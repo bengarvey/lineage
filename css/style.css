@@ -1,0 +1,101 @@
+
+body {
+  font-family: helvetica, arial;
+  font-size: 36pt;
+  background-color: #FFF;
+}
+
+#lockSearch {
+  height: 20px;
+  width: 20px;
+}
+
+#musicOn {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+#nightModeOn {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.birthYear {
+  font-size: 17pt;
+  color: #888888;
+  line-height: 12px;
+}
+
+#year {
+  font-family: helvetica, arial;
+  font-size: 70pt;
+  color: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+svg {
+  z-index: 10;
+}
+
+#memberDetails {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 36px;
+  line-height:
+}
+
+#timeNavigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 900px;
+  padding: 10px;
+  border-right: 10px solid #EEE;
+}
+
+#timeline {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+#feed {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: 16pt;
+  color: #999999;
+}
+
+#search {
+  opacity: 0.5;
+}
+
+ul {
+  list-style: none;
+}
+
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.node {
+  fill: #39F;
+}
+
+.cursor {
+  fill: none;
+  stroke: brown;
+  pointer-events: none;
+}
+
+.link {
+  stroke: #999;
+}
