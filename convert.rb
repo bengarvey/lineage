@@ -5,7 +5,7 @@ require 'json'
 all = ""
 
 # Convert CSV to JSON
-CSV.foreach("relationships_sorted.csv", :headers => true, encoding: "ISO8859-1") do |person|
+CSV.foreach("data/familyData.csv", :headers => true, encoding: "ISO8859-1") do |person|
   jsonPerson = ""
   person.each do |key, value|
     
@@ -27,10 +27,6 @@ end
 
 all = "[" + all.chomp(",\n") + "]"
 
-# Write the file to json
-#file = File.open("moving.json","w")
-#file.write(all)
-#file.close
 count = 0
 family = JSON.parse(all)
 nodes = []
@@ -148,7 +144,7 @@ end
 end
 
 tree = { "nodes" => nodes, "links" => links }
-file = File.open("moving.json", "w")
+file = File.open("data/familyData.json", "w")
 file.write(tree.to_json)
 file.close
 

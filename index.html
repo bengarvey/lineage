@@ -20,15 +20,29 @@
     var width = window.innerWidth / zoomLevel,
         height = window.innerHeight / zoomLevel;
     var fill = d3.scale.category20();
-    var startYear = 1750;
+    var startYear = 1900;
     var currentYear = startYear;
+    var lastYear = 2014;
     var timeVector = 0;
     var visibleNodes = [];
     var allNodes = [];
 
-    var json = $.getJSON("data/lineage.json", function(json) {
+    var json = $.getJSON("data/familyData.json", function(json) {
       allLinks = json.links;
       allNodes = json.nodes;
+
+      startYears = allNodes.map( function(d) { return d.birthYear; } )
+      startYear  = Math.min.apply(Math, startYears);
+      currentYear = startYear;
+
+      // Initialize the slider
+      d3.select('#timeline').call( 
+        slider = d3.slider().axis(true).min(startYear).max(lastYear).step(1)
+          .value(currentYear)
+          .on("slide", function(event, value) {
+            currentYear = value;
+          })
+      );
 
       // link directly instead of using indices
       allLinks.forEach( function(link, index) {
@@ -275,13 +289,6 @@
       }
   });  
  
-  d3.select('#timeline').call( 
-    slider = d3.slider().axis(true).min(1715).max(2015).step(1)
-      .value(currentYear)
-      .on("slide", function(event, value) {
-        currentYear = value;
-      })
-  );
 
   d3.select('#timeNavigation')
     .on('mouseover', function(d) {
