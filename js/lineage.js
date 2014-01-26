@@ -1,4 +1,5 @@
 function start() {
+
   var zoomLevel = 1;
   var slider = null;
   var width = window.innerWidth / zoomLevel,
@@ -10,6 +11,7 @@ function start() {
   var timeVector = 0;
   var visibleNodes = [];
   var allNodes = [];
+  var tickDuration = 1000;
 
   var json = $.getJSON("data/familyData.json", function(json) {
     allLinks = json.links;
@@ -85,7 +87,7 @@ function start() {
   restart();
 
   var stopCode = setInterval(function() {
-      
+  
   // Check to see if we should add any new nodes that aren't already in there
   allNodes.forEach( function(node, index) {
           if (node.birthYear != "" && node.birthYear <= currentYear && nodes.indexOf(node) == -1 && (!lockSearch || allowNodeFromSearch(node))) {
@@ -124,7 +126,7 @@ function start() {
         force.stop();
         clearInterval(stopCode);
       }
-  }, 1000);
+  }, tickDuration);
 
   function tick() {
     link.attr("x1", function(d) { return d.source.x; })
@@ -347,6 +349,7 @@ function checkForSearch() {
     });
     return found ? 1 : 0.3;
   });
+
 }
 
 }

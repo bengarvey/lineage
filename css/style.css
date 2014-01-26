@@ -57,6 +57,7 @@ svg {
   left: 0;
   width: 900px;
   padding: 10px;
+  padding-left: 30px;
   border-right: 10px solid #EEE;
 }
 
