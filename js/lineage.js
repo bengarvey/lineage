@@ -87,7 +87,7 @@ function start() {
   restart();
 
   var stopCode = setInterval(function() {
-    console.log(tickDuration); 
+  
   // Check to see if we should add any new nodes that aren't already in there
   allNodes.forEach( function(node, index) {
           if (node.birthYear != "" && node.birthYear <= currentYear && nodes.indexOf(node) == -1 && (!lockSearch || allowNodeFromSearch(node))) {
@@ -353,5 +353,3 @@ function checkForSearch() {
 }
 
 }
-
-
