@@ -28,57 +28,6 @@ class Converter
     links = []
     max = 4000
 
-    def getBirthYear(member, family)
-      birthYear = member['Birthdate'].to_s.split(":")[0].to_i
-
-      # If we have a birth year, return it
-      if birthYear != 0
-        return birthYear
-      else 
-        # If we don't have a birthyear, see if they have any kids and add 25 years to their age as an appropriate guess
-        # Look through to see if this is anyone's father or mother
-        firstKidBirthYear = 99999
-        spouseBirthYear = 0
-        puts "Can't find one for #{member['Name']}, #{member['ID']}..."
-        family.each do |person|
-          if (person['MotherID'] == member['ID'] or person['FatherID'] == member['ID'])
-            puts "Checking #{person['Name']}, #{person['ID']}..."
-            personBirthYear = getBirthYear(person, family)
-            if firstKidBirthYear > personBirthYear and personBirthYear > 0
-              puts "#{person['Name']} was born in #{personBirthYear}."
-              firstKidBirthYear = personBirthYear
-            end
-          elsif (person['SpouseID'] == member['ID'])
-            spouseBirthYear = person['Birthdate'].to_s.split(":")[0].to_i
-          end
-        end
-
-        birthYearGuess = firstKidBirthYear == 99999 ? 0 : firstKidBirthYear - 25
-        puts "New guess for #{member['Name']}, #{member['ID']} is #{birthYearGuess}."
-        if birthYearGuess == "" or birthYearGuess == 0
-          # If we don't have a guess yet, look at their parents
-          family.each do |person|
-            if person['ID'] == member['MotherId'] and person['Birthdate'].to_s.split(":")[0].to_i != 0
-              birthYearGuess = person['Birthdate'].to_s.split(":")[0].to_i + 30
-            elsif person['ID'] == member['FatherId'] and person['Birthdate'].to_s.split(":")[0].to_i != 0
-              birthYearGuess = person['Birthdate'].to_s.split(":")[0].to_i + 30
-            end
-          end
-        end
-
-        # If we still have nothing, use the spouse's birth year (or our best guess of it)
-        if birthYearGuess == 0 or birthYearGuess == "" and spouseBirthYear != 0
-          birthYearGuess = spouseBirthYear
-        end
-
-        return birthYearGuess
-
-      end
-
-
-    end
-
-
     # this it to map ids to array positions
     nodeMap = []
 
@@ -172,6 +121,56 @@ class Converter
     all = "[" + all.chomp(",\n") + "]"
     return all
   end
+
+  def getBirthYear(member, family)
+    birthYear = member['Birthdate'].to_s.split(":")[0].to_i
+
+    # If we have a birth year, return it
+    if birthYear != 0
+      return birthYear
+    else 
+      # If we don't have a birthyear, see if they have any kids and add 25 years to their age as an appropriate guess
+      # Look through to see if this is anyone's father or mother
+      firstKidBirthYear = 99999
+      spouseBirthYear = 0
+      puts "Can't find one for #{member['Name']}, #{member['ID']}..."
+      family.each do |person|
+        if (person['MotherID'] == member['ID'] or person['FatherID'] == member['ID'])
+          puts "Checking #{person['Name']}, #{person['ID']}..."
+          personBirthYear = getBirthYear(person, family)
+          if firstKidBirthYear > personBirthYear and personBirthYear > 0
+            puts "#{person['Name']} was born in #{personBirthYear}."
+            firstKidBirthYear = personBirthYear
+          end
+        elsif (person['SpouseID'] == member['ID'])
+          spouseBirthYear = person['Birthdate'].to_s.split(":")[0].to_i
+        end
+      end
+
+      birthYearGuess = firstKidBirthYear == 99999 ? 0 : firstKidBirthYear - 25
+      puts "New guess for #{member['Name']}, #{member['ID']} is #{birthYearGuess}."
+      if birthYearGuess == "" or birthYearGuess == 0
+        # If we don't have a guess yet, look at their parents
+        family.each do |person|
+          if person['ID'] == member['MotherId'] and person['Birthdate'].to_s.split(":")[0].to_i != 0
+            birthYearGuess = person['Birthdate'].to_s.split(":")[0].to_i + 30
+          elsif person['ID'] == member['FatherId'] and person['Birthdate'].to_s.split(":")[0].to_i != 0
+            birthYearGuess = person['Birthdate'].to_s.split(":")[0].to_i + 30
+          end
+        end
+      end
+
+      # If we still have nothing, use the spouse's birth year (or our best guess of it)
+      if birthYearGuess == 0 or birthYearGuess == "" and spouseBirthYear != 0
+        birthYearGuess = spouseBirthYear
+      end
+
+      return birthYearGuess
+
+    end
+
+  end
+
 end
 
 converter = Converter.new
