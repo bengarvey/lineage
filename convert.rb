@@ -28,6 +28,8 @@ class Converter
     links = []
     max = 4000
 
+    
+
     # this it to map ids to array positions
     nodeMap = []
 
@@ -62,36 +64,40 @@ class Converter
 
     end
 
-
-    family.each do |member|
-
-
-    if (count < max)
-      if member['SpouseID'] != nil && member['SpouseID'].to_i != 0
-        link = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['SpouseID'].to_i ], "color" => '#CC0', "relation" => 'spouse'}
-        links.push(link)
-      end
-
-      if member['MotherID'] != nil && member['MotherID'].to_i != 0
-        link2 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['MotherID'].to_i ], "color" => "#F39", "relation" => 'mother'}
-        links.push(link2)
-      end
-
-      if member['FatherID'] != nil && member['FatherID'].to_i != 0
-        link3 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['FatherID'].to_i ], "color" => "#39F", "relation" => 'father'}
-        links.push(link3)
-      end
-
-      count += 1
-    end
-
-    end
+    links = getLinks(family, nodeMap, max)    
 
     tree = { "nodes" => nodes, "links" => links }
     file = File.open("data/familyData.json", "w")
     file.write(tree.to_json)
     file.close
  
+  end
+
+  def getLinks(family, nodeMap, max)
+    links = []
+
+    family.each do |member|
+
+      if (links.length < max)
+        if member['SpouseID'] != nil && member['SpouseID'].to_i != 0
+          link = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['SpouseID'].to_i ], "color" => '#CC0', "relation" => 'spouse'}
+          links.push(link)
+        end
+
+        if member['MotherID'] != nil && member['MotherID'].to_i != 0
+          link2 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['MotherID'].to_i ], "color" => "#F39", "relation" => 'mother'}
+          links.push(link2)
+        end
+
+        if member['FatherID'] != nil && member['FatherID'].to_i != 0
+          link3 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['FatherID'].to_i ], "color" => "#39F", "relation" => 'father'}
+          links.push(link3)
+        end
+
+      end
+
+    end
+
   end
 
   def getJsonFromCsv() 
