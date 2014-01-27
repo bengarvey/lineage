@@ -1,39 +1,26 @@
+# Converter
+# Ben Garvey
+# ben@bengarvey.com
+# 2013-06-01
+# http://www.bengarvey.com
+# http://github.com/bengarvey/lineage
 
 require 'csv'
 require 'json'
 
+# The Converter class takes a csv file and converts it to a json file
+# that can be read by D3.js
 class Converter
 
   def initialize
 
   end
 
+  # Converts a csv file to a json file that can be read by D3.js
   def convert
 
-    all = ""
-
-    # Convert CSV to JSON
-    CSV.foreach("data/familyData.csv", :headers => true, encoding: "ISO8859-1") do |person|
-      jsonPerson = ""
-      person.each do |key, value|
-        
-        # Convert zeroes to null and ints to ints
-        if value == "0"
-          value = nil
-        elsif value.to_i != 0
-          value = value.to_i
-        end
-      
-        jsonPerson += "#{key.to_json} : #{value.to_json}, "
-      
-      end
-      
-      jsonPerson = jsonPerson.chomp(", ")
-      all += "{" + jsonPerson + "},\n"
-      
-    end
-
-    all = "[" + all.chomp(",\n") + "]"
+    # Load the csv data into a json string
+    all = getJsonFromCsv()
 
     count = 0
     family = JSON.parse(all)
@@ -156,6 +143,34 @@ class Converter
     file.write(tree.to_json)
     file.close
  
+  end
+
+  def getJsonFromCsv() 
+    all = ""
+    
+    # Convert CSV to JSON
+    CSV.foreach("data/familyData.csv", :headers => true, encoding: "ISO8859-1") do |person|
+      jsonPerson = ""
+      person.each do |key, value|
+        
+        # Convert zeroes to null and ints to ints
+        if value == "0"
+          value = nil
+        elsif value.to_i != 0
+          value = value.to_i
+        end
+      
+        jsonPerson += "#{key.to_json} : #{value.to_json}, "
+      
+      end
+      
+      jsonPerson = jsonPerson.chomp(", ")
+      all += "{" + jsonPerson + "},\n"
+      
+    end
+
+    all = "[" + all.chomp(",\n") + "]"
+    return all
   end
 end
 
