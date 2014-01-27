@@ -13,7 +13,10 @@ require 'json'
 class Converter
 
   def initialize
-
+    # This is to map ids to array positions
+    # It gets built during the getNodes method and used during getLinks
+    # Because of that, those methods need to be called in that order.  Ugly.
+    @nodeMap = []
   end
 
   # Converts a csv file to a json file that can be read by D3.js
@@ -22,20 +25,34 @@ class Converter
     # Load the csv data into a json string
     all = getJsonFromCsv()
 
-    count = 0
+    # Create a json object out of said string
     family = JSON.parse(all)
-    nodes = []
-    links = []
+
+    # Included this because occasionally I didn't want to blow everything up
     max = 4000
 
-    
+    # You have to call getNodes first, because it also builds the nodeMap
+    # That dependency should be dealt with for maintainability, but it's not a priority now
 
-    # this it to map ids to array positions
-    nodeMap = []
+    # Gets a node for each family member
+    nodes = getNodes(family)
 
+    # Gets a link for each relationship
+    links = getLinks(family, max)    
+
+    # Output everything to a json file
+    writeToFile(nodes, links, "data/familyData.json")  
+ 
+  end
+
+  # Loops through all nodes and builds an array of them
+  def getNodes(family)
+    nodes = []
     family.each do |member|
 
+      # There is some serious stuff going on to find (or guess) birth years
       birthYear = getBirthYear(member, family).to_i
+
       if birthYear == 0
         birthYear = ""
       end
@@ -58,39 +75,35 @@ class Converter
       if member['ID'] != nil && member['ID'].to_i != 0 && /.*(available|unused|timeline).*/i !~ member['Name']
         puts node
         nodes.push(node)
+
         # Update the node map
-        nodeMap[member['ID']] = nodes.length - 1
+        @nodeMap[member['ID']] = nodes.length - 1
       end
 
     end
 
-    links = getLinks(family, nodeMap, max)    
+    return nodes
 
-    tree = { "nodes" => nodes, "links" => links }
-    file = File.open("data/familyData.json", "w")
-    file.write(tree.to_json)
-    file.close
- 
   end
 
-  def getLinks(family, nodeMap, max)
+  def getLinks(family, max)
     links = []
 
     family.each do |member|
 
       if (links.length < max)
         if member['SpouseID'] != nil && member['SpouseID'].to_i != 0
-          link = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['SpouseID'].to_i ], "color" => '#CC0', "relation" => 'spouse'}
+          link = {"source" => @nodeMap[ member['ID'].to_i ], "target" => @nodeMap[ member['SpouseID'].to_i ], "color" => '#CC0', "relation" => 'spouse'}
           links.push(link)
         end
 
         if member['MotherID'] != nil && member['MotherID'].to_i != 0
-          link2 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['MotherID'].to_i ], "color" => "#F39", "relation" => 'mother'}
+          link2 = {"source" => @nodeMap[ member['ID'].to_i ], "target" => @nodeMap[ member['MotherID'].to_i ], "color" => "#F39", "relation" => 'mother'}
           links.push(link2)
         end
 
         if member['FatherID'] != nil && member['FatherID'].to_i != 0
-          link3 = {"source" => nodeMap[ member['ID'].to_i ], "target" => nodeMap[ member['FatherID'].to_i ], "color" => "#39F", "relation" => 'father'}
+          link3 = {"source" => @nodeMap[ member['ID'].to_i ], "target" => @nodeMap[ member['FatherID'].to_i ], "color" => "#39F", "relation" => 'father'}
           links.push(link3)
         end
 
@@ -176,6 +189,14 @@ class Converter
     end
 
   end
+
+  def writeToFile(nodes, links, filename) 
+    tree = { "nodes" => nodes, "links" => links }
+    file = File.open(filename, "w")
+    file.write(tree.to_json)
+    file.close
+  end
+
 
 end
 
