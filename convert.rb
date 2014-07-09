@@ -57,7 +57,15 @@ class Converter
         birthYear = ""
       end
 
-      node = {  "name" => member['Name'], 
+      nameArr = member['Name'].to_s.split(", ")
+
+      if nameArr[1].nil?
+        firstInitial = "?"
+      else
+        firstInitial = nameArr[1][0,1]
+      end
+
+      node = {  "name" => "#{firstInitial}, #{nameArr[0].to_s}",
                 "gender" => member['Gender'], 
                 "lastName" => member['Name'].to_s.split(", ")[0],
                 "birthYear" => birthYear,
@@ -111,30 +119,31 @@ class Converter
 
     end
 
+    return links
   end
 
   def getJsonFromCsv() 
     all = ""
-    
+
     # Convert CSV to JSON
     CSV.foreach("data/familyData.csv", :headers => true, encoding: "ISO8859-1") do |person|
       jsonPerson = ""
       person.each do |key, value|
-        
+
         # Convert zeroes to null and ints to ints
         if value == "0"
           value = nil
         elsif value.to_i != 0
           value = value.to_i
         end
-      
+
         jsonPerson += "#{key.to_json} : #{value.to_json}, "
-      
+
       end
-      
+
       jsonPerson = jsonPerson.chomp(", ")
       all += "{" + jsonPerson + "},\n"
-      
+
     end
 
     all = "[" + all.chomp(",\n") + "]"
