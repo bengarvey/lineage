@@ -2,11 +2,11 @@ ID,Name,SpouseID,FatherID,MotherID,Gender,Alive?,Birthdate,Deathdate
 1,"Skywalker, Shmi",0,0,0,F,N,1905:0:0,1955:0:0
 2,"Skywalker, Anakin",3,0,1,M,N,1935:0:0,1983:0:0
 3,"Amidala, Padmé ",2,0,0,F,N,1925:0:0,1960:0:0
-4,"Skywalker, Luke",0,2,3,M,Y,1960:0:0
-5,"Organa, Leia",10,2,3,F,Y,1960:0:0
+4,"Skywalker, Luke",0,2,3,M,Y,1960:0:0,
+5,"Organa, Leia",10,2,3,F,Y,1960:0:0,
 6,"Yoda",0,0,0,M,N,1083:0:0,1983:0:0
 7,"Kenobi, Obi-Wan",0,0,0,M,N,1920:0:0,1977:0:0
-8,"C3PO",0,2,0,M,Y,1940:0:0
-9,"R2D2",0,0,0,M,Y,1940:0:0
-10,"Solo, Han",5,0,0,M,Y,1942:0:0
-11,"Chewbacca",0,0,0,M,Y,1777:0:0
+8,"C3PO",0,2,0,M,Y,1940:0:0,
+9,"R2D2",0,0,0,M,Y,1940:0:0,
+10,"Solo, Han",5,0,0,M,Y,1942:0:0,
+11,"Chewbacca",0,0,0,M,Y,1777:0:0,
