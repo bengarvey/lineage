@@ -11,10 +11,25 @@ FATHER_COLOR = '#39F'
 go = (family) ->
   console.log family
   links = buildLinks(family)
+  list = nodeFilter(family)
+  console.log list
   data =
-    nodes: family
+    nodes: list
     links: links
   writeFile(FAMILY_JSON_FILE, JSON.stringify(data))
+
+nodeFilter = (nodes) ->
+  list = []
+  for node in nodes
+    item =
+      name: node.Name
+      gender: node.Gender
+      lastName: if node.Name.match(",") then node.Name.split(",")[0] else node.Name
+      birthYear: node.Birthdate
+      deathYear: node.Deathdate
+    console.log item
+    list.push(item)
+  return list
 
 writeFile = (file, data) ->
   fs.writeFile(file, data, (err) ->
