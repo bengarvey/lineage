@@ -9,10 +9,8 @@ MOTHER_COLOR = '#F39'
 FATHER_COLOR = '#39F'
 
 go = (family) ->
-  console.log family
   links = buildLinks(family)
   list = nodeFilter(family)
-  console.log list
   data =
     nodes: list
     links: links
@@ -25,9 +23,8 @@ nodeFilter = (nodes) ->
       name: node.Name
       gender: node.Gender
       lastName: if node.Name.match(",") then node.Name.split(",")[0] else node.Name
-      birthYear: node.Birthdate
-      deathYear: node.Deathdate
-    console.log item
+      birthYear: +node.Birthdate
+      deathYear: +node.Deathdate
     list.push(item)
   return list
 
