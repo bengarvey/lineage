@@ -20,6 +20,7 @@ nodeFilter = (nodes) ->
   list = []
   for node in nodes
     item =
+      ID: +node.ID
       name: node.Name
       gender: node.Gender
       lastName: if node.Name.match(",") then node.Name.split(",")[0] else node.Name
@@ -42,24 +43,39 @@ buildLinks = (list) ->
     links = links.concat(getLinkSet(item))
   return links
 
-getLinkSet = (item) ->
+buildLookupTable = (list) ->
+  lookup = {}
+  for item in list
+    lookup[item.ID] = item
+  return lookup
+
+getLinkSet = (item, lookup) ->
   spouse =
     source: +item.ID
-    target: +item.SpouseID
+    target: if item.SpouseID? then item.SpouseId else null
     color: SPOUSE_COLOR
     relation: 'spouse'
   mother =
     source: +item.ID
-    target: +item.MotherID
+    target: if item.MotherID? then item.MotherID else null
     color: MOTHER_COLOR
     relation: 'mother'
   father =
     source: +item.ID
-    target: +item.FatherID
+    target: if item.FatherID? then item.FatherID else null
     color: FATHER_COLOR
     relation: 'father'
 
-  return [spouse, mother, father]
+  links = validateLinkSet([spouse, mother, father])
+
+  return links
+
+validateLinkSet = (set) ->
+  validatedSet = (item for item in set when validatedLink(item))
+  return validatedSet
+
+validatedLink = (link) ->
+  link.source? and link.target? and link.relation?
 
 loadData = (callback) ->
   fs.readFile FAMILY_CSV_FILE, 'utf-8', (err, data) ->
@@ -68,6 +84,9 @@ loadData = (callback) ->
       family = convertArrayToObjectList(result)
       callback null, family
 
+cleanseCsv = (data) ->
+  if data is '' then null else data
+
 # Assumes a header row for attribute names
 convertArrayToObjectList = (arr) ->
   header = arr[0]
@@ -75,7 +94,7 @@ convertArrayToObjectList = (arr) ->
   for index in [1..arr.length-1]
     ob = {}
     for headerIndex in [0..header.length-1]
-      ob[header[headerIndex]] = arr[index][headerIndex]
+      ob[header[headerIndex]] = cleanseCsv(arr[index][headerIndex])
     list.push ob
   return list
 
