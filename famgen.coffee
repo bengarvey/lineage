@@ -13,7 +13,7 @@ generatePeople = (total) ->
   people = []
   for index in [0..total]
     person = generatePerson()
-    person.ID = globalID += 1
+    person.id = globalID += 1
     people.push(person)
   return people
 
@@ -26,19 +26,28 @@ generatePerson = () ->
 
 generateMarriages = (singles) ->
   complete = []
-  for person, index in singles
+  index = 0
+  while singles.length > 1
+    console.log "#{index} vs #{singles.length-1}"
     rand = getRandomInt(index + 1, singles.length - 1)
-    console.log rand
+
     complete.push(singles[index])
     complete.push(singles[rand])
-    singles = singles.slice(rand-1, rand)
-    singles = singles.slice(index-1, index)
-  console.log singles
+
+    console.log index + 1, singles.length - 1, rand, singles.length, singles[rand]
+    complete[complete.length-2].spouseId = singles[rand].id
+    complete[complete.length-1].spouseId = singles[index].id
+
+    singles.splice(rand, 1)
+    singles.splice(index, 1)
+  return complete
 
 getRandomInt = (min, max) ->
   return Math.ceil((Math.random() * (max - min)) + min)
 
 people = generatePeople(INITIAL_PEOPLE)
-generateMarriages(people)
+complete = generateMarriages(people)
+console.log complete
+
 
 console.log "Complete!"
