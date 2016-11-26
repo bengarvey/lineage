@@ -24,17 +24,34 @@ generatePerson = () ->
     birthDate: '1900'
     deathDate: '1950'
 
+generateKidsFromList = (parents) ->
+  kids = []
+  for index in [0..parents.length-1] by 2
+    newKids = generateKids(parents[index], parents[index+1])
+    kids = kids.concat(newKids)
+  return kids
+
+generateKids = (first, second) ->
+  kids = []
+  for index in [0..4]
+    kids.push(generateKid(first, second))
+  return kids
+
+generateKid = (first, second) ->
+  person = generatePerson()
+  person.parentId1 = first.id
+  person.parentId2 = second.id
+  return person
+
 generateMarriages = (singles) ->
   complete = []
   index = 0
   while singles.length > 1
-    console.log "#{index} vs #{singles.length-1}"
     rand = getRandomInt(index + 1, singles.length - 1)
 
     complete.push(singles[index])
     complete.push(singles[rand])
 
-    console.log index + 1, singles.length - 1, rand, singles.length, singles[rand]
     complete[complete.length-2].spouseId = singles[rand].id
     complete[complete.length-1].spouseId = singles[index].id
 
@@ -47,7 +64,7 @@ getRandomInt = (min, max) ->
 
 people = generatePeople(INITIAL_PEOPLE)
 complete = generateMarriages(people)
-console.log complete
-
+kids = generateKidsFromList(complete)
+console.log kids
 
 console.log "Complete!"
