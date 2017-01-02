@@ -1,26 +1,38 @@
 fs = require 'fs'
+Chance = require 'chance'
+chance = new Chance
 
 GENERATIONS = 3
 MAX_CHILDREN = 10
 MIN_CHILDREN = 0
-INITIAL_PEOPLE = 10
+INITIAL_PEOPLE = 200
 STARTING_YEAR = 1900
+MAX_LINKS = 150
 globalID = 0
 
 console.log "Generating family..."
 
 generatePeople = (total) ->
+  console.log total
   people = []
   for index in [0..total]
     person = generatePerson()
     person.id = globalID += 1
     people.push(person)
+  console.log people.length
   return people
 
 generatePerson = () ->
+  gender = chance.gender()
+  first = chance.first({gender: gender})
+  last = chance.last()
+  name = "#{first} #{last}"
+
   person =
-    name: "Ben Garvey" + Math.random()
-    gender: 'M'
+    firstName: first
+    lastName: last
+    name: name
+    gender: gender
     birthDate: '1900'
     deathDate: '1950'
 
@@ -62,9 +74,54 @@ generateMarriages = (singles) ->
 getRandomInt = (min, max) ->
   return Math.ceil((Math.random() * (max - min)) + min)
 
+generateLinks = (nodes, total) ->
+  links = []
+  for index in [0..total]
+    source = chance.integer({min: 0, max: nodes.length-1})
+    target = chance.integer({min: 0, max: nodes.length-1})
+    relation = getRelation(nodes[target])
+    color = getColor(relation)
+    link =
+      source: source
+      target: target
+      color: color
+      relation: relation
+    links.push(link)
+  return links
+
+getColor = (relation) ->
+  switch relation
+    when 'Mother' then '#933'
+    when 'Father' then '#39F'
+    when 'Spouse' then '#666'
+    else '#111'
+
+getRelation = (node) ->
+  if node.gender is 'Female' then 'Mother'
+  else if node.gender is 'Male' then 'Father'
+
+writeFile = (file, data) ->
+  fs.writeFile(file, data, (err) ->
+    if err
+      return console.log err
+    else
+      console.log "Done."
+  )
+
+link =
+  source: 1
+  target: 0
+  color: '#39F'
+  relation: 'father'
+
 people = generatePeople(INITIAL_PEOPLE)
-complete = generateMarriages(people)
-kids = generateKidsFromList(complete)
-console.log kids
+links = generateLinks(people, MAX_LINKS)
+#complete = generateMarriages(people)
+#kids = generateKidsFromList(complete)
+console.log people, links
+output =
+  nodes: people
+  links: links
+writeFile('data/people.json', JSON.stringify(output))
 
 console.log "Complete!"

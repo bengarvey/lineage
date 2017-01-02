@@ -13,11 +13,11 @@ function start() {
   var allNodes = [];
   var tickDuration = 1000;
 
-  var json = $.getJSON("data/familyData.json", function(json) {
+  var json = $.getJSON("data/people.json", function(json) {
     allLinks = json.links;
     allNodes = json.nodes;
 
-    startYears = allNodes.map( function(d) { return d.birthYear; } )
+    startYears = allNodes.map( function(d) { return d.birthDate; } )
     startYear  = Math.min.apply(Math, startYears);
     currentYear = startYear;
 
@@ -32,7 +32,6 @@ function start() {
 
     // link directly instead of using indices
     allLinks.forEach( function(link, index) {
-        
         // Check to see if these links point to valid nodes
         if (typeof(allNodes[link.target]) !== "undefined" && (typeof(allNodes[link.source])) !== "undefined") {
             link.source = allNodes[link.source];
@@ -90,7 +89,7 @@ function start() {
   
   // Check to see if we should add any new nodes that aren't already in there
   allNodes.forEach( function(node, index) {
-          if (node.birthYear != "" && node.birthYear <= currentYear && nodes.indexOf(node) == -1 && (!lockSearch || allowNodeFromSearch(node))) {
+          if (node.birthDate != "" && node.birthDate <= currentYear && nodes.indexOf(node) == -1 && (!lockSearch || allowNodeFromSearch(node))) {
             nodes.push(node);
   
             if (!addedNodeThisYear) {
@@ -99,7 +98,7 @@ function start() {
             }
             
           }
-          else if ((node.birthYear > currentYear || (lockSearch && !allowNodeFromSearch(node))) && nodes.indexOf(node) != -1) {
+          else if ((node.birthDate > currentYear || (lockSearch && !allowNodeFromSearch(node))) && nodes.indexOf(node) != -1) {
             nodes.splice( nodes.indexOf(node), 1);
           }
       });
@@ -177,7 +176,7 @@ function start() {
             .style('top', d.y - 20)
             .style('left', d.x + 20);
 
-          d3.select('#name').html(d.name + "<br><span class='birthYear'>" + d.birthYear + "</span>");
+          d3.select('#name').html(d.name + "<br><span class='birthDate'>" + d.birthDate + "</span>");
         })
         .on("mouseout", function(d) {
           d3.select(this).transition().duration(100).attr('r', 5);
