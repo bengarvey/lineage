@@ -4,7 +4,7 @@ function start() {
   var slider = null;
   var width = window.innerWidth / zoomLevel,
       height = window.innerHeight / zoomLevel;
-  var fill = d3.scale.category20();
+  //var fill = d3.scale.category20();
   var startYear = 1900;
   var currentYear = startYear;
   var lastYear = 2014;
@@ -49,7 +49,7 @@ function start() {
       }
   });
       
-  var colors = d3.scale.category20();
+  var colors = d3.scaleOrdinal(d3.schemeCategory20);
 
   var force = d3.layout.force()
       .size([width, height])
