@@ -22,6 +22,7 @@ function start() {
     currentYear = startYear;
 
     // Initialize the slider
+    /*
     d3.select('#timeline').call( 
       slider = d3.slider().axis(true).min(startYear).max(lastYear).step(1)
         .value(currentYear)
@@ -29,6 +30,7 @@ function start() {
           currentYear = value;
         })
     );
+    */
 
     // link directly instead of using indices
     allLinks.forEach( function(link, index) {
@@ -50,7 +52,20 @@ function start() {
   });
       
   var colors = d3.scaleOrdinal(d3.schemeCategory20);
+var force = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2));
 
+  force
+    .nodes(visibleNodes)
+    .on("tick", tick);
+
+  force
+    .force("link")
+    .links(visibleLinks);
+
+/*
   var force = d3.layout.force()
       .size([width, height])
       .nodes(visibleNodes) // initialize with a single node
@@ -58,7 +73,7 @@ function start() {
       .linkDistance(30)
       .charge(-60)
       .on("tick", tick);
-
+*/
 
   var svg = d3.select("body").append("svg")
       .attr("id", "screen")
@@ -69,8 +84,9 @@ function start() {
       .attr("width", width)
       .attr("height", height);
 
+  console.log(force.nodes);
   var nodes = force.nodes(),
-      links = force.links(),
+      links = allLinks.slice(),
       node = svg.selectAll(".node"),
       link = svg.selectAll(".link");
 
@@ -116,7 +132,7 @@ function start() {
   });
       currentYear += timeVector;
       addedNodeThisYear = false;
-      slider.slide_to(currentYear);
+      //slider.slide_to(currentYear);
      
       if (currentYear < 2020) {
         restart();
@@ -145,7 +161,7 @@ function start() {
     width = window.innerWidth / zoomLevel;
     svg.attr("height", height)
       .attr("width", width);
-    force.size([width, height]); 
+    //force.size([width, height]); 
     $('#year').html(currentYear)
       .css('left', width/2 - 105)
       .css('top', height - 140);
@@ -182,14 +198,13 @@ function start() {
           d3.select(this).transition().duration(100).attr('r', 5);
           d3.select('#memberDetails').style('display', 'none');            
         })
-        .call(force.drag);
+        .call(d3.drag())
 
     if ($('#search').val() != "") { 
       checkForSearch();
     }
-
     node.exit().attr('opacity', 1).transition().duration(500).attr('opacity', 0).remove();
-    force.start();
+    force.restart();
   }
 
   function addToFeed(node) {
