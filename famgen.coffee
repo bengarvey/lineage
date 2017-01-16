@@ -6,7 +6,8 @@ GENERATIONS = 3
 MAX_CHILDREN = 10
 MIN_CHILDREN = 0
 INITIAL_PEOPLE = 300
-STARTING_YEAR = 1900
+MIN_YEAR = 1900
+MAX_YEAR = 2016
 MAX_LINKS = 150
 globalID = 0
 
@@ -28,13 +29,16 @@ generatePerson = () ->
   last = chance.last()
   name = "#{first} #{last}"
 
+  birthYear = chance.year({min: MIN_YEAR, max: MAX_YEAR});
+  deathYear = +birthYear + chance.integer({min:1, max: 100});
+
   person =
     firstName: first
     lastName: last
     name: name
     gender: gender
-    birthDate: '1900'
-    deathDate: '1950'
+    birthDate: chance.date({year: birthYear})
+    deathDate: chance.date({year: deathYear})
 
 generateKidsFromList = (parents) ->
   kids = []
@@ -82,8 +86,8 @@ generateLinks = (nodes, total) ->
     relation = getRelation(nodes[target])
     color = getColor(relation)
     link =
-      source: source
-      target: target
+      source: nodes[source].id
+      target: nodes[target].id
       color: color
       relation: relation
     links.push(link)

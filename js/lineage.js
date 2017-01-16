@@ -161,7 +161,7 @@ var force = d3.forceSimulation()
     width = window.innerWidth / zoomLevel;
     svg.attr("height", height)
       .attr("width", width);
-    //force.size([width, height]); 
+
     $('#year').html(currentYear)
       .css('left', width/2 - 105)
       .css('top', height - 140);
