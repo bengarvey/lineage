@@ -28,7 +28,7 @@ function start() {
     var simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody(1))
       .force("center", d3.forceCenter(width / 6, height / 6))
-      .force("link", d3.forceLink(links).distance(200))
+      .force("link", d3.forceLink(links))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .alphaTarget(1)
@@ -76,7 +76,11 @@ function start() {
         .append("circle")
         .attr("fill", function(d) { return color(d.lastName); })
         .attr("r", 5)
-        .merge(node);
+        .merge(node)
+        .call(d3.drag()
+          .on("start", function(d) {dragstarted(d, simulation);})
+          .on("drag", dragged)
+          .on("end", function(d) {dragended(d, simulation);}));
 
       // Apply the general update pattern to the links.
       link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
@@ -103,4 +107,21 @@ function start() {
           .attr("y2", function(d) { return d.target.y; });
     }
   });
+
+  function dragstarted(d, sim) {
+    if (!d3.event.active) sim.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d, sim) {
+    if (!d3.event.active) sim.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
 }
