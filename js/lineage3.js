@@ -6,24 +6,29 @@ function start() {
       color = d3.scaleOrdinal(d3.schemeCategory20);
 
   var nodes = [],
-      links = [];
+      links = [],
+      allData = {};
 
   var svg = d3.select("svg")
       .attr("id", "screen")
       .attr("width", width)
       .attr("height", height);
 
+  var year = 2000;
+
   d3.json("data/people.json", function(error, data) {
     if (error) throw error;
 
-    nodes = data.nodes;
-    links =  data.links;
+    allData = data;
 
     // link directly instead of using indices
-    links.forEach( function(link, index) {
-      link.source = nodes[link.source-1];
-      link.target = nodes[link.target-1];
+    allData.links.forEach( function(link, index) {
+      link.source = allData.nodes[link.source-1];
+      link.target = allData.nodes[link.target-1];
     });
+
+    nodes = []; //data.nodes;
+    links = []; // data.links;
 
     var simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody(1))
@@ -49,14 +54,35 @@ function start() {
     }, 1000);
     */
 
-    /*
     d3.interval(function() {
-      nodes.pop(); // Remove c.
-      links.pop(); // Remove c-a.
-      links.pop(); // Remove b-c.
+      year -= 1;
+      // push any new ones we need
+      allData.nodes.forEach( function(n) {
+          if (nodes.indexOf(n) == -1 && new Date(n.birthDate).getFullYear() <= year) {
+            nodes.push(n);
+          }
+          else if (nodes.indexOf(n) > -1 && new Date(n.birthDate).getFullYear() >= year) {
+            nodes.splice(nodes.indexOf(n), 1);
+          }
+        }
+      );
+
+      // pop off any ones we don't
+      visibleNodeMap = nodes.map(function(node) { return node.id });
+
+      // Only show links with both source and target
+      allData.links.forEach( function(l) {
+        if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
+          links.push(l);
+        }
+        else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
+          links.splice(links.indexOf(l), 1);
+        }
+      });
+
       restart();
-    }, 100, d3.now());
-    */
+
+    }, 1000, d3.now());
 
     /*
     d3.interval(function() {
@@ -76,6 +102,8 @@ function start() {
         .append("circle")
         .attr("fill", function(d) { return color(d.lastName); })
         .attr("r", 5)
+        .attr("x", width/2)
+        .attr("y", height/2)
         .merge(node)
         .call(d3.drag()
           .on("start", function(d) {dragstarted(d, simulation);})

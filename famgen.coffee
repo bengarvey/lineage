@@ -5,10 +5,10 @@ chance = new Chance
 GENERATIONS = 3
 MAX_CHILDREN = 10
 MIN_CHILDREN = 0
-INITIAL_PEOPLE = 300
+INITIAL_PEOPLE = 3000
 MIN_YEAR = 1900
 MAX_YEAR = 2016
-MAX_LINKS = 150
+MAX_LINKS = 1000
 globalID = 0
 
 console.log "Generating family..."
