@@ -14,9 +14,9 @@ function start() {
       .attr("width", width)
       .attr("height", height);
 
-  var year = 1900;
+  var year = 1850;
 
-  d3.json("data/tree2.json", function(error, data) {
+  d3.json("data/converted.json", function(error, data) {
     if (error) throw error;
 
     allData = data;
@@ -32,7 +32,7 @@ function start() {
 
     var simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody(1))
-      .force("center", d3.forceCenter(width / 6, height / 6))
+      .force("center", d3.forceCenter())
       .force("link", d3.forceLink(links))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
@@ -73,10 +73,10 @@ function start() {
 
       restart();
 
-    }, 1000, d3.now());
+    }, 100, d3.now());
 
     function restart() {
-      console.log("restarted");
+      console.log("restarted ", year);
       // Apply the general update pattern to the nodes.
       node = node.data(nodes, function(d) { return d.id;});
       node.exit().remove();
@@ -91,6 +91,9 @@ function start() {
           .on("start", function(d) {dragstarted(d, simulation);})
           .on("drag", dragged)
           .on("end", function(d) {dragended(d, simulation);}));
+
+      node.append("title")
+        .text(function(d) { return d.lastName; });
 
       // Apply the general update pattern to the links.
       link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
