@@ -14,9 +14,9 @@ function start() {
       .attr("width", width)
       .attr("height", height);
 
-  var year = 2000;
+  var year = 1900;
 
-  d3.json("data/people.json", function(error, data) {
+  d3.json("data/tree2.json", function(error, data) {
     if (error) throw error;
 
     allData = data;
@@ -45,17 +45,8 @@ function start() {
 
     restart();
 
-    /*
-    d3.timeout(function() {
-      links.push({source: a, target: b}); // Add a-b.
-      links.push({source: b, target: c}); // Add b-c.
-      links.push({source: c, target: a}); // Add c-a.
-      restart();
-    }, 1000);
-    */
-
     d3.interval(function() {
-      year -= 1;
+      year += 1;
       // push any new ones we need
       allData.nodes.forEach( function(n) {
           if (nodes.indexOf(n) == -1 && new Date(n.birthDate).getFullYear() <= year) {
@@ -83,15 +74,6 @@ function start() {
       restart();
 
     }, 1000, d3.now());
-
-    /*
-    d3.interval(function() {
-      nodes.push(c); // Re-add c.
-      links.push({source: b, target: c}); // Re-add b-c.
-      links.push({source: c, target: a}); // Re-add c-a.
-      restart();
-    }, 2000, d3.now() + 1000);
-    */
 
     function restart() {
       console.log("restarted");
