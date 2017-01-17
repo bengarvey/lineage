@@ -14,7 +14,9 @@ function start() {
       .attr("width", width)
       .attr("height", height);
 
-  var year = 1850;
+  var year = 2015;
+  var filters = "Garvey Haley Innes Zappasodi Fales Quinn Corcoran Owens Delpino Patterson Waite Dokmanus Pedersen Turner Dvorak Fucetola Phero Penza Koch Hackeloer Ferguson Anderson Supalo Perrin Bristow Loffredo King Carnesale".split(" ");
+  filters = "Garvey Haley Innes Fales".split(" ");
 
   d3.json("data/converted.json", function(error, data) {
     if (error) throw error;
@@ -46,13 +48,13 @@ function start() {
     restart();
 
     d3.interval(function() {
-      year += 1;
+      //year += 1;
       // push any new ones we need
       allData.nodes.forEach( function(n) {
-          if (nodes.indexOf(n) == -1 && new Date(n.birthDate).getFullYear() <= year) {
+          if (nodes.indexOf(n) == -1 && new Date(n.birthDate).getFullYear() <= year && inFilter(n)) {
             nodes.push(n);
           }
-          else if (nodes.indexOf(n) > -1 && new Date(n.birthDate).getFullYear() >= year) {
+          else if (nodes.indexOf(n) > -1 && (new Date(n.birthDate).getFullYear() >= year || !inFilter(n))) {
             nodes.splice(nodes.indexOf(n), 1);
           }
         }
@@ -73,7 +75,7 @@ function start() {
 
       restart();
 
-    }, 100, d3.now());
+    }, 1000, d3.now());
 
     function restart() {
       console.log("restarted ", year);
@@ -93,7 +95,7 @@ function start() {
           .on("end", function(d) {dragended(d, simulation);}));
 
       node.append("title")
-        .text(function(d) { return d.lastName; });
+        .text(function(d) { return d.name; });
 
       // Apply the general update pattern to the links.
       link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
@@ -120,6 +122,17 @@ function start() {
           .attr("y2", function(d) { return d.target.y; });
     }
   });
+
+  function inFilter(node) {
+    var regex = null;
+    for(i=0; i<filters.length; i++) {
+      regex = new RegExp(filters[i], 'ig');
+      if (node.name.match(regex)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   function dragstarted(d, sim) {
     if (!d3.event.active) sim.alphaTarget(0.3).restart();
