@@ -16,7 +16,16 @@ function start() {
 
   var year = 2015;
   var filters = "Garvey Haley Innes Zappasodi Fales Quinn Corcoran Owens Delpino Patterson Waite Dokmanus Pedersen Turner Dvorak Fucetola Phero Penza Koch Hackeloer Ferguson Anderson Supalo Perrin Bristow Loffredo King Carnesale".split(" ");
-  filters = "Garvey Haley Innes Fales".split(" ");
+  //filters = [];
+
+  function getNodeById(nodes, id) {
+    for(i=0; i<nodes.length; i++) {
+      if (nodes[i].id === id) {
+        return nodes[i];
+      }
+    }
+    return -1;
+  }
 
   d3.json("data/converted.json", function(error, data) {
     if (error) throw error;
@@ -25,8 +34,8 @@ function start() {
 
     // link directly instead of using indices
     allData.links.forEach( function(link, index) {
-      link.source = allData.nodes[link.source-1];
-      link.target = allData.nodes[link.target-1];
+      link.source = getNodeById(allData.nodes, link.source);
+      link.target = getNodeById(allData.nodes, link.target);
     });
 
     nodes = []; //data.nodes;
@@ -124,6 +133,10 @@ function start() {
   });
 
   function inFilter(node) {
+    if (filters == "") {
+      return true;
+    }
+
     var regex = null;
     for(i=0; i<filters.length; i++) {
       regex = new RegExp(filters[i], 'ig');
