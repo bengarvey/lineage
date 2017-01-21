@@ -16,7 +16,6 @@ function start() {
 
   var year = 2015;
   var filters = "Garvey Haley Innes Zappasodi Fales Quinn Corcoran Owens Delpino Patterson Waite Dokmanus Pedersen Turner Dvorak Fucetola Phero Penza Koch Hackeloer Ferguson Anderson Supalo Perrin Bristow Loffredo King Carnesale".split(" ");
-  //filters = [];
 
   function getNodeById(nodes, id) {
     for(i=0; i<nodes.length; i++) {
@@ -56,8 +55,9 @@ function start() {
 
     restart();
 
-    d3.interval(function() {
-      //year += 1;
+    var cancel = null;
+    cancel = d3.interval(function() {
+      //year += 3;
       // push any new ones we need
       allData.nodes.forEach( function(n) {
           if (nodes.indexOf(n) == -1 && new Date(n.birthDate).getFullYear() <= year && inFilter(n)) {
@@ -83,7 +83,7 @@ function start() {
       });
 
       restart();
-
+      clearInterval(cancel);
     }, 1000, d3.now());
 
     function restart() {
