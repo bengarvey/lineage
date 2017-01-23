@@ -36,8 +36,6 @@ function start() {
     originalData = jQuery.extend({}, response);
 
     data = prepareData(data, filters);
-    nodes = [];
-    links = [];
 
     simulation = getSimulation(nodes, links);
 
@@ -97,10 +95,13 @@ function start() {
   }
 
   function prepareData(data, filters) {
-    data.nodes = data.nodes.filter( function(n) {
-      filterItems = filters.split(" ");
-      return inFilter(n, filterItems);
-    });
+    filterItems = filters.split(" ");
+    for(var i=0; i<data.nodes.length; i++) {
+      if (!inFilter(data.nodes[i], filterItems)) {
+        data.nodes.splice(i,1);
+        i--;
+      }
+    }
 
     // link directly instead of using indices
     data.links.forEach( function(link, index) {
@@ -140,12 +141,11 @@ function start() {
   function updateFilter() {
     if ($('#search').val() != filters) {
       filters = $('#search').val();
-      nodes.length = 0;
-      links.length = 0;
+      data.nodes.length = 0;
       filterItems = filters.split(" ");
       for (var i=0; i<originalData.nodes.length; i++) {
         if (inFilter(originalData.nodes[i], filterItems)) {
-          nodes.push(originalData.nodes[i]);
+          data.nodes.push(originalData.nodes[i]);
         }
       }
     }
