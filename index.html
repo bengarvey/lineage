@@ -13,11 +13,18 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="js/lineage3.js"></script>
 
+  <script src="https://d3js.org/d3-color.v1.min.js"></script>
+  <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+  <script src="https://d3js.org/d3-ease.v1.min.js"></script>
+  <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+  <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+  <script src="https://d3js.org/d3-timer.v1.min.js"></script>
+  <script src="https://d3js.org/d3-transition.v1.min.js"></script>
+
 </head>
 <body onLoad="start()">
-  <!-- <div id="year">2015</div>-->
+  <div id="year">2015</div>
   <div id="viz"></div>
-  <!-- 
   <div id="timeNavigation">
     <div class="row">
       <div class="col-md-12">
@@ -59,19 +66,18 @@
           <span class="input-group-addon">
             <input type="checkbox" id="lockSearch" checked="">
           </span>
-          <input type="text" id="search" class="form-control input-lg"/>
+          <input id="search" class="form-control input-lg"
+            value="Garvey Haley Innes Zappasodi Fales Quinn Corcoran Owens Delpino Patterson Waite Dokmanus Pedersen Turner Dvorak Fucetola Phero Penza Koch Hackeloer Ferguson Anderson Supalo Perrin Bristow Loffredo King Carnesale">
         </div>
       </div>
     </div>
     <div class="row">
     </div>
   </div>
-  -->
   <svg height="1000" width="1000"></svg>
   <div id="memberDetails">
     <div id="name"></div>
   </div>
-
 </body>
 </html>
 
