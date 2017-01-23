@@ -27,16 +27,17 @@ function start() {
 
   initializeNav();
 
-  d3.json("data/converted.json", function(error, response) {
+  d3.json("data/converted.json", go);
+
+  function go(error, response) {
     if (error) throw error;
 
-    // Filter out nodes we don't need to look at for now
     data = response;
     originalData = jQuery.extend({}, response);
 
     data = prepareData(data, filters);
-    nodes = []; //data.nodes;
-    links = []; // data.links;
+    nodes = [];
+    links = [];
 
     simulation = getSimulation(nodes, links);
 
@@ -46,158 +47,154 @@ function start() {
 
     restart();
     console.timeEnd('init');
-    var cancel = null;
 
-    cancel = d3.interval(loop, speed, d3.now());
+    d3.interval(loop, speed, d3.now());
+  }
 
-    function loop() {
-      console.time("loop 10");
-      year = advanceYear(year);
+  function loop() {
+    console.time("loop 10");
+    year = advanceYear(year);
 
-      console.time("loop 20");
-      data.nodes.forEach(addRemoveNode);
+    console.time("loop 20");
+    data.nodes.forEach(addRemoveNode);
 
-      console.time("loop 25");
-      // pop off any ones we don't
-      visibleNodeMap = nodes.map(function(node) { return node.id });
+    console.time("loop 30");
+    data.links.forEach(addRemoveLink);
 
-      console.time("loop 30");
-      data.links.forEach(addRemoveLinks);
-      console.time("loop 40");
-      restart();
-      console.timeEnd("loop 10");
-      console.timeEnd("loop 20");
-      console.timeEnd("loop 25");
-      console.timeEnd("loop 30");
-      console.timeEnd("loop 40");
-      console.log("--------");
-    }
+    console.time("loop 40");
+    restart();
 
-    function advanceYear(year) {
-      return year + 1;
-    }
+    console.timeEnd("loop 10");
+    console.timeEnd("loop 20");
+    console.timeEnd("loop 30");
+    console.timeEnd("loop 40");
+    console.log("--------");
+  }
 
-    function addRemoveNode(n) {
-      if (n.birthDate != null) {
-        var nodeYear = n.birthDate.substring(0,4);
-        if (nodes.indexOf(n) == -1 && nodeYear <= year) {
-          nodes.push(n);
-        }
-        else if (nodes.indexOf(n) > -1 && (nodeYear > year)) {
-          nodes.splice(nodes.indexOf(n), 1);
-        }
+  function advanceYear(year) {
+    return year + 1;
+  }
+
+  function addRemoveNode(n) {
+    if (n.birthDate != null) {
+      var nodeYear = n.birthDate.substring(0,4);
+      if (nodes.indexOf(n) == -1 && nodeYear <= year) {
+        nodes.push(n);
+      }
+      else if (nodes.indexOf(n) > -1 && (nodeYear > year)) {
+        nodes.splice(nodes.indexOf(n), 1);
       }
     }
+  }
 
-    function addRemoveLinks(l) {
-      if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
-        links.push(l);
-      }
-      else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
-        links.splice(links.indexOf(l), 1);
-      }
+  function addRemoveLink(l) {
+    if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
+      links.push(l);
     }
-
-    function prepareData(data, filters) {
-      data.nodes = data.nodes.filter( function(n) {
-        filterItems = filters.split(" ");
-        return inFilter(n, filterItems);
-      });
-
-      // link directly instead of using indices
-      data.links.forEach( function(link, index) {
-        link.source = getNodeById(data.nodes, link.source);
-        link.target = getNodeById(data.nodes, link.target);
-      });
-
-      return data;
+    else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
+      links.splice(links.indexOf(l), 1);
     }
+  }
 
-    function getSimulation(nodes, links) {
-      var simulation = d3.forceSimulation(nodes)
-        .force("charge", d3.forceManyBody(1))
-        .force("centering", d3.forceCenter(0,0))
-        .force("link", d3.forceLink(links))
-        .force("x", d3.forceX())
-        .force("y", d3.forceY())
-        .alphaTarget(1)
-        .on("tick", ticked);
-      return simulation;
-    }
+  function prepareData(data, filters) {
+    data.nodes = data.nodes.filter( function(n) {
+      filterItems = filters.split(" ");
+      return inFilter(n, filterItems);
+    });
 
-    function updateYear(year) {
-      $('#year').html(year)
-        .css('left', width/2 - 105)
-        .css('top', height - 140);
-    }
+    // link directly instead of using indices
+    data.links.forEach( function(link, index) {
+      link.source = getNodeById(data.nodes, link.source);
+      link.target = getNodeById(data.nodes, link.target);
+    });
 
-    function resizeScreen() {
-      height = window.innerHeight;
-      width = window.innerWidth;
-      svg.attr("height", height)
-        .attr("width", width);
-      console.log(width/2, height/2);
-    }
+    return data;
+  }
 
-    function updateFilter() {
-      if ($('#search').val() != filters) {
-        filters = $('#search').val();
-        nodes.length = 0;
-        links.length = 0;
-        filterItems = filters.split(" ");
-        for (var i=0; i<originalData.nodes.length; i++) {
-          if (inFilter(originalData.nodes[i], filterItems)) {
-            nodes.push(originalData.nodes[i]);
-          }
+  function getSimulation(nodes, links) {
+    var simulation = d3.forceSimulation(nodes)
+      .force("charge", d3.forceManyBody(1))
+      .force("centering", d3.forceCenter(0,0))
+      .force("link", d3.forceLink(links))
+      .force("x", d3.forceX())
+      .force("y", d3.forceY())
+      .alphaTarget(1)
+      .on("tick", ticked);
+    return simulation;
+  }
+
+  function updateYear(year) {
+    $('#year').html(year)
+      .css('left', width/2 - 105)
+      .css('top', height - 140);
+  }
+
+  function resizeScreen() {
+    height = window.innerHeight;
+    width = window.innerWidth;
+    svg.attr("height", height)
+      .attr("width", width);
+    console.log(width/2, height/2);
+  }
+
+  function updateFilter() {
+    if ($('#search').val() != filters) {
+      filters = $('#search').val();
+      nodes.length = 0;
+      links.length = 0;
+      filterItems = filters.split(" ");
+      for (var i=0; i<originalData.nodes.length; i++) {
+        if (inFilter(originalData.nodes[i], filterItems)) {
+          nodes.push(originalData.nodes[i]);
         }
       }
     }
+  }
 
-    function restart() {
-			updateYear(year);
-      updateFilter();
-      // Apply the general update pattern to the nodes.
-      node = node.data(nodes, function(d) { return d.id;});
-      node.exit().remove();
-      node = node.enter()
-        .append("circle")
-        .attr("fill", function(d) { return color(d.lastName); })
-        .attr("r", 5)
-        .attr("x", width/2)
-        .attr("y", height/2)
-        .merge(node)
-        .call(d3.drag()
-          .on("start", function(d) {dragstarted(d, simulation);})
-          .on("drag", dragged)
-          .on("end", function(d) {dragended(d, simulation);}));
+  function restart() {
+    updateYear(year);
+    updateFilter();
+    // Apply the general update pattern to the nodes.
+    node = node.data(nodes, function(d) { return d.id;});
+    node.exit().remove();
+    node = node.enter()
+      .append("circle")
+      .attr("fill", function(d) { return color(d.lastName); })
+      .attr("r", 5)
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .merge(node)
+      .call(d3.drag()
+        .on("start", function(d) {dragstarted(d, simulation);})
+        .on("drag", dragged)
+        .on("end", function(d) {dragended(d, simulation);}));
 
-      node.append("title")
-        .text(function(d) { return d.name; });
+    node.append("title")
+      .text(function(d) { return d.name; });
 
-      // Apply the general update pattern to the links.
-      link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
-      link.exit().remove();
-      link = link.enter()
-        .append("line")
-        .style("stroke-width", 1)
-        .style("stroke", function(d) { return d.color; })
-        .merge(link);
+    // Apply the general update pattern to the links.
+    link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
+    link.exit().remove();
+    link = link.enter()
+      .append("line")
+      .style("stroke-width", 1)
+      .style("stroke", function(d) { return d.color; })
+      .merge(link);
 
-      // Update and restart the simulation.
-      simulation.nodes(nodes);
-      simulation.force("link").links(links);
-    }
+    // Update and restart the simulation.
+    simulation.nodes(nodes);
+    simulation.force("link").links(links);
+  }
 
-    function ticked() {
-      node.attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; })
+  function ticked() {
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
 
-      link.attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
-    }
-  });
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+  }
 
   function inFilter(node, filterItems) {
     if (filterItems.length == 0) {
