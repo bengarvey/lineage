@@ -7,23 +7,27 @@ function start() {
       height = window.innerHeight,
       color = d3.scaleOrdinal(d3.schemeCategory20);
 
+  var canvas = document.querySelector("canvas"),
+      context = canvas.getContext("2d")
+
   var nodes = [],
       links = [],
       data = {},
       originalData = {};
 
-  var svg = d3.select("svg")
+  var canvas = d3.select("canvas")
       .attr("id", "screen")
       .attr("width", width)
       .attr("height", height);
 
-  var startYear = 1950;
+  var startYear = 1850;
   var year = startYear;
   var speed = 1000;
   var filters = $('#search').val();
 
   var simulation = null;
   var g = null;
+  var users = [];
 
   initializeNav();
 
@@ -34,6 +38,10 @@ function start() {
 
     data = response;
     originalData = jQuery.extend({}, response);
+
+    users = d3.nest()
+      .key(function(d) { return d.id; })
+      .entries(data.nodes);
 
     data = prepareData(data, filters);
 
@@ -133,7 +141,7 @@ function start() {
   function resizeScreen() {
     height = window.innerHeight;
     width = window.innerWidth;
-    svg.attr("height", height)
+    canvas.attr("height", height)
       .attr("width", width);
     console.log(width/2, height/2);
   }
@@ -153,7 +161,7 @@ function start() {
 
   function restart() {
     updateYear(year);
-    updateFilter();
+    //updateFilter();
     // Apply the general update pattern to the nodes.
     node = node.data(nodes, function(d) { return d.id;});
     node.exit().remove();
@@ -187,6 +195,23 @@ function start() {
   }
 
   function ticked() {
+
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+
+    data.links.forEach(drawLink);
+
+    users.forEach(function(user) {
+      context.beginPath();
+      user.values.forEach(drawNode);
+      context.fillStyle = color(user.values[0].lastName);
+      context.fill();
+    });
+
+    context.restore();
+
+    /*
     node.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
 
@@ -194,6 +219,7 @@ function start() {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
+    */
   }
 
   function inFilter(node, filterItems) {
@@ -248,4 +274,17 @@ function start() {
     return -1;
   }
 
+  function drawLink(d) {
+    context.beginPath();
+    context.moveTo(d.source.x, d.source.y);
+    context.lineWidth = 1;
+    context.strokeStyle = d.color;
+    context.lineTo(d.target.x, d.target.y);
+    context.stroke();
+  }
+
+  function drawNode(d) {
+    context.moveTo(d.x + 3, d.y);
+    context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
+  }
 }
