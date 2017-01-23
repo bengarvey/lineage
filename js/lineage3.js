@@ -22,6 +22,9 @@ function start() {
   var speed = 1000;
   var filters = $('#search').val();
 
+  var simulation = null;
+  var g = null;
+
   initializeNav();
 
   d3.json("data/converted.json", function(error, response) {
@@ -35,16 +38,9 @@ function start() {
     nodes = []; //data.nodes;
     links = []; // data.links;
 
-    var simulation = d3.forceSimulation(nodes)
-      .force("charge", d3.forceManyBody(1))
-      .force("centering", d3.forceCenter(0,0))
-      .force("link", d3.forceLink(links))
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
-      .alphaTarget(1)
-      .on("tick", ticked);
+    simulation = getSimulation(nodes, links);
 
-    var g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
+    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
         link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
         node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
 
@@ -52,49 +48,55 @@ function start() {
     console.timeEnd('init');
     var cancel = null;
 
-    cancel = d3.interval(function() {
+    cancel = d3.interval(loop, speed, d3.now());
+
+    function loop() {
       console.time("loop 10");
-      year += 1;
+      year = advanceYear(year);
 
       console.time("loop 20");
-      // push any new ones we need
-      data.nodes.forEach( function(n) {
-        if (n.birthDate != null) {
-          var nodeYear = n.birthDate.substring(0,4);
-          if (nodes.indexOf(n) == -1 && nodeYear <= year) {
-            nodes.push(n);
-          }
-          else if (nodes.indexOf(n) > -1 && (nodeYear > year)) {
-            nodes.splice(nodes.indexOf(n), 1);
-          }
-        }
-      });
+      data.nodes.forEach(addRemoveNode);
 
       console.time("loop 25");
       // pop off any ones we don't
       visibleNodeMap = nodes.map(function(node) { return node.id });
 
       console.time("loop 30");
-      // Only show links with both source and target
-      data.links.forEach( function(l) {
-        if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
-          links.push(l);
-        }
-        else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
-          links.splice(links.indexOf(l), 1);
-        }
-      });
-
+      data.links.forEach(addRemoveLinks);
       console.time("loop 40");
       restart();
-      //clearInterval(cancel);
       console.timeEnd("loop 10");
       console.timeEnd("loop 20");
       console.timeEnd("loop 25");
       console.timeEnd("loop 30");
       console.timeEnd("loop 40");
       console.log("--------");
-    }, speed, d3.now());
+    }
+
+    function advanceYear(year) {
+      return year + 1;
+    }
+
+    function addRemoveNode(n) {
+      if (n.birthDate != null) {
+        var nodeYear = n.birthDate.substring(0,4);
+        if (nodes.indexOf(n) == -1 && nodeYear <= year) {
+          nodes.push(n);
+        }
+        else if (nodes.indexOf(n) > -1 && (nodeYear > year)) {
+          nodes.splice(nodes.indexOf(n), 1);
+        }
+      }
+    }
+
+    function addRemoveLinks(l) {
+      if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
+        links.push(l);
+      }
+      else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
+        links.splice(links.indexOf(l), 1);
+      }
+    }
 
     function prepareData(data, filters) {
       data.nodes = data.nodes.filter( function(n) {
@@ -109,6 +111,18 @@ function start() {
       });
 
       return data;
+    }
+
+    function getSimulation(nodes, links) {
+      var simulation = d3.forceSimulation(nodes)
+        .force("charge", d3.forceManyBody(1))
+        .force("centering", d3.forceCenter(0,0))
+        .force("link", d3.forceLink(links))
+        .force("x", d3.forceX())
+        .force("y", d3.forceY())
+        .alphaTarget(1)
+        .on("tick", ticked);
+      return simulation;
     }
 
     function updateYear(year) {
