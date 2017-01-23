@@ -30,17 +30,8 @@ function start() {
     // Filter out nodes we don't need to look at for now
     data = response;
     originalData = jQuery.extend({}, response);
-    data.nodes = data.nodes.filter( function(n) {
-      filterItems = filters.split(" ");
-      return inFilter(n, filterItems);
-    });
 
-    // link directly instead of using indices
-    data.links.forEach( function(link, index) {
-      link.source = getNodeById(data.nodes, link.source);
-      link.target = getNodeById(data.nodes, link.target);
-    });
-
+    data = prepareData(data, filters);
     nodes = []; //data.nodes;
     links = []; // data.links;
 
@@ -104,6 +95,21 @@ function start() {
       console.timeEnd("loop 40");
       console.log("--------");
     }, speed, d3.now());
+
+    function prepareData(data, filters) {
+      data.nodes = data.nodes.filter( function(n) {
+        filterItems = filters.split(" ");
+        return inFilter(n, filterItems);
+      });
+
+      // link directly instead of using indices
+      data.links.forEach( function(link, index) {
+        link.source = getNodeById(data.nodes, link.source);
+        link.target = getNodeById(data.nodes, link.target);
+      });
+
+      return data;
+    }
 
     function updateYear(year) {
       $('#year').html(year)
