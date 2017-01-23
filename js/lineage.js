@@ -1,369 +1,254 @@
 function start() {
 
-  var zoomLevel = 1;
-  var slider = null;
-  var width = window.innerWidth / zoomLevel,
-      height = window.innerHeight / zoomLevel;
-  //var fill = d3.scale.category20();
-  var startYear = 1900;
-  var currentYear = startYear;
-  var lastYear = 2014;
-  var timeVector = 0;
-  var visibleNodes = [];
-  var allNodes = [];
-  var tickDuration = 1000;
+  console.time('init');
 
-  var json = $.getJSON("data/people.json", function(json) {
-    allLinks = json.links;
-    allNodes = json.nodes;
+  var svg = d3.select("svg");
+      width = window.innerWidth,
+      height = window.innerHeight,
+      color = d3.scaleOrdinal(d3.schemeCategory20);
 
-    startYears = allNodes.map( function(d) { return d.birthDate; } )
-    startYear  = Math.min.apply(Math, startYears);
-    currentYear = startYear;
+  var nodes = [],
+      links = [],
+      data = {},
+      originalData = {};
 
-    // Initialize the slider
-    /*
-    d3.select('#timeline').call( 
-      slider = d3.slider().axis(true).min(startYear).max(lastYear).step(1)
-        .value(currentYear)
-        .on("slide", function(event, value) {
-          currentYear = value;
-        })
-    );
-    */
-
-    // link directly instead of using indices
-    allLinks.forEach( function(link, index) {
-        // Check to see if these links point to valid nodes
-        if (typeof(allNodes[link.target]) !== "undefined" && (typeof(allNodes[link.source])) !== "undefined") {
-            link.source = allNodes[link.source];
-            link.target = allNodes[link.target];
-        }
-    });
-
-  });
-  
-  var visibleLinks = [];
-  var allLinks = [];
-  allNodes.forEach( function(node, index) {
-      if (node.year <= startYear) {
-          visibleNodes.push(node);
-      }
-  });
-      
-  var colors = d3.scaleOrdinal(d3.schemeCategory20);
-var force = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
-
-  force
-    .nodes(visibleNodes)
-    .on("tick", tick);
-
-  force
-    .force("link")
-    .links(visibleLinks);
-
-/*
-  var force = d3.layout.force()
-      .size([width, height])
-      .nodes(visibleNodes) // initialize with a single node
-      .links(visibleLinks)
-      .linkDistance(30)
-      .charge(-60)
-      .on("tick", tick);
-*/
-
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("svg")
       .attr("id", "screen")
       .attr("width", width)
       .attr("height", height);
 
-  svg.append("rect")
-      .attr("width", width)
-      .attr("height", height);
+  var startYear = 1950;
+  var year = startYear;
+  var speed = 1000;
+  var filters = $('#search').val();
 
-  console.log(force.nodes);
-  var nodes = force.nodes(),
-      links = allLinks.slice(),
-      node = svg.selectAll(".node"),
-      link = svg.selectAll(".link");
+  var simulation = null;
+  var g = null;
 
-  var cursor = svg.append("circle")
-      .attr("r", 30)
-      .attr("transform", "translate(-100,-100)")
-      .attr("class", "cursor");
+  initializeNav();
 
-  var feed = [];
-  var addedNodeThisYear = false;
-  var lockSearch = true;
+  d3.json("data/converted.json", function(error, response) {
+    if (error) throw error;
 
-  restart();
+    // Filter out nodes we don't need to look at for now
+    data = response;
+    originalData = jQuery.extend({}, response);
 
-  var stopCode = setInterval(function() {
-  
-  // Check to see if we should add any new nodes that aren't already in there
-  allNodes.forEach( function(node, index) {
-          if (node.birthDate != "" && node.birthDate <= currentYear && nodes.indexOf(node) == -1 && (!lockSearch || allowNodeFromSearch(node))) {
-            nodes.push(node);
-  
-            if (!addedNodeThisYear) {
-              //addToFeed( { name: currentYear, lastName: "black" } );
-              addedNodeThisYear = true;
-            }
-            
-          }
-          else if ((node.birthDate > currentYear || (lockSearch && !allowNodeFromSearch(node))) && nodes.indexOf(node) != -1) {
-            nodes.splice( nodes.indexOf(node), 1);
-          }
+    data = prepareData(data, filters);
+    nodes = []; //data.nodes;
+    links = []; // data.links;
+
+    simulation = getSimulation(nodes, links);
+
+    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
+        link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
+        node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
+
+    restart();
+    console.timeEnd('init');
+    var cancel = null;
+
+    cancel = d3.interval(loop, speed, d3.now());
+
+    function loop() {
+      console.time("loop 10");
+      year = advanceYear(year);
+
+      console.time("loop 20");
+      data.nodes.forEach(addRemoveNode);
+
+      console.time("loop 25");
+      // pop off any ones we don't
+      visibleNodeMap = nodes.map(function(node) { return node.id });
+
+      console.time("loop 30");
+      data.links.forEach(addRemoveLinks);
+      console.time("loop 40");
+      restart();
+      console.timeEnd("loop 10");
+      console.timeEnd("loop 20");
+      console.timeEnd("loop 25");
+      console.timeEnd("loop 30");
+      console.timeEnd("loop 40");
+      console.log("--------");
+    }
+
+    function advanceYear(year) {
+      return year + 1;
+    }
+
+    function addRemoveNode(n) {
+      if (n.birthDate != null) {
+        var nodeYear = n.birthDate.substring(0,4);
+        if (nodes.indexOf(n) == -1 && nodeYear <= year) {
+          nodes.push(n);
+        }
+        else if (nodes.indexOf(n) > -1 && (nodeYear > year)) {
+          nodes.splice(nodes.indexOf(n), 1);
+        }
+      }
+    }
+
+    function addRemoveLinks(l) {
+      if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
+        links.push(l);
+      }
+      else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
+        links.splice(links.indexOf(l), 1);
+      }
+    }
+
+    function prepareData(data, filters) {
+      data.nodes = data.nodes.filter( function(n) {
+        filterItems = filters.split(" ");
+        return inFilter(n, filterItems);
       });
 
-  allLinks.forEach( function(link, index) {
-      
-      // Should this link be visible yet?
-      if (nodes.indexOf(link.source) != -1 && nodes.indexOf(link.target) != -1 && links.indexOf(link) == -1) {
-        links.push(link);   
-      } 
-      else if ( (nodes.indexOf(link.source) == -1 || nodes.indexOf(link.target) == -1) && links.indexOf(link) != -1) {
-        // This link should be removed now
-        links.splice(links.indexOf(link, 1)); 
+      // link directly instead of using indices
+      data.links.forEach( function(link, index) {
+        link.source = getNodeById(data.nodes, link.source);
+        link.target = getNodeById(data.nodes, link.target);
+      });
+
+      return data;
+    }
+
+    function getSimulation(nodes, links) {
+      var simulation = d3.forceSimulation(nodes)
+        .force("charge", d3.forceManyBody(1))
+        .force("centering", d3.forceCenter(0,0))
+        .force("link", d3.forceLink(links))
+        .force("x", d3.forceX())
+        .force("y", d3.forceY())
+        .alphaTarget(1)
+        .on("tick", ticked);
+      return simulation;
+    }
+
+    function updateYear(year) {
+      $('#year').html(year)
+        .css('left', width/2 - 105)
+        .css('top', height - 140);
+    }
+
+    function resizeScreen() {
+      height = window.innerHeight;
+      width = window.innerWidth;
+      svg.attr("height", height)
+        .attr("width", width);
+      console.log(width/2, height/2);
+    }
+
+    function updateFilter() {
+      if ($('#search').val() != filters) {
+        filters = $('#search').val();
+        nodes.length = 0;
+        links.length = 0;
+        filterItems = filters.split(" ");
+        for (var i=0; i<originalData.nodes.length; i++) {
+          if (inFilter(originalData.nodes[i], filterItems)) {
+            nodes.push(originalData.nodes[i]);
+          }
+        }
       }
-  });
-      currentYear += timeVector;
-      addedNodeThisYear = false;
-      //slider.slide_to(currentYear);
-     
-      if (currentYear < 2020) {
-        restart();
-      }
-      else {
-        force.stop();
-        clearInterval(stopCode);
-      }
-  }, tickDuration);
+    }
 
-  function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
-        .style("stroke", function(d) { return d.color; });
-
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .style("stroke-width", 1)
-        .style("fill", function(d) { 
-            return colors(d.lastName);
-        });
-
-    height = window.innerHeight / zoomLevel;
-    width = window.innerWidth / zoomLevel;
-    svg.attr("height", height)
-      .attr("width", width);
-
-    $('#year').html(currentYear)
-      .css('left', width/2 - 105)
-      .css('top', height - 140);
-
-  }
-
-  function restart() {
-    link = link.data(links);
-
-    link.enter().insert("line", ".node")
-        .attr("class", "link");
-
-    link.exit().remove();
-    node = node.data(nodes);
-
-    node.enter()
-        .insert("circle")
-        .attr("class", "node")
+    function restart() {
+			updateYear(year);
+      updateFilter();
+      // Apply the general update pattern to the nodes.
+      node = node.data(nodes, function(d) { return d.id;});
+      node.exit().remove();
+      node = node.enter()
+        .append("circle")
+        .attr("fill", function(d) { return color(d.lastName); })
         .attr("r", 5)
-        .on("mouseover", function(d) { 
+        .attr("x", width/2)
+        .attr("y", height/2)
+        .merge(node)
+        .call(d3.drag()
+          .on("start", function(d) {dragstarted(d, simulation);})
+          .on("drag", dragged)
+          .on("end", function(d) {dragended(d, simulation);}));
 
-          d3.select(this).transition().duration(100).attr('r',10);
+      node.append("title")
+        .text(function(d) { return d.name; });
 
-          d3.select('#memberDetails')
-            .transition()
-            .duration(500)
-            .style('display', 'block')
-            .style('top', d.y - 20)
-            .style('left', d.x + 20);
+      // Apply the general update pattern to the links.
+      link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
+      link.exit().remove();
+      link = link.enter()
+        .append("line")
+        .style("stroke-width", 1)
+        .style("stroke", function(d) { return d.color; })
+        .merge(link);
 
-          d3.select('#name').html(d.name + "<br><span class='birthDate'>" + d.birthDate + "</span>");
-        })
-        .on("mouseout", function(d) {
-          d3.select(this).transition().duration(100).attr('r', 5);
-          d3.select('#memberDetails').style('display', 'none');            
-        })
-        .call(d3.drag())
-
-    if ($('#search').val() != "") { 
-      checkForSearch();
+      // Update and restart the simulation.
+      simulation.nodes(nodes);
+      simulation.force("link").links(links);
     }
-    node.exit().attr('opacity', 1).transition().duration(500).attr('opacity', 0).remove();
-    force.restart();
-  }
 
-  function addToFeed(node) {
-    
-    d3.selectAll('ul')
-      .append('li')
-      .text(node.name)
-      .style('color', '#FFFFFF')
-      .transition()
-      .duration(500)
-      .style('color', colors(node.lastName));
-  }
+    function ticked() {
+      node.attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
 
-var audio = new Audio('music/graph.mp3');
-$('#timeNavigation').find('#firstButton')
-  .click(function() {
-      currentYear = startYear;
-      timeVector = 0;
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
     }
-  );
+  });
 
-$('#timeNavigation').find('#previousButton')
-  .click(function() {
-      timeVector = 0;
-      currentYear--;
+  function inFilter(node, filterItems) {
+    if (filterItems.length == 0) {
+      return true;
     }
-  );
-
-$('#timeNavigation').find('#playButton')
-  .click(function() {
-      timeVector = 1;
-      if ($('#musicOn').is(":checked")) { 
-        audio.play();  
+    var regex = null;
+    for(i=0; i<filterItems.length; i++) {
+      regex = new RegExp(filterItems[i], 'ig');
+      if (node.name.match(regex)) {
+        return true;
       }
     }
-  );
-
-$('#timeNavigation').find('#pauseButton')
-  .click(function() {
-      force.stop();
-      timeVector = 0;
-      audio.pause();
-    }
-  );
-
-$('#timeNavigation').find('#nextButton')
-  .click(function() {
-      timeVector = 0;
-      currentYear++;
-    }
-  );
-
-$('#timeNavigation').find('#lastButton')
-  .click(function() {
-      currentYear = 2014;
-      timeVector = 0;
-    }
-  );
-
-$('#timeNavigation').find('#search')
-  .on("keyup", function() {
-      checkForSearch();
-    }
-  );
-
-$('#lockSearch').on("change", function(event) {
-    lockSearch = !lockSearch;
-});  
-
-var nightMode = false;
-$('#nightModeOn').on("change", function(event) {
-    nightMode = !nightMode;
-    body = d3.select('body');
-
-    if (nightMode) {
-      body.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
-      d3.select('#year').style('color', '#EEE');
-    }
-    else {
-      body.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
-      d3.select('#year').style('color', '#222');
-    }
-});  
-
-
-d3.select('#timeNavigation')
-  .on('mouseover', function(d) {
-    d3.select(this)
-    .transition()
-    .duration(500)
-    .style("left", 0);
-  })
-  .on('mouseout', function(d) {
-    d3.select(this)
-    .transition()
-    .duration(500)
-    .style("left", -890);
-  });
-
-function allowNodeFromSearch(node) {
-  var searchText = $('#search').val();
-
-  if (typeof(searchText) == 'undefined' || searchText == "") {
-    searchText = "";
+    return false;
   }
 
-  if (searchText == "") {
-    return true;
+  function dragstarted(d, sim) {
+    if (!d3.event.active) sim.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
   }
 
-  // Split the string into an array if there are spaces
-  // since we may be search for mulitple values
-  var searchList = searchText.split(" ");
-  var found = false;
-  searchList.forEach( function(item) {
-    if (item != "" && node.name.indexOf(item) != -1) {
-      found = true;
-    }
-  });
-  return found;
-}
-
-function checkForSearch() {
-  // Grab the search string from the input form
-  var searchText = $('#search').val();
-
-  if (typeof(searchText) == 'undefined') {
-    searchText = "";
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
   }
 
-  if (searchText == "") {
-    return true;
+  function dragended(d, sim) {
+    if (!d3.event.active) sim.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
   }
 
-  // Split the string into an array if there are spaces
-  // since we may be search for mulitple values
-  var searchList = searchText.split(" ");
+  function initializeNav() {
+    d3.select('#timeNavigation')
+      .on('mouseover', function(d) {
+        d3.select('#timeNavigation')
+          .style("left", 0);
+      })
+      .on('mouseout', function(d) {
+        d3.select('#timeNavigation')
+          .style("left", -890);
+      });
+  }
 
-  // Search through all nodes for this string
-  node.attr('opacity', function(d) {            
-    var found = false;
-    searchList.forEach( function(item) {
-      if (item != "" && d.name.indexOf(item) != -1) {
-        found = true;
+  function getNodeById(nodes, id) {
+    for(i=0; i<nodes.length; i++) {
+      if (nodes[i].id === id) {
+        return nodes[i];
       }
-    });
-    return found ? 1 : 0.3;
-  });
-  
-  link.attr('opacity', function(d) {
-    var found = false;
-    searchList.forEach( function(item) {
-      if (item != "" && d.source.name.indexOf(item) != -1 || d.target.name.indexOf(item) != -1) { 
-        found = true;
-      }
-    });
-    return found ? 1 : 0.3;
-  });
-
-}
+    }
+    return -1;
+  }
 
 }
