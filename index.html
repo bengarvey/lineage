@@ -13,13 +13,14 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="js/lineage.js"></script>
 
-  <script src="https://d3js.org/d3-color.v1.min.js"></script>
-  <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
-  <script src="https://d3js.org/d3-ease.v1.min.js"></script>
-  <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-  <script src="https://d3js.org/d3-selection.v1.min.js"></script>
-  <script src="https://d3js.org/d3-timer.v1.min.js"></script>
-  <script src="https://d3js.org/d3-transition.v1.min.js"></script>
+  <script>
+    var lineage = null;
+    function start() {
+      lineage = new Lineage;
+      lineage();
+    }
+
+  </script>
 
 </head>
 <body onLoad="start()">
@@ -47,12 +48,20 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <button class="btn btn-default" id="firstButton">First</button> 
-        <button class="btn btn-default" id="previousButton">Previous</button> 
-        <button class="btn btn-default" id="playButton">Play</button> 
-        <button class="btn btn-default" id="pauseButton">Pause</button> 
-        <button class="btn btn-default" id="nextButton">Next</button> 
-        <button class="btn btn-default" id="lastButton">Last</button> 
+        <button class="btn btn-default" id="firstButton"
+          onClick="lineage.setYear(1800)">First</button>
+        <button class="btn btn-default" id="previousButton"
+          onClick="lineage.moveYear(-1)">Previous</button>
+        <button class="btn btn-default" id="playButton"
+          onClick="lineage.setYearIncrement(-1)">Rewind</button>
+        <button class="btn btn-default" id="playButton"
+          onClick="lineage.setYearIncrement(1)">Play</button>
+        <button class="btn btn-default" id="pauseButton"
+          onClick="lineage.setYearIncrement(0)">Pause</button>
+        <button class="btn btn-default" id="nextButton"
+          onClick="lineage.moveYear(1)">Next</button>
+        <button class="btn btn-default" id="lastButton"
+          onClick="lineage.setYear(2014)">Last</button>
       </div>
     </div>
     <div class="row">
