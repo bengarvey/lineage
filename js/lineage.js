@@ -3,6 +3,7 @@ function Lineage() {
   function lin() {
     console.log("Initializing");
     initNightMode();
+    initSlider();
   }
 
   console.time('init');
@@ -34,6 +35,7 @@ function Lineage() {
 
   var audio = new Audio('music/graph.mp3');
   var startYear = 1800;
+  var endYear = 2014;
   var year = startYear;
   var speed = 1000;
   var yearIncrement = 0;
@@ -106,6 +108,7 @@ function Lineage() {
   function loop() {
     console.time("loop 10");
     year = advanceYear(year);
+    updateSlider();
 
     console.time("loop 20");
     data.nodes.forEach(addRemoveNode);
@@ -124,7 +127,23 @@ function Lineage() {
   }
 
   function advanceYear(year) {
-    return year + yearIncrement;
+    year += yearIncrement;
+    if (year >= endYear) {
+      year = endYear;
+    }
+    return year;
+  }
+
+  function updateSlider() {
+    position = ((year - startYear) / (endYear - startYear)) * 100;
+    $("#yearSlider").val(position);
+  }
+
+  function initSlider() {
+    $('#yearSlider').on('change', function(){
+      position = $("#yearSlider").val();
+      year = Math.round(((endYear - startYear) * (position/100)) + startYear);
+    });
   }
 
   function addRemoveNode(n) {
