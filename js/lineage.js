@@ -32,9 +32,10 @@ function Lineage() {
       .attr("width", width)
       .attr("height", height);
 
+  var audio = new Audio('music/graph.mp3');
   var startYear = 1800;
   var year = startYear;
-  var speed = 100;
+  var speed = 1000;
   var yearIncrement = 0;
   var filters = $('#search').val();
   var searchRadius = 40;
@@ -363,6 +364,15 @@ function Lineage() {
     });
   }
 
+  lin.playMusic = function() {
+    if ($('#musicOn').is(":checked")) {
+      audio.play();
+    }
+  }
+
+  lin.pauseMusic = function() {
+    audio.pause();
+  }
 
   lin.setYear = function(value) {
     year = value;
