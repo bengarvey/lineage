@@ -2,6 +2,7 @@ function Lineage() {
 
   function lin() {
     console.log("Initializing");
+    initNightMode();
   }
 
   console.time('init');
@@ -19,6 +20,7 @@ function Lineage() {
                   .attr('height', height)
                   .node();
   var context = canvas.getContext('2d');
+  var nightMode = false;
 
   var nodes = [],
       links = [],
@@ -344,6 +346,23 @@ function Lineage() {
     context.moveTo(d.x + 3, d.y);
     context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
   }
+
+  function initNightMode() {
+    $('#nightModeOn').on("change", function(event) {
+        nightMode = !nightMode;
+        body = d3.select('body');
+
+        if (nightMode) {
+          body.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
+          d3.select('#year').style('color', '#EEE');
+        }
+        else {
+          body.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
+          d3.select('#year').style('color', '#222');
+        }
+    });
+  }
+
 
   lin.setYear = function(value) {
     year = value;
