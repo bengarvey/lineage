@@ -109,6 +109,7 @@ function Lineage() {
     console.time("loop 10");
     year = advanceYear(year);
     updateSlider();
+    data = updateFilter();
 
     console.time("loop 20");
     data.nodes.forEach(addRemoveNode);
@@ -132,6 +133,15 @@ function Lineage() {
       year = endYear;
     }
     return year;
+  }
+
+  function updateFilter() {
+    if (filters != $("#search").val()) {
+      filters = $("#search").val();
+
+      data = prepareData(jQuery.extend({}, originalData), filters);
+    }
+    return data;
   }
 
   function updateSlider() {
@@ -233,22 +243,8 @@ function Lineage() {
     console.log(width/2, height/2);
   }
 
-  function updateFilter() {
-    if ($('#search').val() != filters) {
-      filters = $('#search').val();
-      data.nodes.length = 0;
-      filterItems = filters.split(" ");
-      for (var i=0; i<originalData.nodes.length; i++) {
-        if (inFilter(originalData.nodes[i], filterItems)) {
-          data.nodes.push(originalData.nodes[i]);
-        }
-      }
-    }
-  }
-
   function restart() {
     updateYear(year);
-    //updateFilter();
     // Apply the general update pattern to the nodes.
     /*
     node = node.data(nodes, function(d) { return d.id;});
