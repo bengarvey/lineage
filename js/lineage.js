@@ -44,7 +44,8 @@ function Lineage() {
   var simulation = null;
   var g = null;
   var users = [];
-
+  var interval = null;
+  var forceRefresh = true;
   initializeNav();
 
   d3.json("data/converted.json", go);
@@ -52,8 +53,20 @@ function Lineage() {
   function go(error, response) {
     if (error) throw error;
 
+    init(response);
+    forceRefresh = true;
+    if (interval != null) {
+      interval.stop();
+    }
+    interval = d3.interval(loop, speed, d3.now());
+  }
+
+  function init(response) {
+    nodes = [];
+    links = [];
+
+    originalData = jQuery.extend(true, {}, response);
     data = response;
-    originalData = jQuery.extend({}, response);
 
     users = d3.nest()
       .key(function(d) { return d.id; })
@@ -61,7 +74,6 @@ function Lineage() {
 
     data = prepareData(data, filters);
 
-    //simulation = getSimulation(nodes, links);
     canvas
       .on("mousemove", mousemoved)
       .call(d3.drag()
@@ -80,7 +92,6 @@ function Lineage() {
       .alphaTarget(1)
       .on("tick", ticked);
 
-    d3.interval(loop, speed, d3.now());
 
     function dragsubject() {
       console.log("started");
@@ -101,30 +112,37 @@ function Lineage() {
     node = canvas.selectAll(".node");
     link = canvas.selectAll(".link");
     restart();
-    console.timeEnd('init');
 
+    console.timeEnd('init');
+  }
+
+  function setForceRefresh(value) {
+    forceRefresh = value;
   }
 
   function loop() {
     console.time("loop 10");
+    var oldYear = year;
     year = advanceYear(year);
     updateSlider();
-    data = updateFilter();
+    updateFilter();
+
+    if (year != oldYear) {
+      forceRefresh = true;
+    }
 
     console.time("loop 20");
-    data.nodes.forEach(addRemoveNode);
+    if (forceRefresh) {
+      data.nodes.forEach(addRemoveNode);
+      data.links.forEach(addRemoveLink);
+    }
 
-    console.time("loop 30");
-    data.links.forEach(addRemoveLink);
-
-    console.time("loop 40");
     restart();
-
     console.timeEnd("loop 10");
     console.timeEnd("loop 20");
-    console.timeEnd("loop 30");
-    console.timeEnd("loop 40");
+    console.log("forceRefresh: " + forceRefresh);
     console.log("--------");
+    forceRefresh = false;
   }
 
   function advanceYear(year) {
@@ -138,10 +156,8 @@ function Lineage() {
   function updateFilter() {
     if (filters != $("#search").val()) {
       filters = $("#search").val();
-
-      data = prepareData(jQuery.extend({}, originalData), filters);
+      go(null, originalData);
     }
-    return data;
   }
 
   function updateSlider() {
@@ -179,6 +195,9 @@ function Lineage() {
 
   function prepareData(data, filters) {
     filterItems = filters.split(" ");
+    filterItems = filterItems.filter( function(i) {
+      return i.length > 0;
+    });
     for(var i=0; i<data.nodes.length; i++) {
       if (!inFilter(data.nodes[i], filterItems)) {
         data.nodes.splice(i,1);
@@ -191,7 +210,6 @@ function Lineage() {
       link.source = getNodeById(data.nodes, link.source);
       link.target = getNodeById(data.nodes, link.target);
     });
-
     return data;
   }
 
@@ -391,14 +409,17 @@ function Lineage() {
 
   lin.setYear = function(value) {
     year = value;
+    forceRefresh = true;
   }
 
   lin.moveYear = function(value) {
     year += value
+    forceRefresh = true;
   }
 
   lin.setYearIncrement = function(value) {
     yearIncrement = value;
+    forceRefresh = true;
   }
 
   return lin;
