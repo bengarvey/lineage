@@ -20,11 +20,12 @@ nodeFilter = (nodes) ->
   list = []
   for node in nodes
     item =
-      name: node.Name
-      gender: node.Gender
-      lastName: if node.Name.match(",") then node.Name.split(",")[0] else node.Name
-      birthYear: +node.Birthdate
-      deathYear: +node.Deathdate
+      id: +node.id
+      name: node.name
+      gender: node.gender
+      lastName: if node.name.match(",") then node.name.split(",")[0] else node.name
+      birthDate: node.birthDate
+      deathDate: node.deathDate
     list.push(item)
   return list
 
@@ -42,31 +43,50 @@ buildLinks = (list) ->
     links = links.concat(getLinkSet(item))
   return links
 
-getLinkSet = (item) ->
+buildLookupTable = (list) ->
+  lookup = {}
+  for item in list
+    lookup[item.id] = item
+  return lookup
+
+getLinkSet = (item, lookup) ->
   spouse =
-    source: +item.ID
-    target: +item.SpouseID
+    source: +item.id
+    target: if item.spouseId? then +item.spouseId else null
     color: SPOUSE_COLOR
     relation: 'spouse'
   mother =
-    source: +item.ID
-    target: +item.MotherID
+    source: +item.id
+    target: if item.motherId? then +item.motherId else null
     color: MOTHER_COLOR
     relation: 'mother'
   father =
-    source: +item.ID
-    target: +item.FatherID
+    source: +item.id
+    target: if item.fatherId? then +item.fatherId else null
     color: FATHER_COLOR
     relation: 'father'
 
-  return [spouse, mother, father]
+  links = validateLinkSet([spouse, mother, father])
+
+  return links
+
+validateLinkSet = (set) ->
+  validatedSet = (item for item in set when validatedLink(item))
+  return validatedSet
+
+validatedLink = (link) ->
+  link.source? and link.target? and link.relation?
 
 loadData = (callback) ->
   fs.readFile FAMILY_CSV_FILE, 'utf-8', (err, data) ->
     console.log "Loaded family data..."
+
     csvParse data, {delimiter: ','}, (err, result) ->
       family = convertArrayToObjectList(result)
       callback null, family
+
+cleanseCsv = (data) ->
+  if data is '' then null else data
 
 # Assumes a header row for attribute names
 convertArrayToObjectList = (arr) ->
@@ -75,7 +95,7 @@ convertArrayToObjectList = (arr) ->
   for index in [1..arr.length-1]
     ob = {}
     for headerIndex in [0..header.length-1]
-      ob[header[headerIndex]] = arr[index][headerIndex]
+      ob[header[headerIndex]] = cleanseCsv(arr[index][headerIndex])
     list.push ob
   return list
 

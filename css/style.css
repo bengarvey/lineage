@@ -54,7 +54,7 @@ svg {
 #timeNavigation {
   position: absolute;
   top: 0;
-  left: 0;
+  left: -895px;
   width: 900px;
   padding: 10px;
   padding-left: 30px;
@@ -99,4 +99,12 @@ rect {
 
 .link {
   stroke: #999;
+}
+
+.slider {
+  width: 100%;
+}
+
+#timeNavigation {
+  left: 0;
 }

@@ -5,17 +5,24 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
-  <link rel="stylesheet" type="text/css" href="css/d3.slider.css">
 
-  <script src="js/d3.v3.min.js"></script>
-  <script src="js/d3.slider.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/lineage.js"></script>
 
+  <script>
+    var lineage = null;
+    function start() {
+      lineage = new Lineage;
+      lineage();
+    }
+
+  </script>
+
 </head>
 <body onLoad="start()">
-  <div id="year">2015</div>
+  <div id="year"></div>
   <div id="viz"></div>
   <div id="timeNavigation">
     <div class="row">
@@ -39,17 +46,25 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <button class="btn btn-default" id="firstButton">First</button> 
-        <button class="btn btn-default" id="previousButton">Previous</button> 
-        <button class="btn btn-default" id="playButton">Play</button> 
-        <button class="btn btn-default" id="pauseButton">Pause</button> 
-        <button class="btn btn-default" id="nextButton">Next</button> 
-        <button class="btn btn-default" id="lastButton">Last</button> 
+        <button class="btn btn-default" id="firstButton"
+          onClick="lineage.setYear(1800)">First</button>
+        <button class="btn btn-default" id="previousButton"
+          onClick="lineage.moveYear(-1)">Previous</button>
+        <button class="btn btn-default" id="playButton"
+          onClick="lineage.setYearIncrement(-1)">Rewind</button>
+        <button class="btn btn-default" id="playButton"
+          onClick="lineage.setYearIncrement(1);lineage.playMusic();">Play</button>
+        <button class="btn btn-default" id="pauseButton"
+          onClick="lineage.setYearIncrement(0);lineage.pauseMusic();">Pause</button>
+        <button class="btn btn-default" id="nextButton"
+          onClick="lineage.moveYear(1)">Next</button>
+        <button class="btn btn-default" id="lastButton"
+          onClick="lineage.setYear(2014)">Last</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div id="timeline" class="d3-slider d3-slider-horizontal"></div>
+        <input type="range" id="yearSlider" class="slider">
       </div>
     </div>
     <div class="row">
@@ -58,17 +73,18 @@
           <span class="input-group-addon">
             <input type="checkbox" id="lockSearch" checked="">
           </span>
-          <input type="text" id="search" class="form-control input-lg"/>
+          <input id="search" class="form-control input-lg"
+            value="">
         </div>
       </div>
     </div>
     <div class="row">
     </div>
   </div>
+  <canvas height="1000" width="1000"></canvas>
   <div id="memberDetails">
     <div id="name"></div>
   </div>
-
 </body>
 </html>
 
