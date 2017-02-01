@@ -20,12 +20,12 @@ nodeFilter = (nodes) ->
   list = []
   for node in nodes
     item =
-      ID: +node.ID
-      name: node.Name
-      gender: node.Gender
-      lastName: if node.Name.match(",") then node.Name.split(",")[0] else node.Name
-      birthYear: +node.Birthdate
-      deathYear: +node.Deathdate
+      id: +node.id
+      name: node.name
+      gender: node.gender
+      lastName: if node.name.match(",") then node.name.split(",")[0] else node.name
+      birthDate: node.birthDate
+      deathDate: node.deathDate
     list.push(item)
   return list
 
@@ -46,23 +46,23 @@ buildLinks = (list) ->
 buildLookupTable = (list) ->
   lookup = {}
   for item in list
-    lookup[item.ID] = item
+    lookup[item.id] = item
   return lookup
 
 getLinkSet = (item, lookup) ->
   spouse =
-    source: +item.ID
-    target: if item.SpouseID? then item.SpouseId else null
+    source: +item.id
+    target: if item.spouseId? then +item.spouseId else null
     color: SPOUSE_COLOR
     relation: 'spouse'
   mother =
-    source: +item.ID
-    target: if item.MotherID? then item.MotherID else null
+    source: +item.id
+    target: if item.motherId? then +item.motherId else null
     color: MOTHER_COLOR
     relation: 'mother'
   father =
-    source: +item.ID
-    target: if item.FatherID? then item.FatherID else null
+    source: +item.id
+    target: if item.fatherId? then +item.fatherId else null
     color: FATHER_COLOR
     relation: 'father'
 
@@ -80,6 +80,7 @@ validatedLink = (link) ->
 loadData = (callback) ->
   fs.readFile FAMILY_CSV_FILE, 'utf-8', (err, data) ->
     console.log "Loaded family data..."
+
     csvParse data, {delimiter: ','}, (err, result) ->
       family = convertArrayToObjectList(result)
       callback null, family

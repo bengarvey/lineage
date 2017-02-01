@@ -48,7 +48,7 @@ function Lineage() {
   var forceRefresh = true;
   initializeNav();
 
-  d3.json("data/people.json", go);
+  d3.json("data/familyData.json", go);
 
   function go(error, response) {
     if (error) throw error;
