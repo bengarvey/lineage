@@ -104,3 +104,7 @@ rect {
 .slider {
   width: 100%;
 }
+
+#timeNavigation {
+  left: 0;
+}

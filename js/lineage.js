@@ -36,8 +36,8 @@ function Lineage() {
   var audio = new Audio('music/graph.mp3');
   var startYear = 1800;
   var endYear = 2014;
-  var year = startYear;
-  var speed = 1000;
+  var year = 1800;
+  var speed = 100;
   var yearIncrement = 0;
   var filters = $('#search').val();
   var searchRadius = 40;
@@ -48,7 +48,7 @@ function Lineage() {
   var forceRefresh = true;
   initializeNav();
 
-  d3.json("data/converted.json", go);
+  d3.json("data/people.json", go);
 
   function go(error, response) {
     if (error) throw error;
@@ -100,15 +100,27 @@ function Lineage() {
 
     function mousemoved() {
       var a = this.parentNode, m = d3.mouse(this), d = simulation.find(m[0] - width / 2, m[1] - height / 2, searchRadius);
-      if (!d) return a.removeAttribute("href"), a.removeAttribute("title");
-      a.setAttribute("href", "http://bl.ocks.org/" + (d.user ? d.user + "/" : "") + d.id);
-      a.setAttribute("title", d.id + (d.user ? " by " + d.user : "") + (d.description ? "\n" + d.description : ""));
+      if (!d) {
+        hideMemberDetails(); 
+      }
+      else {
+        highlightNode(d, m);
+      }
     }
-    /*
-    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"),
-        link = g.append("g").attr("stroke", "#000").attr("stroke-width", 1.5).selectAll(".link"),
-        node = g.append("g").attr("stroke", "#fff").attr("stroke-width", 1.5).selectAll(".node");
-    */
+
+    function hideMemberDetails() {
+      d3.selectAll("#memberDetails")
+        .style('display', 'none');
+    }
+
+    function highlightNode(d, m) {
+      d3.selectAll('#memberDetails')
+        .style('display', 'block')
+        .style('top', m[1] - 20)
+        .style('left', m[0] + 20);
+      d3.select('#name').html(d.name + "<br><span class='birthYear'>" + d.birthDate.substring(0,4) + "</span>");
+    }
+
     node = canvas.selectAll(".node");
     link = canvas.selectAll(".link");
     restart();
@@ -213,40 +225,6 @@ function Lineage() {
     return data;
   }
 
-  function getSimulation(nodes, links) {
-    canvas
-      .on("mousemove", mousemoved)
-      .call(d3.drag()
-        .container(canvas)
-          .subject(dragsubject)
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
-    var simulation = d3.forceSimulation(nodes)
-      .force("charge", d3.forceManyBody(1))
-      .force("centering", d3.forceCenter(0,0))
-      .force("link", d3.forceLink(links))
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
-      .alphaTarget(1)
-      .on("tick", ticked);
-    return simulation;
-
-  function dragsubject() {
-    console.log("started");
-    return simulation.find(d3.event.x - width / 2, d3.event.y - height / 2, searchRadius);
-  }
-
-  function mousemoved() {
-    var a = this.parentNode, m = d3.mouse(this), d = simulation.find(m[0] - width / 2, m[1] - height / 2, searchRadius);
-    if (!d) return a.removeAttribute("href"), a.removeAttribute("title");
-    a.setAttribute("href", "http://bl.ocks.org/" + (d.user ? d.user + "/" : "") + d.id);
-    a.setAttribute("title", d.id + (d.user ? " by " + d.user : "") + (d.description ? "\n" + d.description : ""));
-  }
-}
-
-
   function updateYear(year) {
     $('#year').html(year)
       .css('left', width/2 - 105)
@@ -350,11 +328,13 @@ function Lineage() {
     d3.select('#timeNavigation')
       .on('mouseover', function(d) {
         d3.select('#timeNavigation')
-          .style("left", 0);
+          .transition()
+          .style("left", 0 + "px");
       })
       .on('mouseout', function(d) {
         d3.select('#timeNavigation')
-          .style("left", -890);
+          .transition()
+          .style("left", -890 + "px");
       });
   }
 

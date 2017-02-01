@@ -5,10 +5,10 @@ chance = new Chance
 GENERATIONS = 3
 MAX_CHILDREN = 10
 MIN_CHILDREN = 0
-INITIAL_PEOPLE = 3000
+INITIAL_PEOPLE = 2000
 MIN_YEAR = 1900
 MAX_YEAR = 2016
-MAX_LINKS = 1000
+MAX_LINKS = 2000
 globalID = 0
 
 console.log "Generating family..."
@@ -95,14 +95,14 @@ generateLinks = (nodes, total) ->
 
 getColor = (relation) ->
   switch relation
-    when 'Mother' then '#933'
-    when 'Father' then '#39F'
-    when 'Spouse' then '#666'
+    when 'mother' then '#933'
+    when 'father' then '#39F'
+    when 'spouse' then '#666'
     else '#111'
 
 getRelation = (node) ->
-  if node.gender is 'Female' then 'Mother'
-  else if node.gender is 'Male' then 'Father'
+  if node.gender is 'Female' then 'mother'
+  else if node.gender is 'Male' then 'father'
 
 writeFile = (file, data) ->
   fs.writeFile(file, data, (err) ->
@@ -120,8 +120,6 @@ link =
 
 people = generatePeople(INITIAL_PEOPLE)
 links = generateLinks(people, MAX_LINKS)
-#complete = generateMarriages(people)
-#kids = generateKidsFromList(complete)
 console.log people, links
 output =
   nodes: people
