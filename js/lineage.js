@@ -83,9 +83,9 @@ function Lineage() {
             .on("end", dragended));
 
     simulation = d3.forceSimulation(nodes)
-      .force("charge", d3.forceManyBody(1))
+      .force("charge", d3.forceManyBody().strength(-50))
       .force("centering", d3.forceCenter(0,0))
-      .force("link", d3.forceLink(links))
+      .force("link", d3.forceLink(links).distance(30).strength(0.5))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .alphaTarget(1)
