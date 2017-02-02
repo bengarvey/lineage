@@ -48,7 +48,6 @@ function Lineage() {
   var forceRefresh = true;
   initializeNav();
 
-  d3.json("data/familyData.json", go);
 
   function go(error, response) {
     if (error) throw error;
@@ -375,6 +374,10 @@ function Lineage() {
           d3.select('#year').style('color', '#222');
         }
     });
+  }
+
+  lin.loadJson = function(path) {
+    d3.json(path, go);
   }
 
   lin.playMusic = function() {
