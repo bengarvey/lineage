@@ -83,14 +83,11 @@ function Lineage() {
             .on("end", dragended));
 
     simulation = d3.forceSimulation(nodes)
-      .force("charge", d3.forceManyBody().strength(-50))
-      .force("centering", d3.forceCenter(0,0))
-      .force("link", d3.forceLink(links).distance(30).strength(0.5))
-      .force("x", d3.forceX())
+      .force("charge", d3.forceManyBody().strength(-5))
+      .force("link", d3.forceLink(links).distance(30).strength(0.0))
       .force("y", d3.forceY())
       .alphaTarget(1)
       .on("tick", ticked);
-
 
     function dragsubject() {
       console.log("started");
@@ -197,7 +194,7 @@ function Lineage() {
 
   function addRemoveLink(l) {
     if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
-      links.push(l);
+      //links.push(l);
     }
     else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
       links.splice(links.indexOf(l), 1);
@@ -240,23 +237,10 @@ function Lineage() {
 
   function restart() {
     updateYear(year);
-    // Apply the general update pattern to the nodes.
-    /*
-    node = node.data(nodes, function(d) { return d.id;});
-    node.enter().merge(node);
-    node.exit().attr('opacity', 1).transition().duration(500).attr('opacity', 0).remove();
-
-    // Apply the general update pattern to the links.
-    link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
-    link.enter().merge(link);
-    link.exit().transition().attr("stroke-opacity", 0).remove();
-    */
-
     users = d3.nest()
       .key(function(d) { return d.id; })
       .entries(nodes);
 
-    // Update and restart the simulation.
     simulation.nodes(nodes);
     simulation.force("link").links(links);
     simulation.alpha(1).restart();
@@ -268,6 +252,12 @@ function Lineage() {
     context.save();
     context.translate(width / 2, height / 2);
 
+    for(i=0; i<users.length; i++) {
+      d = users[i].values[0];
+      scale = ((d.birthDate.substring(0,4) - 1750) / (2020 - 1750) - 0.5);
+      d.x = width*scale;
+    }
+
     links.forEach(drawLink);
 
     users.forEach(function(user) {
@@ -278,16 +268,6 @@ function Lineage() {
     });
 
     context.restore();
-
-    /*
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    */
   }
 
   function inFilter(node, filterItems) {
