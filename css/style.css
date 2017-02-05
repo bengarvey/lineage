@@ -108,3 +108,7 @@ rect {
 #timeNavigation {
   left: 0;
 }
+
+.view__button {
+  display: inline-block;
+}

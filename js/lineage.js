@@ -41,11 +41,13 @@ function Lineage() {
   var yearIncrement = 0;
   var filters = $('#search').val();
   var searchRadius = 40;
-  var simulation = null;
+  var simulation = d3.forceSimulation();
   var g = null;
   var users = [];
   var interval = null;
   var forceRefresh = true;
+  var mode = 'tree'
+
   initializeNav();
 
 
@@ -60,7 +62,13 @@ function Lineage() {
     interval = d3.interval(loop, speed, d3.now());
   }
 
-  function init(response) {
+  function reinit(response) {
+    links = [];
+    [canvas, simulation] = getCanvasSimulation(mode);
+    restart();
+ }
+
+ function init(response) {
     nodes = [];
     links = [];
 
@@ -72,6 +80,15 @@ function Lineage() {
       .entries(nodes);
 
     data = prepareData(data, filters);
+    simulation - d3.forceSimulation(nodes);
+    [canvas, simulation] = getCanvasSimulation(mode);
+
+    restart();
+
+    console.timeEnd('init');
+  }
+
+  function getCanvasSimulation(mode) {
 
     canvas
       .on("mousemove", mousemoved)
@@ -82,7 +99,19 @@ function Lineage() {
             .on("drag", dragged)
             .on("end", dragended));
 
-    simulation = d3.forceSimulation(nodes)
+    var sim = null;
+    if (mode == 'tree') {
+      sim = getTreeSimulation();
+    }
+    else if (mode =='timeline') {
+      sim = getTimelineSimulation();
+    }
+
+    return [canvas, sim];
+  }
+
+  function getTreeSimulation() {
+    simulation
       .force("charge", d3.forceManyBody().strength(-50))
       .force("centering", d3.forceCenter(0,0))
       .force("link", d3.forceLink(links).distance(30).strength(0.5))
@@ -91,41 +120,48 @@ function Lineage() {
       .alphaTarget(1)
       .on("tick", ticked);
 
-
-    function dragsubject() {
-      console.log("started");
-      return simulation.find(d3.event.x - width / 2, d3.event.y - height / 2, searchRadius);
-    }
-
-    function mousemoved() {
-      var a = this.parentNode, m = d3.mouse(this), d = simulation.find(m[0] - width / 2, m[1] - height / 2, searchRadius);
-      if (!d) {
-        hideMemberDetails(); 
-      }
-      else {
-        highlightNode(d, m);
-      }
-    }
-
-    function hideMemberDetails() {
-      d3.selectAll("#memberDetails")
-        .style('display', 'none');
-    }
-
-    function highlightNode(d, m) {
-      d3.selectAll('#memberDetails')
-        .style('display', 'block')
-        .style('top', m[1] - 20)
-        .style('left', m[0] + 20);
-      d3.select('#name').html(d.name + "<br><span class='birthYear'>" + d.birthDate.substring(0,4) + "</span>");
-    }
-
-    node = canvas.selectAll(".node");
-    link = canvas.selectAll(".link");
-    restart();
-
-    console.timeEnd('init');
+    return simulation;
   }
+
+  function getTimelineSimulation() {
+    simulation
+      .force("charge", d3.forceManyBody().strength(-5))
+      .force("link", d3.forceLink([]).strength(-1))
+      .force("y", d3.forceY())
+      .force("x", d3.forceX(0))
+      .alphaTarget(0.5)
+      .on("tick", ticked);
+
+    return simulation;
+  }
+
+  function mousemoved() {
+    var a = this.parentNode, m = d3.mouse(this), d = simulation.find(m[0] - width / 2, m[1] - height / 2, searchRadius);
+    if (!d) {
+      hideMemberDetails(); 
+    }
+    else {
+      highlightNode(d, m);
+    }
+  }
+
+  function dragsubject() {
+    return simulation.find(d3.event.x - width / 2, d3.event.y - height / 2, searchRadius);
+  }
+
+  function hideMemberDetails() {
+    d3.selectAll("#memberDetails")
+      .style('display', 'none');
+  }
+
+  function highlightNode(d, m) {
+    d3.selectAll('#memberDetails')
+      .style('display', 'block')
+      .style('top', m[1] - 20)
+      .style('left', m[0] + 20);
+    d3.select('#name').html(d.name + "<br><span class='birthYear'>" + d.birthDate.substring(0,4) + "</span>");
+  }
+
 
   function setForceRefresh(value) {
     forceRefresh = value;
@@ -145,7 +181,9 @@ function Lineage() {
     console.time("loop 20");
     if (forceRefresh) {
       data.nodes.forEach(addRemoveNode);
-      data.links.forEach(addRemoveLink);
+      if (mode == 'tree') {
+        data.links.forEach(addRemoveLink);
+      }
     }
 
     restart();
@@ -240,30 +278,30 @@ function Lineage() {
 
   function restart() {
     updateYear(year);
-    // Apply the general update pattern to the nodes.
-    /*
-    node = node.data(nodes, function(d) { return d.id;});
-    node.enter().merge(node);
-    node.exit().attr('opacity', 1).transition().duration(500).attr('opacity', 0).remove();
-
-    // Apply the general update pattern to the links.
-    link = link.data(links, function(d) { return d.source.id + "-" + d.target.id; });
-    link.enter().merge(link);
-    link.exit().transition().attr("stroke-opacity", 0).remove();
-    */
-
     users = d3.nest()
       .key(function(d) { return d.id; })
       .entries(nodes);
 
-    // Update and restart the simulation.
     simulation.nodes(nodes);
-    simulation.force("link").links(links);
+    if (mode == 'tree') {
+      simulation.force("link").links(links);
+    }
+    else {
+      simulation.force("link").links(links).strength(0);
+    }
     simulation.alpha(1).restart();
   }
 
   function ticked() {
+    if (mode == 'timeline') {
+      timeTicked();
+    }
+    else if (mode == 'tree') {
+      treeTicked();
+    }
+  }
 
+  function treeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
     context.translate(width / 2, height / 2);
@@ -278,16 +316,28 @@ function Lineage() {
     });
 
     context.restore();
+  }
 
-    /*
-    node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+  function timeTicked() {
 
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    */
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+
+    for(i=0; i<users.length; i++) {
+      d = users[i].values[0];
+      scale = ((d.birthDate.substring(0,4) - 1750) / (2020 - 1750) - 0.5);
+      d.x = width*scale;
+    }
+
+    users.forEach(function(user) {
+      context.beginPath();
+      user.values.forEach(drawNode);
+      context.fillStyle = color(user.values[0].lastName);
+      context.fill();
+    });
+
+    context.restore();
   }
 
   function inFilter(node, filterItems) {
@@ -403,6 +453,18 @@ function Lineage() {
   lin.setYearIncrement = function(value) {
     yearIncrement = value;
     forceRefresh = true;
+  }
+
+  lin.setMode = function(value) {
+    mode = value;
+    forceRefresh = true;
+    reinit(originalData);
+  }
+
+  lin.print = function() {
+    console.log(links);
+    console.log(nodes);
+    console.log(simulation);
   }
 
   return lin;

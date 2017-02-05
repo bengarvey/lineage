@@ -2,8 +2,8 @@ fs = require 'fs'
 csvParse = require 'csv-parse'
 async = require 'async'
 
-FAMILY_CSV_FILE = 'data/familyData.csv'
-FAMILY_JSON_FILE = 'data/familyData.json'
+FAMILY_CSV_FILE = 'data/tree2.csv'
+FAMILY_JSON_FILE = 'data/temp.json'
 SPOUSE_COLOR = '#CC0'
 MOTHER_COLOR = '#F39'
 FATHER_COLOR = '#39F'
@@ -18,6 +18,7 @@ go = (family) ->
 
 nodeFilter = (nodes) ->
   list = []
+
   for node in nodes
     item =
       id: +node.id

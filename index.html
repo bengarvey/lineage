@@ -65,6 +65,12 @@
     </div>
     <div class="row">
       <div class="col-md-12">
+        <button class="btn btn-default view__button" onClick="lineage.setMode('tree');">Tree</button>
+        <button class="btn btn-default view__button" onClick="lineage.setMode('timeline');">Timeline</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <input type="range" id="yearSlider" class="slider">
       </div>
     </div>
@@ -74,7 +80,7 @@
           <span class="input-group-addon">
             <input type="checkbox" id="lockSearch" checked="">
           </span>
-          <input id="search" class="form-control input-lg">
+          <input id="search" class="form-control input-lg" value="">
         </div>
       </div>
     </div>
