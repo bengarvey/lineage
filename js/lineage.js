@@ -46,7 +46,7 @@ function Lineage() {
   var users = [];
   var interval = null;
   var forceRefresh = true;
-  var mode = 'timeline'
+  var mode = 'tree'
 
   initializeNav();
 
