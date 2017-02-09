@@ -224,8 +224,6 @@ function Lineage() {
         clusters[n.lastName] = {x: x, y: y};
       }
     });
-    debugger;
-    console.log(clusters);
     return clusters;
   }
 
@@ -347,9 +345,6 @@ function Lineage() {
     var k = 0.1 * simulation.alpha;
     users.forEach(function(o, i) {
       u = o.values[0];
-      //u.x = clusters[u.lastName].x;
-      //u.y = clusters[u.lastName].y;
-
       u.y += (clusters[u.lastName].y - u.y) * 0.08;
       u.x += (clusters[u.lastName].x - u.x) * 0.08;
     });
@@ -391,7 +386,7 @@ function Lineage() {
     for(i=0; i<users.length; i++) {
       d = users[i].values[0];
       scale = ((d.birthDate.substring(0,4) - 1750) / (2020 - 1750) - 0.5);
-      d.x = width*scale;
+      d.x += (width*scale - d.x) * 0.8;
     }
 
     users.forEach(function(user) {
