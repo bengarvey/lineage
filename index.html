@@ -7,6 +7,8 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://unpkg.com/d3-force-cluster@latest"></script>
+  <script src="https://unpkg.com/d3-force-attract@latest"></script>
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/lineage.js"></script>
@@ -16,7 +18,7 @@
     function start() {
       lineage = new Lineage;
       lineage();
-      lineage.loadJson("data/familyData.json");
+      lineage.loadJson("data/temp.json");
     }
 
   </script>
@@ -67,6 +69,7 @@
       <div class="col-md-12">
         <button class="btn btn-default view__button" onClick="lineage.setMode('tree');">Tree</button>
         <button class="btn btn-default view__button" onClick="lineage.setMode('timeline');">Timeline</button>
+        <button class="btn btn-default view__button" onClick="lineage.setMode('cluster');">Cluster</button>
       </div>
     </div>
     <div class="row">

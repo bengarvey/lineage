@@ -25,6 +25,7 @@ function Lineage() {
 
   var nodes = [],
       links = [],
+      clusters = [],
       data = {},
       originalData = {};
 
@@ -71,7 +72,6 @@ function Lineage() {
  function init(response) {
     nodes = [];
     links = [];
-
     originalData = jQuery.extend(true, {}, response);
     data = response;
 
@@ -83,6 +83,7 @@ function Lineage() {
     simulation - d3.forceSimulation(nodes);
     [canvas, simulation] = getCanvasSimulation(mode);
 
+    clusters = resetClusters(data.nodes);
     restart();
 
     console.timeEnd('init');
@@ -103,12 +104,29 @@ function Lineage() {
     if (mode == 'tree') {
       sim = getTreeSimulation();
     }
-    else if (mode =='timeline') {
+    else if (mode == 'timeline') {
       sim = getTimelineSimulation();
+    }
+    else if (mode == 'cluster') {
+      sim = getClusterSimulation();
     }
 
     return [canvas, sim];
   }
+
+  function getClusterSimulation() {
+    simulation
+      .force("charge", d3.forceManyBody().strength(-5))
+      .force("centering", d3.forceCenter(0,0))
+      .force("link", d3.forceLink([]).strength(-1))
+      .force("x", d3.forceX())
+      .force("y", d3.forceY())
+      .alphaTarget(1)
+      .on("tick", ticked);
+
+    return simulation;
+  }
+
 
   function getTreeSimulation() {
     simulation
@@ -186,12 +204,29 @@ function Lineage() {
       }
     }
 
+
     restart();
     console.timeEnd("loop 10");
     console.timeEnd("loop 20");
     console.log("forceRefresh: " + forceRefresh);
     console.log("--------");
     forceRefresh = false;
+  }
+
+  function resetClusters(nodes) {
+    clusters = [];
+    rowCount = 11;
+    colCount = 13;
+    nodes.forEach( function(n, i) {
+      if(clusters[n.lastName] == null) {
+        var x = Math.round(i / colCount) + Math.round(i/colCount)*10 - width;
+        var y = i % rowCount + Math.round(i%rowCount)*40 - height;
+        clusters[n.lastName] = {x: x, y: y};
+      }
+    });
+    debugger;
+    console.log(clusters);
+    return clusters;
   }
 
   function advanceYear(year) {
@@ -292,14 +327,43 @@ function Lineage() {
     simulation.alpha(1).restart();
   }
 
-  function ticked() {
+  function ticked(e) {
     if (mode == 'timeline') {
       timeTicked();
     }
     else if (mode == 'tree') {
       treeTicked();
     }
+    else if (mode == 'cluster') {
+      clusterTicked();
+    }
   }
+
+  function clusterTicked() {
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+
+    var k = 0.1 * simulation.alpha;
+    users.forEach(function(o, i) {
+      u = o.values[0];
+      //u.x = clusters[u.lastName].x;
+      //u.y = clusters[u.lastName].y;
+
+      u.y += (clusters[u.lastName].y - u.y) * 0.08;
+      u.x += (clusters[u.lastName].x - u.x) * 0.08;
+    });
+
+    users.forEach(function(user) {
+      context.beginPath();
+      user.values.forEach(drawNode);
+      context.fillStyle = color(user.values[0].lastName);
+      context.fill();
+    });
+
+    context.restore();
+  }
+
 
   function treeTicked() {
     context.clearRect(0, 0, width, height);
