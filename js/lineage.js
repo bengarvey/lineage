@@ -8,6 +8,11 @@ function Lineage() {
 
   console.time('init');
 
+  var CLUSTER_COL_SPACING = 10;
+  var CLUSTER_ROW_SPACING = 40;
+
+  var TIMELINE_SPEED = 0.8;
+
   var svg = d3.select("svg");
       width = window.innerWidth,
       height = window.innerHeight,
@@ -122,7 +127,7 @@ function Lineage() {
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .alphaTarget(1)
-      .on("tick", ticked);
+      .on("tick", clusterTicked);
 
     return simulation;
   }
@@ -136,7 +141,7 @@ function Lineage() {
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .alphaTarget(1)
-      .on("tick", ticked);
+      .on("tick", treeTicked);
 
     return simulation;
   }
@@ -148,7 +153,7 @@ function Lineage() {
       .force("y", d3.forceY())
       .force("x", d3.forceX(0))
       .alphaTarget(0.5)
-      .on("tick", ticked);
+      .on("tick", timeTicked);
 
     return simulation;
   }
@@ -219,8 +224,8 @@ function Lineage() {
     colCount = 13;
     nodes.forEach( function(n, i) {
       if(clusters[n.lastName] == null) {
-        var x = Math.round(i / colCount) + Math.round(i/colCount)*10 - width;
-        var y = i % rowCount + Math.round(i%rowCount)*40 - height;
+        var x = Math.round(i / colCount) + Math.round(i/colCount)*CLUSTER_COL_SPACING - width;
+        var y = i % rowCount + Math.round(i%rowCount)*CLUSTER_ROW_SPACING - height;
         clusters[n.lastName] = {x: x, y: y};
       }
     });
@@ -325,18 +330,6 @@ function Lineage() {
     simulation.alpha(1).restart();
   }
 
-  function ticked(e) {
-    if (mode == 'timeline') {
-      timeTicked();
-    }
-    else if (mode == 'tree') {
-      treeTicked();
-    }
-    else if (mode == 'cluster') {
-      clusterTicked();
-    }
-  }
-
   function clusterTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
@@ -386,7 +379,7 @@ function Lineage() {
     for(i=0; i<users.length; i++) {
       d = users[i].values[0];
       scale = ((d.birthDate.substring(0,4) - 1750) / (2020 - 1750) - 0.5);
-      d.x += (width*scale - d.x) * 0.8;
+      d.x += (width*scale - d.x) * TIMELINE_SPEED;
     }
 
     users.forEach(function(user) {
