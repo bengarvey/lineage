@@ -1,12 +1,21 @@
 function Lineage() {
 
-  function lin() {
+  function lin(conf) {
     console.log("Initializing");
     initNightMode();
     initSlider();
+    config = conf;
   }
 
   console.time('init');
+
+  var config = {
+    startYear:1800,
+    endYear: 2014,
+    speed: 100
+  };
+
+  var year = 1800;
 
   var CLUSTER_COL_SPACING = 10;
   var CLUSTER_ROW_SPACING = 40;
@@ -40,10 +49,6 @@ function Lineage() {
       .attr("height", height);
 
   var audio = new Audio('music/graph.mp3');
-  var startYear = 1800;
-  var endYear = 2014;
-  var year = 1800;
-  var speed = 100;
   var yearIncrement = 0;
   var filters = $('#search').val();
   var searchRadius = 40;
@@ -65,7 +70,7 @@ function Lineage() {
     if (interval != null) {
       interval.stop();
     }
-    interval = d3.interval(loop, speed, d3.now());
+    interval = d3.interval(loop, config.speed, d3.now());
   }
 
   function reinit(response) {
@@ -234,8 +239,8 @@ function Lineage() {
 
   function advanceYear(year) {
     year += yearIncrement;
-    if (year >= endYear) {
-      year = endYear;
+    if (year >= config.endYear) {
+      year = config.endYear;
     }
     return year;
   }
@@ -248,14 +253,14 @@ function Lineage() {
   }
 
   function updateSlider() {
-    position = ((year - startYear) / (endYear - startYear)) * 100;
+    position = ((year - config.startYear) / (config.endYear - config.startYear)) * 100;
     $("#yearSlider").val(position);
   }
 
   function initSlider() {
     $('#yearSlider').on('change', function(){
       position = $("#yearSlider").val();
-      year = Math.round(((endYear - startYear) * (position/100)) + startYear);
+      year = Math.round(((config.endYear - config.startYear) * (position/100)) + config.startYear);
     });
   }
 

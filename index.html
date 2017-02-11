@@ -17,7 +17,7 @@
     function start() {
       $.getJSON("config.json", function(config) {
           lineage = new Lineage;
-          lineage();
+          lineage(config);
           lineage.loadJson(config.data);
       });
     }
