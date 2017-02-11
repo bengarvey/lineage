@@ -12,11 +12,14 @@
   <script src="js/lineage.js"></script>
 
   <script>
+
     var lineage = null;
     function start() {
-      lineage = new Lineage;
-      lineage();
-      lineage.loadJson("data/familyData.json");
+      $.getJSON("config.json", function(config) {
+          lineage = new Lineage;
+          lineage();
+          lineage.loadJson(config.data);
+      });
     }
 
   </script>
