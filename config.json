@@ -3,5 +3,6 @@
   "filter": "",
   "startYear": 1800,
   "endYear": 2014,
-  "speed": 100
+  "speed": 100,
+  "debug": true
 }
