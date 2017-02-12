@@ -1,19 +1,20 @@
 function Lineage() {
 
   function lin(conf) {
-    console.log("Initializing");
+    log("Initializing", config);
     initNightMode();
     initSlider();
     config = conf;
   }
 
-  console.time('init');
-
   var config = {
     startYear:1800,
     endYear: 2014,
-    speed: 100
+    speed: 100,
+    debug: false
   };
+
+  timeStart('init', config);
 
   var year = 1800;
 
@@ -96,7 +97,7 @@ function Lineage() {
     clusters = resetClusters(data.nodes);
     restart();
 
-    console.timeEnd('init');
+    timeEnd('init', config);
   }
 
   function getCanvasSimulation(mode) {
@@ -196,7 +197,7 @@ function Lineage() {
   }
 
   function loop() {
-    console.time("loop 10");
+    timeStart("loop", config);
     var oldYear = year;
     year = advanceYear(year);
     updateSlider();
@@ -206,7 +207,6 @@ function Lineage() {
       forceRefresh = true;
     }
 
-    console.time("loop 20");
     if (forceRefresh) {
       data.nodes.forEach(addRemoveNode);
       if (mode == 'tree') {
@@ -216,10 +216,7 @@ function Lineage() {
 
 
     restart();
-    console.timeEnd("loop 10");
-    console.timeEnd("loop 20");
-    console.log("forceRefresh: " + forceRefresh);
-    console.log("--------");
+    timeEnd("loop", config);
     forceRefresh = false;
   }
 
@@ -316,7 +313,6 @@ function Lineage() {
     width = window.innerWidth;
     canvas.attr("height", height)
       .attr("width", width);
-    console.log(width/2, height/2);
   }
 
   function restart() {
@@ -413,7 +409,6 @@ function Lineage() {
 
 
   function dragstarted() {
-    console.log("started");
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d3.event.subject.fx = d3.event.subject.x;
     d3.event.subject.fy = d3.event.subject.y;
@@ -481,6 +476,24 @@ function Lineage() {
           d3.select('#year').style('color', '#222');
         }
     });
+  }
+
+  function timeStart(name, config) {
+    if (config.debug ) {
+      console.time(name);
+    }
+  }
+
+  function timeEnd(name, config) {
+    if (config.debug) {
+      console.timeEnd(name);
+    }
+  }
+
+  function log(message, config) {
+    if (config.debug) {
+      console.log(message);
+    }
   }
 
   lin.loadJson = function(path) {
