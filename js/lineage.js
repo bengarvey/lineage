@@ -198,6 +198,7 @@ function Lineage() {
 
   function loop() {
     timeStart("loop", config);
+    resizeScreen();
     var oldYear = year;
     year = advanceYear(year);
     updateSlider();
@@ -309,10 +310,12 @@ function Lineage() {
   }
 
   function resizeScreen() {
-    height = window.innerHeight;
-    width = window.innerWidth;
-    canvas.attr("height", height)
-      .attr("width", width);
+    if (width != window.innerWidth) {
+      height = window.innerHeight;
+      width = window.innerWidth;
+      canvas.attr("height", height)
+        .attr("width", width);
+    }
   }
 
   function restart() {
@@ -352,7 +355,6 @@ function Lineage() {
 
     context.restore();
   }
-
 
   function treeTicked() {
     context.clearRect(0, 0, width, height);
@@ -458,7 +460,7 @@ function Lineage() {
   }
 
   function drawNode(d) {
-    context.moveTo(d.x + 3, d.y);
+    context.moveTo(d.x, d.y);
     context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
   }
 
