@@ -22,7 +22,7 @@ nodeFilter = (nodes) ->
   for node in nodes
     item =
       id: +node.id
-      name: node.name
+      name: if node.name.match(",") then node.name.split(",")[1].substring(1,2) + ", " + node.name.split(",")[0] else node.name
       gender: node.gender
       lastName: if node.name.match(",") then node.name.split(",")[0] else node.name
       birthDate: node.birthDate

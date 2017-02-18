@@ -468,14 +468,19 @@ function Lineage() {
     $('#nightModeOn').on("change", function(event) {
         nightMode = !nightMode;
         body = d3.select('body');
+        main = d3.select('main');
 
         if (nightMode) {
           body.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
-          d3.select('#year').style('color', '#EEE');
+          main.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
+          d3.select('#year').transition().duration(1000).style('color', '#EEE');
+          d3.select('.toggle-button').transition().duration(1000).style('color', '#666').style('background-color', '#333');
         }
         else {
           body.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
-          d3.select('#year').style('color', '#222');
+          main.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
+          d3.select('#year').transition().duration(1000).style('color', '#222');
+          d3.select('.toggle-button').transition().duration(1000).style('color', '#FFF').style('background-color', '#E7E7E7');
         }
     });
   }

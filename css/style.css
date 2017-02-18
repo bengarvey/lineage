@@ -109,6 +109,28 @@ rect {
   left: 0;
 }
 
-.view__button {
-  display: inline-block;
+.time__button {
+  display: block;
+  width: 90%;
+  margin: 3px;
 }
+
+.view__button {
+  display: block;
+  width: 90%;
+  margin: 3px;
+}
+
+.time {
+  margin: 10px 0 10px 0;
+}
+
+.views {
+  margin: 10px 0 10px 0;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
