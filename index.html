@@ -3,52 +3,50 @@
 <title>Lineage - Family tree visualization tool in D3</title>
 
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/slideout.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
   <script src="js/lineage.js"></script>
 
   <script>
     var lineage = null;
+    var menuStatus = true;
     function start() {
       $.getJSON("config.json", function(config) {
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);
       });
+      }
 
-      var slideout = new Slideout({
-        'panel': document.getElementById('panel'),
-        'menu': document.getElementById('menu'),
-        'padding': 256,
-        'tolerance': 70
-      });
-
-      // Toggle button
-      document.querySelector('.toggle-button').addEventListener('click', function() {
-        slideout.toggle();
-      });
+    function toggleMenu() {
+      menuStatus = !menuStatus;
+      menu = d3.select('#menu');
+      left = menuStatus ? '0px' : '-250px';
+      menu.transition().duration(500).style('left', left);
     }
-  </script>
+
+ </script>
 
 </head>
 <body onLoad="start()">
-  <nav id="menu">
-    <h1><a href="http://github.com/bengarvey/lineage">Lineage</a></h1>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" class="checkbox-lg" id="musicOn"> Music
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" class="checkbox-lg" id="nightModeOn"> Night Mode
-      </label>
+  <div id="menu">
+    <button class="toggle__button" onClick="toggleMenu()">☰</button>
+    <div class="options">
+      <h1><a href="http://github.com/bengarvey/lineage">Lineage</a></h1>
+      <div class="checkbox">
+        <label class="options__label">
+          <input type="checkbox" class="checkbox-lg" id="musicOn"> Music
+        </label>
+      </div>
+      <div class="checkbox">
+        <label type="options__label">
+          <input type="checkbox" class="checkbox-lg" id="nightModeOn"> Night Mode
+        </label>
+      </div>
     </div>
     <div class="views">
       <button class="btn btn-default view__button" onClick="lineage.setMode('tree');">Tree</button>
@@ -58,31 +56,18 @@
     <div class="time">
       <button class="btn btn-default time__button" id="firstButton"
         onClick="lineage.setYear(1800)">First</button>
-      <button class="btn btn-default time__button" id="previousButton"
-        onClick="lineage.moveYear(-1)">Previous</button>
-      <button class="btn btn-default time__button" id="playButton"
-        onClick="lineage.setYearIncrement(-1)">Rewind</button>
       <button class="btn btn-default time__button" id="playButton"
         onClick="lineage.setYearIncrement(1);lineage.playMusic();">Play</button>
-      <button class="btn btn-default time__button" id="pauseButton"
-        onClick="lineage.setYearIncrement(0);lineage.pauseMusic();">Pause</button>
-      <button class="btn btn-default time__button" id="nextButton"
-        onClick="lineage.moveYear(1)">Next</button>
       <button class="btn btn-default time__button" id="lastButton"
         onClick="lineage.setYear(2014)">Last</button>
     </div>
     <input id="search" class="form-control input-lg" value="Garvey Haley Innes Zappasodi Fales Quinn Corcoran Owens Delpino Patterson Waite Dokmanus Pedersen Turner Dvorak Fucetola Phero Penza Koch Hackeloer Ferguson Anderson Supalo Perrin Bristow Loffredo King Carnesale">
-  </nav>
-  <main id="panel">
-    <header>
-      <button class="toggle-button">☰</button>
-    </header>
-    <div id="year"></div>
-    <canvas height="1000" width="1000"></canvas>
-    <div id="memberDetails">
-      <div id="name"></div>
-    </div>
-  </main>
+  </div>
+  <div id="year"></div>
+  <canvas height="1000" width="1000"></canvas>
+  <div id="memberDetails">
+    <div id="name"></div>
+  </div>
 </body>
 </html>
 

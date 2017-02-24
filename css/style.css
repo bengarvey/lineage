@@ -5,6 +5,30 @@ body {
   background-color: #FFF;
 }
 
+#menu {
+  position: absolute;
+  width: 250px;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  background-color: rgba(250,250,250,0.75);
+}
+
+.toggle__button {
+  position: absolute;
+  top: 0px;
+  left: 250px;
+  z-index: 100;
+  background-color: #E7E7E7;
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 32px;
+}
+
 #lockSearch {
   height: 20px;
   width: 20px;
@@ -76,6 +100,8 @@ svg {
 
 #search {
   opacity: 0.5;
+  margin: 0 0 0 10;
+  width: 91%;
 }
 
 ul {
@@ -109,28 +135,40 @@ rect {
   left: 0;
 }
 
+.options {
+  padding: 0 0 0 12px;
+}
+
+.options__label {
+  padding: 2px 0 0 0;
+}
+
 .time__button {
   display: block;
+  height: 40px;
   width: 90%;
   margin: 3px;
 }
 
 .view__button {
   display: block;
+  height: 75px;
   width: 90%;
   margin: 3px;
 }
 
 .time {
   margin: 10px 0 10px 0;
+  text-align: center;
 }
 
 .views {
   margin: 10px 0 10px 0;
+  text-align: center;
 }
 
 canvas {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -10;
+  z-index: 0;
