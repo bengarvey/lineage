@@ -5,10 +5,11 @@ function Lineage() {
     initNightMode();
     initSlider();
     config = conf;
+    year = config.startYear;
   }
 
   var config = {
-    startYear:1800,
+    startYear:2014,
     endYear: 2014,
     speed: 100,
     debug: false
@@ -468,14 +469,22 @@ function Lineage() {
     $('#nightModeOn').on("change", function(event) {
         nightMode = !nightMode;
         body = d3.select('body');
+        main = d3.select('main');
+        menu = d3.select('#menu');
 
         if (nightMode) {
           body.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
-          d3.select('#year').style('color', '#EEE');
+          main.transition().duration(1000).style('background-color', '#000').style('color', '#EEE');
+          menu.transition().duration(1000).style('background-color', 'rgba(5, 5, 5, 0.75)').style('color', '#EEE');
+          d3.select('#year').transition().duration(1000).style('color', '#EEE');
+          d3.select('.toggle__button').transition().duration(1000).style('color', '#666').style('background-color', '#333');
         }
         else {
           body.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
-          d3.select('#year').style('color', '#222');
+          main.transition().duration(1000).style('background-color', '#FFF').style('color', '#333');
+          menu.transition().duration(1000).style('background-color', 'rgba(250, 250 , 250, 0.75)').style('color', '#333');
+          d3.select('#year').transition().duration(1000).style('color', '#222');
+          d3.select('.toggle__button').transition().duration(1000).style('color', '#FFF').style('background-color', '#E7E7E7');
         }
     });
   }
