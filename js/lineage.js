@@ -61,9 +61,6 @@ function Lineage() {
   var forceRefresh = true;
   var mode = 'tree'
 
-  initializeNav();
-
-
   function go(error, response) {
     if (error) throw error;
 
@@ -426,20 +423,6 @@ function Lineage() {
     if (!d3.event.active) simulation.alphaTarget(0);
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
-  }
-
-  function initializeNav() {
-    d3.select('#timeNavigation')
-      .on('mouseover', function(d) {
-        d3.select('#timeNavigation')
-          .transition()
-          .style("left", 0 + "px");
-      })
-      .on('mouseout', function(d) {
-        d3.select('#timeNavigation')
-          .transition()
-          .style("left", -890 + "px");
-      });
   }
 
   function getNodeById(nodes, id) {
