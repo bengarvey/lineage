@@ -7,7 +7,8 @@ body {
 
 #menu {
   position: absolute;
-  width: 250px;
+  width: 25%;
+  height: 100%;
   top: 0px;
   left: 0px;
   z-index: 1;
@@ -17,9 +18,9 @@ body {
 .toggle__button {
   position: absolute;
   top: 0px;
-  left: 250px;
+  left: 341px;
   z-index: 100;
-  background-color: #E7E7E7;
+  background-color: rgba(200,200,200,0.9);
   border: none;
   color: white;
   padding: 5px 5px;
