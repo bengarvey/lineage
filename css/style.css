@@ -10,7 +10,7 @@ body {
   width: 340px;
   height: 100%;
   top: 0px;
-  left: 0px;
+  left: -341px;
   z-index: 1;
   background-color: rgba(250,250,250,0.75);
 }
