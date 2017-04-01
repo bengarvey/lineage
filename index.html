@@ -15,7 +15,7 @@
     var lineage = null;
     var menuStatus = true;
     function start() {
-      $.getJSON("config.json", function(config) {
+      $.getJSON("config_ben.json", function(config) {
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);

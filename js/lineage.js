@@ -6,6 +6,7 @@ function Lineage() {
     initSlider();
     config = conf;
     year = config.startYear;
+    document.getElementById('search').value = conf.filter;
   }
 
   var config = {
