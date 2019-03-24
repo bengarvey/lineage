@@ -16,7 +16,7 @@
     var menuStatus = false;
     function start() {
       $.getJSON("config.json", function(config) {
-          config.startYear = typeof(startYear) === 'undefined' ? config.startYear : startYear;
+          config.startYear = isNaN(startYear) ? config.startYear : startYear;
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);
