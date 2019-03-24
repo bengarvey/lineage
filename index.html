@@ -16,6 +16,7 @@
     var menuStatus = false;
     function start() {
       $.getJSON("config.json", function(config) {
+          config.startYear = typeof(startYear) === 'undefined' ? config.startYear : startYear;
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);
@@ -28,6 +29,9 @@
       left = menuStatus ? '0px' : '-341px';
       menu.transition().duration(500).style('left', left);
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const startYear = parseInt(urlParams.get('startYear'));
 
  </script>
 
