@@ -73,7 +73,6 @@ svg {
   top: 0;
   left: 0;
   font-size: 36px;
-  line-height:
 }
 
 #timeNavigation {
@@ -179,3 +178,4 @@ canvas {
   top: 0;
   left: 0;
   z-index: 0;
+}
