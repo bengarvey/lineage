@@ -21,7 +21,7 @@
           lineage(config);
           lineage.loadJson(config.data);
       });
-      }
+    }
 
     function toggleMenu() {
       menuStatus = !menuStatus;
@@ -33,7 +33,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const startYear = parseInt(urlParams.get('startYear'));
 
- </script>
+  </script>
 
 </head>
 <body onLoad="start()">
@@ -68,6 +68,9 @@
         onClick="lineage.setYear(2014)">Last</button>
     </div>
     <input id="search" class="form-control input-lg" value="">
+    Go to year:
+    <input id="goToYear" type="number" class="form-control input-lg" value=""
+      onchange="lineage.setYear(Number(this.value));">
   </div>
   <div id="year"></div>
   <canvas height="1000" width="1000"></canvas>

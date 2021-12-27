@@ -105,6 +105,12 @@ svg {
   width: 91%;
 }
 
+#goToYear {
+  opacity: 0.5;
+  margin: 0 0 0 10;
+  width: 91%;
+}
+
 ul {
   list-style: none;
 }
