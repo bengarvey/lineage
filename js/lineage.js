@@ -77,7 +77,7 @@ function Lineage() {
     links = [];
     [canvas, simulation] = getCanvasSimulation(mode);
     restart();
- }
+  }
 
  function init(response) {
     nodes = [];
