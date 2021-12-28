@@ -20,6 +20,8 @@
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);
+
+          if (config.menuDefaultOpen) toggleMenu();
       });
     }
 

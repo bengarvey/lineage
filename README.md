@@ -34,6 +34,11 @@ How many milliseconds does one year take when you hit the "Play" button?
 Default value is 100 which makes 10 years pass per second
 (100ms = 1/10th of a second).
 
+### `menuDefaultOpen`
+If this is set to `true`, the menu is instantly opened when the web view is
+loaded.
+Defaults to `true`.
+
 ### `debug`
 This key is irrelevant to the observable behavior of lineage and only affects
 the logging which happens in the background.
