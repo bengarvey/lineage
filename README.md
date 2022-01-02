@@ -43,6 +43,12 @@ Defaults to `true`.
 This key is irrelevant to the observable behavior of lineage and only affects
 the logging which happens in the background.
 
+### `showDead`
+If this is false, only people who are alive at the time of the currently active
+year are shown in the graphs.
+If it's true, everybody who has been born at this time (regardless of death
+date) is shown.
+
 
 ## Notes
 - For viewing large datasets, it may help to zoom out your browser
