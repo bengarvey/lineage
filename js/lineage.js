@@ -59,8 +59,11 @@ function Lineage() {
   var g = null;
   var users = [];
   var interval = null;
-  var forceRefresh = true;
   var mode = 'tree'
+
+  // Do i have to re-populate `nodes` and `links` in `loop()`?
+  var forceRefresh = true;
+
 
   function go(error, response) {
     if (error) throw error;
@@ -73,11 +76,13 @@ function Lineage() {
     interval = d3.interval(loop, config.speed, d3.now());
   }
 
+
   function reinit(response) {
     links = [];
     [canvas, simulation] = getCanvasSimulation(mode);
     restart();
   }
+
 
  function init(response) {
     nodes = [];
@@ -90,7 +95,8 @@ function Lineage() {
       .entries(nodes);
 
     data = prepareData(data, filters);
-    simulation - d3.forceSimulation(nodes);
+    simulation = d3.forceSimulation(nodes);
+    console.log(nodes);
     [canvas, simulation] = getCanvasSimulation(mode);
 
     clusters = resetClusters(data.nodes);
@@ -99,8 +105,8 @@ function Lineage() {
     timeEnd('init', config);
   }
 
-  function getCanvasSimulation(mode) {
 
+  function getCanvasSimulation(mode) {
     canvas
       .on("mousemove", mousemoved)
       .call(d3.drag()
@@ -123,6 +129,7 @@ function Lineage() {
 
     return [canvas, sim];
   }
+
 
   function getClusterSimulation() {
     simulation
@@ -212,14 +219,32 @@ function Lineage() {
       if (mode == 'tree') {
         data.links.forEach(addRemoveLink);
       }
+      console.log(links);
+      console.log(nodes);
     }
-
 
     restart();
     timeEnd("loop", config);
     forceRefresh = false;
   }
 
+  /*
+    I think this groups all nodes into clusters based on their last names...
+    Example Output:
+
+    Array []
+      Amidala: Object { x: -999, y: -636 }
+      C3PO: Object { x: -988, y: -431 }
+      Chewbacca: Object { x: -988, y: -759 }
+      Kenobi: Object { x: -988, y: -472 }
+      Organa: Object { x: -999, y: -554 }
+      Palpatine: Object { x: -999, y: -759 }
+      R2D2: Object { x: -988, y: -390 }
+      Skywalker: Object { x: -999, y: -718 }
+      Solo: Object { x: -988, y: -349 }
+      Yoda: Object { x: -999, y: -513 }
+    */
+  // TODO: Add correct Docstring
   function resetClusters(nodes) {
     clusters = [];
     rowCount = 11;
@@ -234,6 +259,7 @@ function Lineage() {
     return clusters;
   }
 
+
   function advanceYear(year) {
     year += yearIncrement;
     if (year >= config.endYear) {
@@ -242,6 +268,7 @@ function Lineage() {
     return year;
   }
 
+
   function updateFilter() {
     if (filters != $("#search").val()) {
       filters = $("#search").val();
@@ -249,11 +276,16 @@ function Lineage() {
     }
   }
 
+
   function updateSlider() {
     position = ((year - config.startYear) / (config.endYear - config.startYear)) * 100;
     $("#yearSlider").val(position);
   }
 
+
+  /*
+    DEPRECATED: No #yearSlider DOM Element
+    */
   function initSlider() {
     $('#yearSlider').on('change', function(){
       position = $("#yearSlider").val();
@@ -261,52 +293,99 @@ function Lineage() {
     });
   }
 
+  /*
+    Only have those people in `nodes` that have been born at the time `year`.
+    To be called via `data.nodes.forEach(addRemoveNodes)` in `loop()`.
+    */
   function addRemoveNode(n) {
     if (n.birthDate != null) {
-      var nodeYear = n.birthDate.substring(0,4);
-      if (nodes.indexOf(n) == -1 && nodeYear <= year) {
+      var birthYear = n.birthDate.substring(0, 4);
+      if (
+        nodes.indexOf(n) == -1 &&
+        birthYear <= year
+      ) {
         nodes.push(n);
       }
-      else if (nodes.indexOf(n) != -1 && (nodeYear > year)) {
+      else if (
+        nodes.indexOf(n) != -1 &&
+        (birthYear > year)
+      ) {
         nodes.splice(nodes.indexOf(n), 1);
       }
     }
   }
 
+  /*
+    Only have links in `link` that specify a connection between people that
+    currently are in `nodes`.
+    To be called via `data.links.forEach(addRemoveLink)` in `loop()`.
+    */
   function addRemoveLink(l) {
-    if (links.indexOf(l) == -1 && nodes.indexOf(l.source) > -1 && nodes.indexOf(l.target) > -1) {
+    if (
+      links.indexOf(l) == -1 &&
+      nodes.indexOf(l.source) > -1 &&
+      nodes.indexOf(l.target) > -1
+    ) {
       links.push(l);
     }
-    else if (links.indexOf(l) > -1 && (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)) {
+    else if (
+      links.indexOf(l) > -1 &&
+      (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)
+    ) {
       links.splice(links.indexOf(l), 1);
     }
   }
 
+
+  /*
+    Filter `data.nodes` by `filters`:
+    Only have items in `nodes` For which `inFilter()` returns `true`.
+    */
   function prepareData(data, filters) {
     filterItems = filters.split(" ");
     filterItems = filterItems.filter( function(i) {
       return i.length > 0;
     });
-    for(var i=0; i<data.nodes.length; i++) {
+    for(var i = 0; i < data.nodes.length; i++) {
       if (!inFilter(data.nodes[i], filterItems)) {
-        data.nodes.splice(i,1);
+        data.nodes.splice(i, 1);
         i--;
       }
     }
 
     // link directly instead of using indices
-    data.links.forEach( function(link, index) {
+    data.links.forEach(function(link, index) {
       link.source = getNodeById(data.nodes, link.source);
       link.target = getNodeById(data.nodes, link.target);
     });
     return data;
   }
 
+
+  /*
+    Does one of the regex words from the filter occur in this nodes name?
+    */
+  function inFilter(node, filterItems) {
+    if (filterItems.length == 0) {
+      return true;
+    }
+    var regex = null;
+    for(i=0; i<filterItems.length; i++) {
+      regex = new RegExp(filterItems[i], 'ig');
+      if (node.name.match(regex)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   function updateYear(year) {
     $('#year').html(year)
       .css('left', width/2 - 105)
       .css('top', height - 140);
   }
+
 
   function resizeScreen() {
     if (width != window.innerWidth) {
@@ -316,6 +395,7 @@ function Lineage() {
         .attr("width", width);
     }
   }
+
 
   function restart() {
     updateYear(year);
@@ -332,6 +412,7 @@ function Lineage() {
     }
     simulation.alpha(1).restart();
   }
+
 
   function clusterTicked() {
     context.clearRect(0, 0, width, height);
@@ -355,6 +436,7 @@ function Lineage() {
     context.restore();
   }
 
+
   function treeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
@@ -371,6 +453,7 @@ function Lineage() {
 
     context.restore();
   }
+
 
   function timeTicked() {
 
@@ -394,20 +477,6 @@ function Lineage() {
     context.restore();
   }
 
-  function inFilter(node, filterItems) {
-    if (filterItems.length == 0) {
-      return true;
-    }
-    var regex = null;
-    for(i=0; i<filterItems.length; i++) {
-      regex = new RegExp(filterItems[i], 'ig');
-      if (node.name.match(regex)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 
   function dragstarted() {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -415,16 +484,19 @@ function Lineage() {
     d3.event.subject.fy = d3.event.subject.y;
   }
 
+
   function dragged() {
     d3.event.subject.fx = d3.event.x;
     d3.event.subject.fy = d3.event.y;
   }
+
 
   function dragended() {
     if (!d3.event.active) simulation.alphaTarget(0);
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
   }
+
 
   function getNodeById(nodes, id) {
     for(i=0; i<nodes.length; i++) {
@@ -435,6 +507,7 @@ function Lineage() {
     return -1;
   }
 
+
   function drawLink(d) {
     context.beginPath();
     context.moveTo(d.source.x, d.source.y);
@@ -444,10 +517,12 @@ function Lineage() {
     context.stroke();
   }
 
+
   function drawNode(d) {
     context.moveTo(d.x, d.y);
     context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
   }
+
 
   function initNightMode() {
     $('#nightModeOn').on("change", function(event) {
@@ -473,11 +548,13 @@ function Lineage() {
     });
   }
 
+
   function timeStart(name, config) {
     if (config.debug ) {
       console.time(name);
     }
   }
+
 
   function timeEnd(name, config) {
     if (config.debug) {
@@ -485,11 +562,13 @@ function Lineage() {
     }
   }
 
+
   function log(message, config) {
     if (config.debug) {
       console.log(message);
     }
   }
+
 
   lin.loadJson = function(path) {
     d3.json(path, go);
