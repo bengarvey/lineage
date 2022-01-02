@@ -6,6 +6,7 @@ function Lineage() {
     initSlider();
     config = conf;
     year = config.startYear;
+    initShowDead(config.showDead);
     document.getElementById('search').value = conf.filter;
   }
 
@@ -20,6 +21,7 @@ function Lineage() {
   timeStart('init', config);
 
   var year = 1800;
+  var showDead = true;
 
   var CLUSTER_COL_SPACING = 10;
   var CLUSTER_ROW_SPACING = 40;
@@ -65,6 +67,11 @@ function Lineage() {
   // Do i have to re-populate `nodes` and `links` in `loop()`?
   var forceRefresh = true;
 
+
+  function initShowDead(value) {
+    showDead = value;
+    $('#showDead').prop('checked', showDead);
+  }
 
   function go(error, response) {
     if (error) throw error;
@@ -621,6 +628,13 @@ function Lineage() {
     mode = value;
     forceRefresh = true;
     reinit(originalData);
+  }
+
+  lin.setShowDead = function(value) {
+    showDead = value;
+    forceRefresh = true;
+    reinit(originalData);
+    loop();
   }
 
   lin.print = function() {
