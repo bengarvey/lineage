@@ -226,6 +226,70 @@ function Lineage() {
     forceRefresh = false;
   }
 
+
+  /*
+    Only have those people in `nodes` that have been born at the time `year`.
+    To be called via `data.nodes.forEach(addRemoveNodes)` in `loop()`.
+    If `showDead` is true:
+    Only have those people in `nodes` that are currently alive.
+    */
+  function addRemoveNode(n) {
+    // Only add people who have been born at this time
+    if (n.birthDate != null) {
+      var birthYear = n.birthDate.substring(0, 4);
+      if (
+        nodes.indexOf(n) == -1 &&
+        birthYear <= year
+      ) {
+        nodes.push(n);
+      }
+      else if (
+        nodes.indexOf(n) != -1 &&
+        (birthYear > year)
+      ) {
+        nodes.splice(nodes.indexOf(n), 1);
+      }
+    }
+
+    // Remove dead people
+    if (!showDead) {
+      if (n.deathDate != null && n.deathDate != "") {
+        var deathYear = Number(n.deathDate.substring(0, 4));
+        if (isNaN(deathYear)) return;
+
+        if (
+          nodes.indexOf(n) != -1 &&
+          deathYear < year
+        ) {
+          nodes.splice(nodes.indexOf(n), 1);
+        }
+      }
+    }
+  }
+
+
+  /*
+    Only have links in `link` that specify a connection between people that
+    currently are in `nodes`.
+    To be called via `data.links.forEach(addRemoveLink)` in `loop()`.
+    */
+  function addRemoveLink(l) {
+    if (
+      links.indexOf(l) == -1 &&
+      nodes.indexOf(l.source) > -1 &&
+      nodes.indexOf(l.target) > -1
+    ) {
+      links.push(l);
+    }
+    else if (
+      links.indexOf(l) > -1 &&
+      (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)
+    ) {
+      links.splice(links.indexOf(l), 1);
+    }
+  }
+
+
   /*
     I think this groups all nodes into clusters based on their last names...
     Example Output:
@@ -290,68 +354,6 @@ function Lineage() {
       year = Math.round(((config.endYear - config.startYear) * (position/100)) + config.startYear);
     });
   }
-
-  /*
-    Only have those people in `nodes` that have been born at the time `year`.
-    To be called via `data.nodes.forEach(addRemoveNodes)` in `loop()`.
-    If `showDead` is true:
-    Only have those people in `nodes` that are currently alive.
-    */
-  function addRemoveNode(n) {
-    // Only add people who have been born at this time
-    if (n.birthDate != null) {
-      var birthYear = n.birthDate.substring(0, 4);
-      if (
-        nodes.indexOf(n) == -1 &&
-        birthYear <= year
-      ) {
-        nodes.push(n);
-      }
-      else if (
-        nodes.indexOf(n) != -1 &&
-        (birthYear > year)
-      ) {
-        nodes.splice(nodes.indexOf(n), 1);
-      }
-    }
-
-    // Remove dead people
-    if (!config.showDead) {
-      if (n.deathDate != null && n.deathDate != "") {
-        var deathYear = Number(n.deathDate.substring(0, 4));
-        if (isNaN(deathYear)) return;
-
-        if (
-          nodes.indexOf(n) != -1 &&
-          deathYear < year
-        ) {
-          nodes.splice(nodes.indexOf(n), 1);
-        }
-      }
-    }
-  }
-
-  /*
-    Only have links in `link` that specify a connection between people that
-    currently are in `nodes`.
-    To be called via `data.links.forEach(addRemoveLink)` in `loop()`.
-    */
-  function addRemoveLink(l) {
-    if (
-      links.indexOf(l) == -1 &&
-      nodes.indexOf(l.source) > -1 &&
-      nodes.indexOf(l.target) > -1
-    ) {
-      links.push(l);
-    }
-    else if (
-      links.indexOf(l) > -1 &&
-      (nodes.indexOf(l.source) == -1 || nodes.indexOf(l.target) == -1)
-    ) {
-      links.splice(links.indexOf(l), 1);
-    }
-  }
-
 
   /*
     Filter `data.nodes` by `filters`:
