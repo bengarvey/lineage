@@ -96,7 +96,6 @@ function Lineage() {
 
     data = prepareData(data, filters);
     simulation = d3.forceSimulation(nodes);
-    console.log(nodes);
     [canvas, simulation] = getCanvasSimulation(mode);
 
     clusters = resetClusters(data.nodes);
@@ -219,8 +218,6 @@ function Lineage() {
       if (mode == 'tree') {
         data.links.forEach(addRemoveLink);
       }
-      console.log(links);
-      console.log(nodes);
     }
 
     restart();
