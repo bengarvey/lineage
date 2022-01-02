@@ -52,3 +52,7 @@ the logging which happens in the background.
 - To see the full dataset in the demo, remove all the names from the search /
     filter box
 
+
+## Upcoming features
+- New key for config.json 'displayDead': Dead people will be excluded from
+    graphs if this is true
