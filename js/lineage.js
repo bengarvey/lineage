@@ -9,6 +9,7 @@ function Lineage() {
     document.getElementById('search').value = conf.filter;
   }
 
+  // Will be overwritten by `lin()`
   var config = {
     startYear:2014,
     endYear: 2014,
@@ -293,8 +294,11 @@ function Lineage() {
   /*
     Only have those people in `nodes` that have been born at the time `year`.
     To be called via `data.nodes.forEach(addRemoveNodes)` in `loop()`.
+    If `showDead` is true:
+    Only have those people in `nodes` that are currently alive.
     */
   function addRemoveNode(n) {
+    // Only add people who have been born at this time
     if (n.birthDate != null) {
       var birthYear = n.birthDate.substring(0, 4);
       if (
@@ -308,6 +312,21 @@ function Lineage() {
         (birthYear > year)
       ) {
         nodes.splice(nodes.indexOf(n), 1);
+      }
+    }
+
+    // Remove dead people
+    if (!config.showDead) {
+      if (n.deathDate != null && n.deathDate != "") {
+        var deathYear = Number(n.deathDate.substring(0, 4));
+        if (isNaN(deathYear)) return;
+
+        if (
+          nodes.indexOf(n) != -1 &&
+          deathYear < year
+        ) {
+          nodes.splice(nodes.indexOf(n), 1);
+        }
       }
     }
   }
