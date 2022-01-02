@@ -60,5 +60,3 @@ date) is shown.
 
 
 ## Upcoming features
-- New key for config.json 'displayDead': Dead people will be excluded from
-    graphs if this is true
