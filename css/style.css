@@ -47,6 +47,12 @@ body {
   margin-right: 5px;
 }
 
+#showDead {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
 .birthYear {
   font-size: 17pt;
   color: #888888;
@@ -73,7 +79,6 @@ svg {
   top: 0;
   left: 0;
   font-size: 36px;
-  line-height:
 }
 
 #timeNavigation {
@@ -100,6 +105,12 @@ svg {
 }
 
 #search {
+  opacity: 0.5;
+  margin: 0 0 0 10;
+  width: 91%;
+}
+
+#goToYear {
   opacity: 0.5;
   margin: 0 0 0 10;
   width: 91%;
@@ -173,3 +184,4 @@ canvas {
   top: 0;
   left: 0;
   z-index: 0;
+}

@@ -1,3 +1,8 @@
+config_ben.json
+
 data/lineage.json
 data/relationship*.csv
-config_ben.json
+
+node_modules/
+package-lock.json
+package.json

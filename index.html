@@ -6,7 +6,7 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
 
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="js/d3.v4.min.js"></script>
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/lineage.js"></script>
@@ -20,8 +20,10 @@
           lineage = new Lineage;
           lineage(config);
           lineage.loadJson(config.data);
+
+          if (config.menuDefaultOpen) toggleMenu();
       });
-      }
+    }
 
     function toggleMenu() {
       menuStatus = !menuStatus;
@@ -33,7 +35,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const startYear = parseInt(urlParams.get('startYear'));
 
- </script>
+  </script>
 
 </head>
 <body onLoad="start()">
@@ -43,29 +45,61 @@
       <h1><a href="http://github.com/bengarvey/lineage">Lineage</a></h1>
       <div class="checkbox">
         <label class="options__label">
-          <input type="checkbox" class="checkbox-lg" id="musicOn"> Music
+          <input type="checkbox" class="checkbox-lg" id="musicOn">
+          Music
         </label>
       </div>
       <div class="checkbox">
         <label type="options__label">
-          <input type="checkbox" class="checkbox-lg" id="nightModeOn"> Night Mode
+          <input type="checkbox" class="checkbox-lg" id="nightModeOn">
+          Night Mode
+        </label>
+      </div>
+      <div class="checkbox">
+        <label class="options__label">
+          <input type="checkbox" class="checkbox-lg" id="showDead"
+            onclick="lineage.setShowDead(this.checked);">
+            Show dead
         </label>
       </div>
     </div>
     <div class="views">
-      <button class="btn btn-default view__button" onClick="lineage.setMode('tree');">Tree</button>
-      <button class="btn btn-default view__button" onClick="lineage.setMode('timeline');">Timeline</button>
-      <button class="btn btn-default view__button" onClick="lineage.setMode('cluster');">Cluster</button>
+      <button class="btn btn-default view__button"
+        onClick="lineage.setMode('tree');">
+        Tree
+      </button>
+      <button class="btn btn-default view__button"
+        onClick="lineage.setMode('timeline');">
+        Timeline
+      </button>
+      <button class="btn btn-default view__button"
+        onClick="lineage.setMode('cluster');">
+        Cluster
+      </button>
     </div>
     <div class="time">
       <button class="btn btn-default time__button" id="firstButton"
         onClick="lineage.setYear(1800)">First</button>
       <button class="btn btn-default time__button" id="playButton"
-        onClick="lineage.setYearIncrement(1);lineage.playMusic();">Play</button>
+        onClick="lineage.setYearIncrement(1);lineage.playMusic();">
+        Play
+      </button>
+      <button class="btn btn-default time__button" id="stopButton"
+        onClick="lineage.setYearIncrement(0);lineage.pauseMusic();">
+        Stop
+      </button>
       <button class="btn btn-default time__button" id="lastButton"
-        onClick="lineage.setYear(2014)">Last</button>
+        onClick="lineage.setYear(2014)">
+        Last
+      </button>
     </div>
-    <input id="search" class="form-control input-lg" value="">
+    <input id="search" class="form-control input-lg"
+      value=""
+      placeholder="Filter, e.g.: 'Kenobi Skywalker'">
+    <input id="goToYear" type="number" class="form-control input-lg"
+      value=""
+      onchange="lineage.setYear(Number(this.value));"
+      placeholder="Jump to this year, e.g. 2002">
   </div>
   <div id="year"></div>
   <canvas height="1000" width="1000"></canvas>

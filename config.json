@@ -4,5 +4,7 @@
   "startYear": 2014,
   "endYear": 2014,
   "speed": 100,
-  "debug": true
+  "debug": false,
+  "menuDefaultOpen": true,
+  "showDead": true
 }
