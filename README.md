@@ -6,6 +6,15 @@ Family Tree Data Expression Engine
 See a live demo at
 http://www.bengarvey.com/lineage
 
+## Running locally
+You can run this locally by running `python3 -m http.server 8000` from a terminal or running the following commands
+
+```
+npm install
+npm install connect
+npm install serve-static
+```
+And then every time after that running `node server.js`
 
 ## Configuration
 

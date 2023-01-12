@@ -15,7 +15,7 @@
     var lineage = null;
     var menuStatus = false;
     function start() {
-      $.getJSON("config.json", function(config) {
+      $.getJSON("config/config.json", function(config) {
           config.startYear = isNaN(startYear) ? config.startYear : startYear;
           lineage = new Lineage;
           lineage(config);
