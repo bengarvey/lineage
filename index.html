@@ -16,15 +16,10 @@
     var menuStatus = false;
     function start() {
       $.getJSON("config/config.json", function(config) {
-          console.log("start 1");
           config.startYear = isNaN(startYear) ? config.startYear : startYear;
-          console.log("start 2");
           lineage = new Lineage;
-          console.log("start 3");
           lineage(config);
-          console.log("start 4");
           lineage.loadJson(config.data);
-          console.log("start 5");
 
           if (config.menuDefaultOpen) toggleMenu();
       });

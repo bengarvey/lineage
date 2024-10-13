@@ -72,17 +72,11 @@ function Lineage() {
   }
 
   function go(response) {
-    //console.log("go", error, response)
-    //if (error) throw error;
-
-    console.log("we going", response)
-
     init(response);
     forceRefresh = true;
     if (interval != null) {
       interval.stop();
     }
-    console.log("here!@#");
     interval = d3.interval(loop, config.speed);
   }
 
@@ -99,7 +93,6 @@ function Lineage() {
     data = response;
 
     users = d3.group(nodes, d => d.id);
-
     data = prepareData(data, filters);
     simulation = d3.forceSimulation(nodes);
     [canvas, simulation] = getCanvasSimulation(mode);
@@ -287,7 +280,7 @@ function Lineage() {
   function updateFilter() {
     if (filters != $("#search").val()) {
       filters = $("#search").val();
-      go(null, originalData);
+      go(originalData);
     }
   }
 
@@ -304,12 +297,12 @@ function Lineage() {
   }
 
   function prepareData(data, filters) {
-    console.log(data);
 
     var filterItems = filters.split(" ");
     filterItems = filterItems.filter(function(i) {
       return i.length > 0;
     });
+    debugger;
     for (var i = 0; i < data.nodes.length; i++) {
       if (!inFilter(data.nodes[i], filterItems)) {
         data.nodes.splice(i, 1);
@@ -411,7 +404,7 @@ function Lineage() {
     context.translate(width / 2, height / 2);
 
     for (var i = 0; i < users.length; i++) {
-      var d = users[i].values[0];
+      var d = users[i][0];
       var scale = ((d.birthDate.substring(0, 4) - 1750) / (2020 - 1750) - 0.5);
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
     }
@@ -502,7 +495,6 @@ function Lineage() {
   }
 
   function log(message, config) {
-    console.log(config.debug);
     if (config.debug) {
       console.log(message);
     }
