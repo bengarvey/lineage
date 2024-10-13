@@ -302,7 +302,6 @@ function Lineage() {
     filterItems = filterItems.filter(function(i) {
       return i.length > 0;
     });
-    debugger;
     for (var i = 0; i < data.nodes.length; i++) {
       if (!inFilter(data.nodes[i], filterItems)) {
         data.nodes.splice(i, 1);
@@ -403,11 +402,11 @@ function Lineage() {
     context.save();
     context.translate(width / 2, height / 2);
 
-    for (var i = 0; i < users.length; i++) {
-      var d = users[i][0];
-      var scale = ((d.birthDate.substring(0, 4) - 1750) / (2020 - 1750) - 0.5);
+    users.forEach( function(user) {
+      var d = user[0];
+      var scale = ((d.birthDate.substring(0, 4) - 1800) / (2004 - 1800) - 0.5);
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
-    }
+    });
 
     users.forEach(function(user) {
       context.beginPath();
