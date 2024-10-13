@@ -302,7 +302,6 @@ function Lineage() {
     filterItems = filterItems.filter(function(i) {
       return i.length > 0;
     });
-
     for (var i = 0; i < data.nodes.length; i++) {
       if (!inFilter(data.nodes[i], filterItems)) {
         data.nodes.splice(i, 1);
