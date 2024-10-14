@@ -1,155 +1,210 @@
-const fs = require('fs');
 const Chance = require('chance');
 const chance = new Chance();
 
-const GENERATIONS = 10;
-const MAX_CHILDREN = 20;
-const MIN_CHILDREN = 0;
-const INITIAL_PEOPLE = 4000;
-const MIN_YEAR = 1800;
-const MAX_YEAR = 2014;
-const MAX_LINKS = 3000;
-let globalID = 0;
+// Constants
+const TOTAL_NODES = 30; // You can adjust this as needed
+const MAX_CHILDREN = 5; // Max children per family
+const MIN_CHILDREN = 0; // Min children per family
+const GENDER_NEUTRAL_NAMES = ['Alex', 'Jordan', 'Casey', 'Taylor', 'Riley']; // Add more as needed
+const NON_BINARY_PERCENTAGE = 0.03; // 3%
+const SAME_SEX_PERCENTAGE = 0.05; // 5%
 
-console.log("Generating family...");
+let nodes = [];
+let links = [];
+let currentId = 0;
 
-const generatePeople = (total) => {
-  console.log(total);
-  const people = [];
-  for (let index = 0; index <= total; index++) {
-    const person = generatePerson();
-    person.id = globalID += 1;
-    people.push(person);
-  }
-  console.log(people.length);
-  return people;
-};
+// Keep track of sibling groups to prevent sibling marriages
+let siblingGroups = [];
 
-const generatePerson = () => {
-  const gender = chance.gender();
-  const first = chance.first({ gender: gender });
-  const last = chance.last();
-  const name = `${first} ${last}`;
+// Helper Functions
+const getRandomBirthDeathDates = () => {
+    const birthYear = parseInt(chance.year({ min: 1900, max: 2000 }), 10);
+    const minDeathYear = birthYear + 20;
+    const maxDeathYear = Math.min(minDeathYear + 80, 2100);
 
-  const birthYear = chance.year({ min: MIN_YEAR, max: MAX_YEAR });
-  const deathYear = +birthYear + chance.integer({ min: 1, max: 100 });
+    const deathYear = parseInt(chance.year({ min: minDeathYear, max: maxDeathYear }), 10);
 
-  return {
-    firstName: first,
-    lastName: last,
-    name: name,
-    gender: gender,
-    birthDate: chance.date({ year: birthYear }),
-    deathDate: chance.date({ year: deathYear })
-  };
-};
+    const birthMonth = chance.integer({ min: 0, max: 11 });
+    const birthDay = chance.integer({ min: 1, max: 28 });
+    const deathMonth = chance.integer({ min: 0, max: 11 });
+    const deathDay = chance.integer({ min: 1, max: 28 });
 
-const generateKidsFromList = (parents) => {
-  let kids = [];
-  for (let index = 0; index < parents.length - 1; index += 2) {
-    const newKids = generateKids(parents[index], parents[index + 1]);
-    kids = kids.concat(newKids);
-  }
-  return kids;
-};
+    const birthDate = new Date(birthYear, birthMonth, birthDay);
+    const deathDate = new Date(deathYear, deathMonth, deathDay);
 
-const generateKids = (first, second) => {
-  let kids = [];
-  for (let index = 0; index <= 4; index++) {
-    kids.push(generateKid(first, second));
-  }
-  return kids;
-};
-
-const generateKid = (first, second) => {
-  const person = generatePerson();
-  person.parentId1 = first.id;
-  person.parentId2 = second.id;
-  return person;
-};
-
-const generateMarriages = (singles) => {
-  const complete = [];
-  let index = 0;
-  while (singles.length > 1) {
-    const rand = getRandomInt(index + 1, singles.length - 1);
-
-    complete.push(singles[index]);
-    complete.push(singles[rand]);
-
-    complete[complete.length - 2].spouseId = singles[rand].id;
-    complete[complete.length - 1].spouseId = singles[index].id;
-
-    singles.splice(rand, 1);
-    singles.splice(index, 1);
-  }
-  return complete;
-};
-
-const getRandomInt = (min, max) => {
-  return Math.ceil(Math.random() * (max - min) + min);
-};
-
-const generateLinks = (nodes, total) => {
-  const links = [];
-  for (let index = 0; index <= total; index++) {
-    const source = chance.integer({ min: 0, max: nodes.length - 1 });
-    const target = chance.integer({ min: 0, max: nodes.length - 1 });
-    const relation = getRelation(nodes[target]);
-    const color = getColor(relation);
-    const link = {
-      source: nodes[source].id,
-      target: nodes[target].id,
-      color: color,
-      relation: relation
-    };
-    links.push(link);
-  }
-  return links;
-};
-
-const getColor = (relation) => {
-  switch (relation) {
-    case 'mother':
-      return '#933';
-    case 'father':
-      return '#39F';
-    case 'spouse':
-      return '#666';
-    default:
-      return '#111';
-  }
-};
-
-const getRelation = (node) => {
-  if (node.gender === 'Female') return 'mother';
-  else if (node.gender === 'Male') return 'father';
-};
-
-const writeFile = (file, data) => {
-  fs.writeFile(file, data, (err) => {
-    if (err) {
-      return console.log(err);
-    } else {
-      console.log("Done.");
+    if (isNaN(birthDate.getTime()) || isNaN(deathDate.getTime())) {
+        throw new Error('Invalid date generated');
     }
+
+    return { birthDate, deathDate };
+};
+
+const createNode = (gender) => {
+    const isNonBinary = Math.random() < NON_BINARY_PERCENTAGE;
+    let name;
+
+    if (isNonBinary || gender === 'non-binary') {
+        name = chance.pickone(GENDER_NEUTRAL_NAMES);
+    } else {
+        name = chance.first({ gender: gender.toLowerCase() });
+    }
+
+    const { birthDate, deathDate } = getRandomBirthDeathDates();
+
+    const node = {
+        id: currentId++,
+        name,
+        gender: isNonBinary ? 'non-binary' : gender,
+        lastName: chance.last(),
+        birthDate: birthDate.toISOString(),
+        deathDate: deathDate.toISOString()
+    };
+
+    nodes.push(node);
+    return node;
+};
+
+const createLink = (sourceId, targetId, relation, color) => {
+    links.push({
+        source: sourceId,
+        target: targetId,
+        relation,
+        color
+    });
+};
+
+const getParentType = (gender) => {
+  if (gender === 'Male') return 'father'; // Blue for father
+  if (gender === 'Female') return 'mother'; // Pink for mother
+  return 'parent'; // Purple for non-binary parent
+};
+
+const createFamilyTree = (parent1, parent2, generation = 1) => {
+    const numChildren = chance.integer({ min: MIN_CHILDREN, max: MAX_CHILDREN });
+    const siblingGroup = [];
+
+    for (let i = 0; i < numChildren; i++) {
+        const childGender = chance.gender();
+        const child = createNode(childGender);
+
+        // Inherit last name
+        child.lastName = chance.pickone([parent1.lastName, parent2.lastName]);
+
+        // Add child to sibling group
+        siblingGroup.push(child.id);
+
+        // Color parent-child links based on gender of the parent
+        let parent1Color = parent1.gender === 'Male' ? '#0000FF' : (parent1.gender === 'Female' ? '#FFC0CB' : '#800080');
+        let parent2Color = parent2.gender === 'Male' ? '#0000FF' : (parent2.gender === 'Female' ? '#FFC0CB' : '#800080');
+
+        // Create parent-child links with appropriate colors
+        createLink(parent1.id, child.id, getParentType(parent1.gender), parent1Color);
+        createLink(parent2.id, child.id, getParentType(parent2.gender), parent2Color);
+
+        // Recursively generate more families
+        if (generation < 3) {
+            let spouseGender = chance.gender();
+            let isSameSexCouple = Math.random() < SAME_SEX_PERCENTAGE;
+
+            // For same-sex couple, spouse gender matches the child gender
+            if (isSameSexCouple) spouseGender = child.gender;
+
+            const spouse = createNode(spouseGender);
+            createLink(child.id, spouse.id, 'spouse', '#cc0');
+
+            createFamilyTree(child, spouse, generation + 1);
+        }
+    }
+
+    // Add sibling group to the siblingGroups list
+    if (siblingGroup.length > 1) {
+        siblingGroups.push(siblingGroup);
+    }
+};
+
+// Ensure no siblings marry by checking against sibling groups
+const isValidMarriage = (person1Id, person2Id) => {
+    for (const group of siblingGroups) {
+        if (group.includes(person1Id) && group.includes(person2Id)) {
+            return false; // They are siblings
+        }
+    }
+    return true; // Not siblings
+};
+
+const linkUnlinkedDescendants = () => {
+    const unlinked = findUnlinkedDescendants();
+
+    chance.shuffle(unlinked);
+
+    // Pair up unlinked descendants and create spouse relationships
+    for (let i = 0; i < unlinked.length - 1; i += 2) {
+        const descendant1 = unlinked[i];
+        const descendant2 = unlinked[i + 1];
+
+        if (isValidMarriage(descendant1.id, descendant2.id)) {
+            // Create a spousal link between them
+            createLink(descendant1.id, descendant2.id, 'spouse', '#cc0');
+
+            // Generate children for the newly formed couple
+            createFamilyTree(descendant1, descendant2);
+        }
+    }
+};
+
+const findUnlinkedDescendants = () => {
+  const unlinked = [];
+  const linked = new Set();
+
+  // Traverse through all links and mark linked individuals as 'spouses'
+  links.forEach(link => {
+      if (link.relation === 'spouse') {
+          linked.add(link.source);
+          linked.add(link.target);
+      }
   });
+
+  // Find nodes that are not linked as a spouse
+  nodes.forEach(node => {
+      if (!linked.has(node.id)) {
+          unlinked.push(node);
+      }
+  });
+
+  return unlinked;
 };
 
-const link = {
-  source: 1,
-  target: 0,
-  color: '#39F',
-  relation: 'father'
+
+// Create initial family
+const createInitialFamilies = () => {
+    const numFamilies = TOTAL_NODES / (MAX_CHILDREN + 2); // Estimate
+    for (let i = 0; i < numFamilies; i++) {
+        const parent1Gender = chance.gender();
+        let parent2Gender = chance.gender();
+
+        // Same-sex couple logic
+        let isSameSexCouple = Math.random() < SAME_SEX_PERCENTAGE;
+        if (isSameSexCouple) parent2Gender = parent1Gender;
+
+        const parent1 = createNode(parent1Gender);
+        const parent2 = createNode(parent2Gender);
+
+        // Link parents as spouses
+        createLink(parent1.id, parent2.id, 'spouse', '#cc0');
+
+        // Create their family
+        createFamilyTree(parent1, parent2);
+    }
 };
 
-const people = generatePeople(INITIAL_PEOPLE);
-const links = generateLinks(people, MAX_LINKS);
-console.log(people, links);
-const output = {
-  nodes: people,
-  links: links
-};
-writeFile('data/people.json', JSON.stringify(output));
+// Run the generator
+createInitialFamilies();
+linkUnlinkedDescendants();
 
-console.log("Complete!");
+const dataset = {
+    nodes,
+    links
+};
+
+// Output the dataset (or write to a file)
+console.log(JSON.stringify(dataset, null, 2));
