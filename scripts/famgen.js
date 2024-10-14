@@ -5,7 +5,53 @@ const chance = new Chance();
 const TOTAL_NODES = 30; // You can adjust this as needed
 const MAX_CHILDREN = 5; // Max children per family
 const MIN_CHILDREN = 0; // Min children per family
-const GENDER_NEUTRAL_NAMES = ['Alex', 'Jordan', 'Casey', 'Taylor', 'Riley']; // Add more as needed
+const GENDER_NEUTRAL_NAMES  = [
+  'Alex', 'Jordan', 'Taylor', 'Casey', 'Morgan', 'Riley', 'Avery', 'Quinn', 'Cameron', 'Peyton',
+  'Rowan', 'Sawyer', 'Charlie', 'Skyler', 'Dakota', 'Emerson', 'Finley', 'Harper', 'Phoenix', 'River',
+  'Bailey', 'Ellis', 'Hayden', 'Jesse', 'Marlowe', 'Shawn', 'Tatum', 'Addison', 'Ash', 'Blake',
+  'Emery', 'Kendall', 'Lennon', 'Remy', 'Aiden', 'Angel', 'Ari', 'Blaine', 'Brett', 'Chandler',
+  'Corey', 'Dallas', 'Devin', 'Eden', 'Frankie', 'Gray', 'Hollis', 'Indigo', 'Jael', 'Jaden',
+  'Kai', 'Kasey', 'Kyrie', 'Lake', 'Lane', 'Linden', 'Lyric', 'Marley', 'Micah', 'Monroe',
+  'Noel', 'Oakley', 'Parker', 'Reese', 'Rene', 'Robin', 'Sam', 'Shiloh', 'Sterling', 'Teagan',
+  'Tracy', 'Winter', 'Zion', 'Arden', 'August', 'Beau', 'Bellamy', 'Brooks', 'Carter', 'Clarke',
+  'Drew', 'Elliot', 'Haven', 'Jules', 'Justice', 'Kit', 'Laurie', 'Leigh', 'Lex', 'London',
+  'Max', 'Nico', 'Paris', 'Perry', 'Ray', 'Reagan', 'Sage', 'Shay', 'Toni', 'Vesper',
+  'Wren', 'Zephyr', 'Briar', 'Blair', 'Dylan', 'Elliott', 'Harley', 'Jamie', 'Jules', 'Kieran',
+  'Luca', 'Remington', 'Sasha', 'Toby', 'Amari', 'Ashby', 'Cypress', 'Dakari', 'Darian', 'Denver',
+  'Ellison', 'Fifer', 'Hartley', 'Hollis', 'Ivory', 'Jagger', 'Karsyn', 'Landry', 'Mackenzie', 'Madden',
+  'Merritt', 'Mika', 'Murphy', 'Nova', 'Onyx', 'Ozzy', 'Pax', 'Presley', 'Reed', 'Reeve',
+  'Rory', 'Scout', 'Storm', 'Tanner', 'Tarian', 'Timber', 'Tyler', 'Valentine', 'Wynn', 'Zayne',
+  'Alva', 'Baylor', 'Bowie', 'Brighton', 'Brinley', 'Campbell', 'Cleo', 'Darby', 'Dorsey', 'Ellery',
+  'Farren', 'Glenn', 'Greer', 'Hadley', 'Hale', 'Jalen', 'Jensen', 'Jericho', 'Kenley', 'Keegan',
+  'Kendrick', 'Kingsley', 'Lark', 'Leighton', 'Lennox', 'Marlow', 'Merrill', 'Orion', 'Palmer', 'Quincy',
+  'Reilly', 'Ripley', 'Sailor', 'Shea', 'Sky', 'Tal', 'Thayer', 'Torin', 'True', 'West',
+  'Zuri', 'Adair', 'Arlo', 'Ashton', 'Bell', 'Bliss', 'Bowie', 'Bright', 'Callahan', 'Carlin',
+  'Clancy', 'Collins', 'Creed', 'Delaney', 'Dempsey', 'Dorian', 'Ellington', 'Fallon', 'Finch', 'Fox',
+  'Graydon', 'Hadwin', 'Halston', 'Harlow', 'Haven', 'Joss', 'Keaton', 'Kodi', 'Larkin', 'Leith',
+  'Lior', 'Locke', 'Lyle', 'Maris', 'Misha', 'Nev', 'Noa', 'Oak', 'Paxton', 'Quill',
+  'Rain', 'Red', 'Reeve', 'Rhys', 'Roscoe', 'Scout', 'Sloan', 'Sorrel', 'Talon', 'Tristan',
+  'Vale', 'Whitley', 'Zane', 'Zephyr', 'Adley', 'Ainsley', 'Anderson', 'Ashwin', 'Beckett', 'Bex',
+  'Blaise', 'Brady', 'Cal', 'Chesney', 'Clove', 'Cyan', 'Dane', 'Dayton', 'Eero', 'Farrell',
+  'Finn', 'Florian', 'Georgie', 'Grayson', 'Guthrie', 'Hale', 'Hart', 'Huxley', 'Ira', 'Isley',
+  'Jacoby', 'Jess', 'Jory', 'Kahlo', 'Kirby', 'Kylo', 'Lander', 'Lumen', 'Madden', 'Mavis',
+  'Navy', 'Nikita', 'North', 'Oaklee', 'Payson', 'Penn', 'Radley', 'Reese', 'Reid', 'Rogue',
+  'Saxon', 'Soren', 'Taegan', 'Tenzin', 'Thea', 'Tory', 'True', 'Vale', 'Wiley', 'Yale',
+  'Zane', 'Aeron', 'Aris', 'Arrow', 'Axton', 'Banks', 'Brennan', 'Brogan', 'Callan', 'Channing',
+  'Clancy', 'Crosby', 'Dale', 'Dario', 'Edison', 'Evan', 'Faye', 'Flint', 'Ford', 'Frost',
+  'Gemini', 'Haley', 'Harlem', 'Indy', 'Jett', 'Jones', 'Kody', 'Land', 'Leif', 'Linden',
+  'Lochlan', 'Lux', 'Mace', 'McKinley', 'Meadow', 'Merrick', 'Nevada', 'Oakes', 'Otis', 'Palin',
+  'Phoenix', 'Porter', 'Quaid', 'Quinn', 'Ren', 'Ridley', 'Roswell', 'Sparrow', 'Story', 'Sy',
+  'Taran', 'Temple', 'Trace', 'Uriah', 'Vale', 'Van', 'Wendell', 'Wilder', 'Xan', 'Zeke',
+  'Ziggy', 'Amory', 'Archer', 'Ashland', 'Aspen', 'Barrett', 'Berlin', 'Blaze', 'Bo', 'Brodie',
+  'Cadence', 'Cairo', 'Calder', 'Chase', 'Cove', 'Cruz', 'Declan', 'Dune', 'Echo', 'Elian',
+  'Elliot', 'Ezra', 'Farrah', 'Finnick', 'Floyd', 'Fraser', 'Garrett', 'Griffin', 'Harper', 'Islay',
+  'Israel', 'Jaden', 'Jagger', 'Jem', 'Jericho', 'Juno', 'Kai', 'Kenai', 'Koa', 'Lace',
+  'Lane', 'Lyle', 'Mac', 'Magnus', 'Milo', 'Moss', 'Nash', 'Nevin', 'Onyx', 'Oran',
+  'Otto', 'Pace', 'Paxton', 'Rafe', 'Raleigh', 'Ranger', 'Ren', 'Rio', 'Roux', 'Ryker',
+  'Sequoia', 'Shai', 'Shane', 'Sonny', 'Sorren', 'Stone', 'Taj', 'Tanis', 'Taran', 'Tesla',
+  'Tobiah', 'Tobin', 'Torren', 'Trace', 'Trey', 'Tully', 'Wade', 'Wayne', 'Weston', 'Xander',
+  'York', 'Zeppelin', 'Zion', 'Ziv'
+];
 const NON_BINARY_PERCENTAGE = 0.03; // 3%
 const SAME_SEX_PERCENTAGE = 0.05; // 5%
 
