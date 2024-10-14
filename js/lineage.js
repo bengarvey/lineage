@@ -187,7 +187,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(d.name + "<br><span class='birthYear'>" + d.birthDate.substring(0, 4) + "</span>");
+    d3.select('#name').html(d.name + " " + d.lastName + "<br><span class='birthYear'>" + d.birthDate.substring(0, 4) + "</span>");
   }
 
   function setForceRefresh(value) {
