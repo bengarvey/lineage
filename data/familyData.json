@@ -1,162 +1,1984 @@
 {
-    "nodes": [
-        {
-            "id": 0,
-            "name": "Palpatine",
-            "gender": "M",
-            "lastName": "Palpatine",
-            "birthDate": "1875-01-01T00:00:00.000Z",
-            "deathDate": "1983-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 1,
-            "name": "Skywalker, Shmi",
-            "gender": "F",
-            "lastName": "Skywalker",
-            "birthDate": "1905-01-01T00:00:00.000Z",
-            "deathDate": "1955-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 2,
-            "name": "Skywalker, Anakin",
-            "gender": "M",
-            "lastName": "Skywalker",
-            "birthDate": "1935-01-01T00:00:00.000Z",
-            "deathDate": "1983-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 3,
-            "name": "Amidala, Padm� ",
-            "gender": "F",
-            "lastName": "Amidala",
-            "birthDate": "1925-01-01T00:00:00.000Z",
-            "deathDate": "1960-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 4,
-            "name": "Skywalker, Luke",
-            "gender": "M",
-            "lastName": "Skywalker",
-            "birthDate": "1960-01-01T00:00:00.000Z",
-            "deathDate": null
-        },
-        {
-            "id": 5,
-            "name": "Organa, Leia",
-            "gender": "F",
-            "lastName": "Organa",
-            "birthDate": "1960-01-01T00:00:00.000Z",
-            "deathDate": null
-        },
-        {
-            "id": 6,
-            "name": "Yoda",
-            "gender": "M",
-            "lastName": "Yoda",
-            "birthDate": "1083-01-01T00:00:00.000Z",
-            "deathDate": "1983-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 7,
-            "name": "Kenobi, Obi-Wan",
-            "gender": "M",
-            "lastName": "Kenobi",
-            "birthDate": "1920-01-01T00:00:00.000Z",
-            "deathDate": "1977-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 8,
-            "name": "C3PO",
-            "gender": "M",
-            "lastName": "C3PO",
-            "birthDate": "1940-01-01T00:00:00.000Z",
-            "deathDate": "-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 9,
-            "name": "R2D2",
-            "gender": "M",
-            "lastName": "R2D2",
-            "birthDate": "1940-01-01T00:00:00.000Z",
-            "deathDate": "-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 10,
-            "name": "Solo, Han",
-            "gender": "M",
-            "lastName": "Solo",
-            "birthDate": "1942-01-01T00:00:00.000Z",
-            "deathDate": "2015-01-01T00:00:00.000Z"
-        },
-        {
-            "id": 11,
-            "name": "Chewbacca",
-            "gender": "M",
-            "lastName": "Chewbacca",
-            "birthDate": "1777-01-01T00:00:00.000Z",
-            "deathDate": null
-        }
-    ],
-    "links": [
-        {
-            "source": 2,
-            "target": 3,
-            "color": "#CC0",
-            "relation": "spouse"
-        },
-        {
-            "source": 2,
-            "target": 1,
-            "color": "#F39",
-            "relation": "mother"
-        },
-        {
-            "source": 3,
-            "target": 2,
-            "color": "#CC0",
-            "relation": "spouse"
-        },
-        {
-            "source": 4,
-            "target": 3,
-            "color": "#F39",
-            "relation": "mother"
-        },
-        {
-            "source": 4,
-            "target": 2,
-            "color": "#39F",
-            "relation": "father"
-        },
-        {
-            "source": 5,
-            "target": 10,
-            "color": "#CC0",
-            "relation": "spouse"
-        },
-        {
-            "source": 5,
-            "target": 3,
-            "color": "#F39",
-            "relation": "mother"
-        },
-        {
-            "source": 5,
-            "target": 2,
-            "color": "#39F",
-            "relation": "father"
-        },
-        {
-            "source": 8,
-            "target": 2,
-            "color": "#39F",
-            "relation": "father"
-        },
-        {
-            "source": 10,
-            "target": 5,
-            "color": "#CC0",
-            "relation": "spouse"
-        }
-    ]
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Isaac",
+      "gender": "Male",
+      "lastName": "West",
+      "birthDate": "1961-06-06T04:00:00.000Z",
+      "deathDate": "2023-08-13T04:00:00.000Z"
+    },
+    {
+      "id": 1,
+      "name": "Hilda",
+      "gender": "Female",
+      "lastName": "Parkes",
+      "birthDate": "1904-02-16T05:00:00.000Z",
+      "deathDate": "1941-01-03T05:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Luella",
+      "gender": "Female",
+      "lastName": "West",
+      "birthDate": "1941-06-01T04:00:00.000Z",
+      "deathDate": "1989-04-15T04:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Vernon",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1954-03-20T05:00:00.000Z",
+      "deathDate": "1982-03-18T05:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Craig",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1934-08-16T04:00:00.000Z",
+      "deathDate": "2001-04-09T04:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Lina",
+      "gender": "Female",
+      "lastName": "Andres",
+      "birthDate": "1991-12-26T05:00:00.000Z",
+      "deathDate": "2011-12-04T05:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "name": "Adrian",
+      "gender": "Male",
+      "lastName": "Andres",
+      "birthDate": "1957-01-05T05:00:00.000Z",
+      "deathDate": "2048-12-17T05:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "name": "Donald",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1962-07-16T04:00:00.000Z",
+      "deathDate": "2022-09-14T04:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "name": "Jack",
+      "gender": "Male",
+      "lastName": "Andres",
+      "birthDate": "1942-06-02T04:00:00.000Z",
+      "deathDate": "1972-11-22T05:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "name": "Lola",
+      "gender": "Female",
+      "lastName": "Andres",
+      "birthDate": "1998-01-02T05:00:00.000Z",
+      "deathDate": "2041-12-12T05:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "name": "Leroy",
+      "gender": "Male",
+      "lastName": "Andres",
+      "birthDate": "1974-06-06T04:00:00.000Z",
+      "deathDate": "2002-02-15T05:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "name": "Eugenia",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1929-09-02T04:00:00.000Z",
+      "deathDate": "2006-09-10T04:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "name": "Henrietta",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1905-03-21T05:00:00.000Z",
+      "deathDate": "1973-08-08T04:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "name": "Hester",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1963-07-19T04:00:00.000Z",
+      "deathDate": "2058-12-20T05:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "name": "Edward",
+      "gender": "Male",
+      "lastName": "Fontana",
+      "birthDate": "1926-03-27T05:00:00.000Z",
+      "deathDate": "1963-12-23T05:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "name": "Rachel",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1958-12-17T05:00:00.000Z",
+      "deathDate": "2005-09-05T04:00:00.000Z"
+    },
+    {
+      "id": 16,
+      "name": "Jonathan",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1952-01-07T05:00:00.000Z",
+      "deathDate": "1975-08-13T04:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "name": "Lucille",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1901-07-22T05:00:00.000Z",
+      "deathDate": "1932-11-14T05:00:00.000Z"
+    },
+    {
+      "id": 18,
+      "name": "Elijah",
+      "gender": "Male",
+      "lastName": "Sutton",
+      "birthDate": "1958-11-16T05:00:00.000Z",
+      "deathDate": "2018-01-09T05:00:00.000Z"
+    },
+    {
+      "id": 19,
+      "name": "Clyde",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1911-05-06T05:00:00.000Z",
+      "deathDate": "1942-01-16T05:00:00.000Z"
+    },
+    {
+      "id": 20,
+      "name": "Adeline",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1904-01-21T05:00:00.000Z",
+      "deathDate": "1933-07-12T04:00:00.000Z"
+    },
+    {
+      "id": 21,
+      "name": "Bertie",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1973-03-01T05:00:00.000Z",
+      "deathDate": "1999-08-15T04:00:00.000Z"
+    },
+    {
+      "id": 22,
+      "name": "Ricardo",
+      "gender": "Male",
+      "lastName": "Sutton",
+      "birthDate": "1973-09-18T04:00:00.000Z",
+      "deathDate": "1998-08-08T04:00:00.000Z"
+    },
+    {
+      "id": 23,
+      "name": "Finley",
+      "gender": "non-binary",
+      "lastName": "Sutton",
+      "birthDate": "1928-08-17T04:00:00.000Z",
+      "deathDate": "1986-04-21T05:00:00.000Z"
+    },
+    {
+      "id": 24,
+      "name": "Delia",
+      "gender": "Female",
+      "lastName": "Andres",
+      "birthDate": "1911-11-26T05:00:00.000Z",
+      "deathDate": "2004-11-04T05:00:00.000Z"
+    },
+    {
+      "id": 25,
+      "name": "Lettie",
+      "gender": "Female",
+      "lastName": "Rogai",
+      "birthDate": "1936-06-06T04:00:00.000Z",
+      "deathDate": "2028-02-10T05:00:00.000Z"
+    },
+    {
+      "id": 26,
+      "name": "Fannie",
+      "gender": "Female",
+      "lastName": "Andres",
+      "birthDate": "1998-04-21T04:00:00.000Z",
+      "deathDate": "2029-02-18T05:00:00.000Z"
+    },
+    {
+      "id": 27,
+      "name": "David",
+      "gender": "Male",
+      "lastName": "Gonnelli",
+      "birthDate": "1939-10-09T05:00:00.000Z",
+      "deathDate": "2003-11-19T05:00:00.000Z"
+    },
+    {
+      "id": 28,
+      "name": "Grace",
+      "gender": "Female",
+      "lastName": "Gonnelli",
+      "birthDate": "1929-12-16T05:00:00.000Z",
+      "deathDate": "1980-11-10T05:00:00.000Z"
+    },
+    {
+      "id": 29,
+      "name": "Justin",
+      "gender": "Male",
+      "lastName": "Gonnelli",
+      "birthDate": "1921-07-22T04:00:00.000Z",
+      "deathDate": "1966-01-24T05:00:00.000Z"
+    },
+    {
+      "id": 30,
+      "name": "Lola",
+      "gender": "Female",
+      "lastName": "Andres",
+      "birthDate": "1945-06-21T04:00:00.000Z",
+      "deathDate": "2034-01-12T05:00:00.000Z"
+    },
+    {
+      "id": 31,
+      "name": "Sophie",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1954-01-19T05:00:00.000Z",
+      "deathDate": "2028-05-12T04:00:00.000Z"
+    },
+    {
+      "id": 32,
+      "name": "Oscar",
+      "gender": "Male",
+      "lastName": "Francioni",
+      "birthDate": "1962-02-11T05:00:00.000Z",
+      "deathDate": "2008-03-03T05:00:00.000Z"
+    },
+    {
+      "id": 33,
+      "name": "Bernice",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1921-04-13T05:00:00.000Z",
+      "deathDate": "1994-10-18T04:00:00.000Z"
+    },
+    {
+      "id": 34,
+      "name": "Henrietta",
+      "gender": "Female",
+      "lastName": "Bates",
+      "birthDate": "1998-04-03T05:00:00.000Z",
+      "deathDate": "2077-05-11T04:00:00.000Z"
+    },
+    {
+      "id": 35,
+      "name": "Jeremiah",
+      "gender": "Male",
+      "lastName": "Fontana",
+      "birthDate": "1929-11-25T05:00:00.000Z",
+      "deathDate": "1992-03-23T05:00:00.000Z"
+    },
+    {
+      "id": 36,
+      "name": "Glen",
+      "gender": "Male",
+      "lastName": "Bates",
+      "birthDate": "1987-04-23T04:00:00.000Z",
+      "deathDate": "2047-10-15T04:00:00.000Z"
+    },
+    {
+      "id": 37,
+      "name": "Leo",
+      "gender": "Male",
+      "lastName": "Fontana",
+      "birthDate": "1974-02-15T04:00:00.000Z",
+      "deathDate": "2066-05-04T04:00:00.000Z"
+    },
+    {
+      "id": 38,
+      "name": "Erik",
+      "gender": "Male",
+      "lastName": "Bates",
+      "birthDate": "1951-01-06T05:00:00.000Z",
+      "deathDate": "2032-01-12T05:00:00.000Z"
+    },
+    {
+      "id": 39,
+      "name": "Lucinda",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1930-08-16T04:00:00.000Z",
+      "deathDate": "2021-05-16T04:00:00.000Z"
+    },
+    {
+      "id": 40,
+      "name": "Elliot",
+      "gender": "non-binary",
+      "lastName": "Fontana",
+      "birthDate": "1948-01-26T05:00:00.000Z",
+      "deathDate": "2026-10-27T04:00:00.000Z"
+    },
+    {
+      "id": 41,
+      "name": "Linnie",
+      "gender": "Female",
+      "lastName": "Garrett",
+      "birthDate": "1919-02-05T05:00:00.000Z",
+      "deathDate": "1974-05-23T04:00:00.000Z"
+    },
+    {
+      "id": 42,
+      "name": "Martha",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1986-08-21T04:00:00.000Z",
+      "deathDate": "2029-04-15T04:00:00.000Z"
+    },
+    {
+      "id": 43,
+      "name": "Nelle",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1953-03-13T05:00:00.000Z",
+      "deathDate": "1995-06-13T04:00:00.000Z"
+    },
+    {
+      "id": 44,
+      "name": "Franklin",
+      "gender": "Male",
+      "lastName": "Garrett",
+      "birthDate": "1905-02-01T05:00:00.000Z",
+      "deathDate": "2001-01-12T05:00:00.000Z"
+    },
+    {
+      "id": 45,
+      "name": "Olivia",
+      "gender": "Female",
+      "lastName": "Fontana",
+      "birthDate": "1900-07-12T05:00:00.000Z",
+      "deathDate": "1923-06-17T04:00:00.000Z"
+    },
+    {
+      "id": 46,
+      "name": "Seth",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1907-03-19T05:00:00.000Z",
+      "deathDate": "2003-12-08T05:00:00.000Z"
+    },
+    {
+      "id": 47,
+      "name": "Sean",
+      "gender": "Male",
+      "lastName": "Lee",
+      "birthDate": "1921-04-26T04:00:00.000Z",
+      "deathDate": "1973-06-12T04:00:00.000Z"
+    },
+    {
+      "id": 48,
+      "name": "Manuel",
+      "gender": "Male",
+      "lastName": "Lee",
+      "birthDate": "1970-05-09T04:00:00.000Z",
+      "deathDate": "2069-04-10T04:00:00.000Z"
+    },
+    {
+      "id": 49,
+      "name": "Ethel",
+      "gender": "Female",
+      "lastName": "Vanni",
+      "birthDate": "1967-06-19T04:00:00.000Z",
+      "deathDate": "2032-04-27T04:00:00.000Z"
+    },
+    {
+      "id": 50,
+      "name": "Lloyd",
+      "gender": "Male",
+      "lastName": "Lee",
+      "birthDate": "1910-01-27T05:00:00.000Z",
+      "deathDate": "1971-10-12T04:00:00.000Z"
+    },
+    {
+      "id": 51,
+      "name": "Catherine",
+      "gender": "Female",
+      "lastName": "Vanni",
+      "birthDate": "1981-09-11T04:00:00.000Z",
+      "deathDate": "2078-06-16T04:00:00.000Z"
+    },
+    {
+      "id": 52,
+      "name": "Jack",
+      "gender": "Male",
+      "lastName": "Vanni",
+      "birthDate": "1968-03-03T05:00:00.000Z",
+      "deathDate": "2044-11-03T04:00:00.000Z"
+    },
+    {
+      "id": 53,
+      "name": "Rio",
+      "gender": "non-binary",
+      "lastName": "Battaglini",
+      "birthDate": "1999-04-22T04:00:00.000Z",
+      "deathDate": "2099-07-20T04:00:00.000Z"
+    },
+    {
+      "id": 54,
+      "name": "Eliza",
+      "gender": "Female",
+      "lastName": "Kramer",
+      "birthDate": "1980-04-04T05:00:00.000Z",
+      "deathDate": "2044-05-19T04:00:00.000Z"
+    },
+    {
+      "id": 55,
+      "name": "Marion",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1976-02-28T05:00:00.000Z",
+      "deathDate": "2076-05-23T04:00:00.000Z"
+    },
+    {
+      "id": 56,
+      "name": "Eliza",
+      "gender": "Female",
+      "lastName": "Schneider",
+      "birthDate": "1914-11-03T05:00:00.000Z",
+      "deathDate": "1959-03-10T05:00:00.000Z"
+    },
+    {
+      "id": 57,
+      "name": "Tillie",
+      "gender": "Female",
+      "lastName": "Schneider",
+      "birthDate": "1936-03-14T05:00:00.000Z",
+      "deathDate": "1986-08-14T04:00:00.000Z"
+    },
+    {
+      "id": 58,
+      "name": "Alvin",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1964-04-27T04:00:00.000Z",
+      "deathDate": "2051-11-04T04:00:00.000Z"
+    },
+    {
+      "id": 59,
+      "name": "Christopher",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1933-02-10T05:00:00.000Z",
+      "deathDate": "1984-07-01T04:00:00.000Z"
+    },
+    {
+      "id": 60,
+      "name": "Rosa",
+      "gender": "Female",
+      "lastName": "Kramer",
+      "birthDate": "1900-05-27T05:00:00.000Z",
+      "deathDate": "1922-10-20T05:00:00.000Z"
+    },
+    {
+      "id": 61,
+      "name": "Lenora",
+      "gender": "Female",
+      "lastName": "Bouman",
+      "birthDate": "1971-03-23T05:00:00.000Z",
+      "deathDate": "2021-09-21T04:00:00.000Z"
+    },
+    {
+      "id": 62,
+      "name": "Lily",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1950-08-18T04:00:00.000Z",
+      "deathDate": "2049-05-06T04:00:00.000Z"
+    },
+    {
+      "id": 63,
+      "name": "Lura",
+      "gender": "Female",
+      "lastName": "Pozzi",
+      "birthDate": "2000-07-02T04:00:00.000Z",
+      "deathDate": "2099-09-10T04:00:00.000Z"
+    },
+    {
+      "id": 64,
+      "name": "Allen",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1938-08-26T04:00:00.000Z",
+      "deathDate": "2005-06-10T04:00:00.000Z"
+    },
+    {
+      "id": 65,
+      "name": "Ruby",
+      "gender": "Female",
+      "lastName": "Schenk",
+      "birthDate": "1964-06-27T04:00:00.000Z",
+      "deathDate": "2010-12-22T05:00:00.000Z"
+    },
+    {
+      "id": 66,
+      "name": "Lula",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1917-04-12T05:00:00.000Z",
+      "deathDate": "1949-10-11T05:00:00.000Z"
+    },
+    {
+      "id": 67,
+      "name": "Clayton",
+      "gender": "Male",
+      "lastName": "Calvo",
+      "birthDate": "1983-11-21T05:00:00.000Z",
+      "deathDate": "2004-03-20T05:00:00.000Z"
+    },
+    {
+      "id": 68,
+      "name": "Bruce",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1973-06-19T04:00:00.000Z",
+      "deathDate": "2017-04-19T04:00:00.000Z"
+    },
+    {
+      "id": 69,
+      "name": "Christian",
+      "gender": "Male",
+      "lastName": "Calvo",
+      "birthDate": "1980-12-16T05:00:00.000Z",
+      "deathDate": "2007-04-03T04:00:00.000Z"
+    },
+    {
+      "id": 70,
+      "name": "Violet",
+      "gender": "Female",
+      "lastName": "Calvo",
+      "birthDate": "1956-07-17T04:00:00.000Z",
+      "deathDate": "1980-09-04T04:00:00.000Z"
+    },
+    {
+      "id": 71,
+      "name": "Isabella",
+      "gender": "Female",
+      "lastName": "Calvo",
+      "birthDate": "1934-05-15T04:00:00.000Z",
+      "deathDate": "1990-10-14T04:00:00.000Z"
+    },
+    {
+      "id": 72,
+      "name": "Blake",
+      "gender": "Male",
+      "lastName": "Schenk",
+      "birthDate": "1941-05-07T04:00:00.000Z",
+      "deathDate": "2030-04-14T04:00:00.000Z"
+    },
+    {
+      "id": 73,
+      "name": "Alice",
+      "gender": "Female",
+      "lastName": "Bouvier",
+      "birthDate": "1981-03-04T05:00:00.000Z",
+      "deathDate": "2049-07-07T04:00:00.000Z"
+    },
+    {
+      "id": 74,
+      "name": "Ronald",
+      "gender": "Male",
+      "lastName": "Schenk",
+      "birthDate": "1975-04-03T04:00:00.000Z",
+      "deathDate": "2048-06-26T04:00:00.000Z"
+    },
+    {
+      "id": 75,
+      "name": "Kathryn",
+      "gender": "Female",
+      "lastName": "Magrini",
+      "birthDate": "1967-01-19T05:00:00.000Z",
+      "deathDate": "2020-08-01T04:00:00.000Z"
+    },
+    {
+      "id": 76,
+      "name": "Charlie",
+      "gender": "Male",
+      "lastName": "Schenk",
+      "birthDate": "1912-12-04T05:00:00.000Z",
+      "deathDate": "1983-10-20T04:00:00.000Z"
+    },
+    {
+      "id": 77,
+      "name": "Gene",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1952-06-04T04:00:00.000Z",
+      "deathDate": "2017-09-26T04:00:00.000Z"
+    },
+    {
+      "id": 78,
+      "name": "Augusta",
+      "gender": "Female",
+      "lastName": "Kobayashi",
+      "birthDate": "1984-07-25T04:00:00.000Z",
+      "deathDate": "2059-11-08T05:00:00.000Z"
+    },
+    {
+      "id": 79,
+      "name": "Clayton",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1925-06-19T04:00:00.000Z",
+      "deathDate": "1962-04-18T05:00:00.000Z"
+    },
+    {
+      "id": 80,
+      "name": "Vera",
+      "gender": "Female",
+      "lastName": "Battaglini",
+      "birthDate": "1981-06-14T04:00:00.000Z",
+      "deathDate": "2021-01-21T05:00:00.000Z"
+    },
+    {
+      "id": 81,
+      "name": "John",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1932-10-02T05:00:00.000Z",
+      "deathDate": "1993-12-15T05:00:00.000Z"
+    },
+    {
+      "id": 82,
+      "name": "Rhoda",
+      "gender": "Female",
+      "lastName": "Kobayashi",
+      "birthDate": "1988-07-20T04:00:00.000Z",
+      "deathDate": "2041-05-06T04:00:00.000Z"
+    },
+    {
+      "id": 83,
+      "name": "Adrian",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1992-05-08T04:00:00.000Z",
+      "deathDate": "2062-12-19T05:00:00.000Z"
+    },
+    {
+      "id": 84,
+      "name": "Winifred",
+      "gender": "Female",
+      "lastName": "Leone",
+      "birthDate": "1950-04-27T05:00:00.000Z",
+      "deathDate": "2005-07-25T04:00:00.000Z"
+    },
+    {
+      "id": 85,
+      "name": "Julian",
+      "gender": "Male",
+      "lastName": "Leone",
+      "birthDate": "1969-04-19T05:00:00.000Z",
+      "deathDate": "2014-04-06T04:00:00.000Z"
+    },
+    {
+      "id": 86,
+      "name": "Miguel",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1909-03-15T05:00:00.000Z",
+      "deathDate": "2007-02-02T05:00:00.000Z"
+    },
+    {
+      "id": 87,
+      "name": "Chester",
+      "gender": "Male",
+      "lastName": "Bigi",
+      "birthDate": "1923-03-01T05:00:00.000Z",
+      "deathDate": "1985-06-27T04:00:00.000Z"
+    },
+    {
+      "id": 88,
+      "name": "Manuel",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1901-11-26T05:00:00.000Z",
+      "deathDate": "2000-05-19T04:00:00.000Z"
+    },
+    {
+      "id": 89,
+      "name": "Olive",
+      "gender": "Female",
+      "lastName": "Shelton",
+      "birthDate": "1933-04-11T05:00:00.000Z",
+      "deathDate": "1985-02-03T05:00:00.000Z"
+    },
+    {
+      "id": 90,
+      "name": "Jonathan",
+      "gender": "Male",
+      "lastName": "Shelton",
+      "birthDate": "1915-08-16T05:00:00.000Z",
+      "deathDate": "1970-11-17T05:00:00.000Z"
+    },
+    {
+      "id": 91,
+      "name": "Victor",
+      "gender": "Male",
+      "lastName": "Shelton",
+      "birthDate": "1987-07-26T04:00:00.000Z",
+      "deathDate": "2037-02-22T05:00:00.000Z"
+    },
+    {
+      "id": 92,
+      "name": "Fanny",
+      "gender": "Female",
+      "lastName": "Shelton",
+      "birthDate": "1999-12-11T05:00:00.000Z",
+      "deathDate": "2074-08-15T04:00:00.000Z"
+    },
+    {
+      "id": 93,
+      "name": "Timothy",
+      "gender": "Male",
+      "lastName": "Battaglini",
+      "birthDate": "1930-03-16T05:00:00.000Z",
+      "deathDate": "1980-11-12T05:00:00.000Z"
+    },
+    {
+      "id": 94,
+      "name": "Jeffrey",
+      "gender": "Male",
+      "lastName": "Bigi",
+      "birthDate": "1953-10-28T05:00:00.000Z",
+      "deathDate": "2008-11-15T05:00:00.000Z"
+    },
+    {
+      "id": 95,
+      "name": "Zachary",
+      "gender": "Male",
+      "lastName": "Ingram",
+      "birthDate": "1965-02-23T05:00:00.000Z",
+      "deathDate": "2060-07-07T04:00:00.000Z"
+    },
+    {
+      "id": 96,
+      "name": "Theresa",
+      "gender": "Female",
+      "lastName": "Ingram",
+      "birthDate": "1982-05-17T04:00:00.000Z",
+      "deathDate": "2080-10-01T04:00:00.000Z"
+    },
+    {
+      "id": 97,
+      "name": "Irene",
+      "gender": "Female",
+      "lastName": "Bigi",
+      "birthDate": "1973-09-20T04:00:00.000Z",
+      "deathDate": "2040-03-11T05:00:00.000Z"
+    },
+    {
+      "id": 98,
+      "name": "Bex",
+      "gender": "non-binary",
+      "lastName": "Bigi",
+      "birthDate": "1910-11-10T05:00:00.000Z",
+      "deathDate": "1938-09-26T05:00:00.000Z"
+    },
+    {
+      "id": 99,
+      "name": "Bruce",
+      "gender": "Male",
+      "lastName": "Bigi",
+      "birthDate": "1964-01-21T05:00:00.000Z",
+      "deathDate": "2015-06-12T04:00:00.000Z"
+    },
+    {
+      "id": 100,
+      "name": "Erik",
+      "gender": "Male",
+      "lastName": "Bigi",
+      "birthDate": "1989-04-25T04:00:00.000Z",
+      "deathDate": "2065-12-17T05:00:00.000Z"
+    },
+    {
+      "id": 101,
+      "name": "James",
+      "gender": "Male",
+      "lastName": "Pietrini",
+      "birthDate": "1939-05-04T04:00:00.000Z",
+      "deathDate": "1969-05-01T04:00:00.000Z"
+    },
+    {
+      "id": 102,
+      "name": "Glen",
+      "gender": "Male",
+      "lastName": "Pietrini",
+      "birthDate": "1996-06-09T04:00:00.000Z",
+      "deathDate": "2018-11-16T05:00:00.000Z"
+    },
+    {
+      "id": 103,
+      "name": "Benjamin",
+      "gender": "Male",
+      "lastName": "Pietrini",
+      "birthDate": "1970-06-06T04:00:00.000Z",
+      "deathDate": "2057-11-05T05:00:00.000Z"
+    },
+    {
+      "id": 104,
+      "name": "Edna",
+      "gender": "Female",
+      "lastName": "Pietrini",
+      "birthDate": "1965-10-05T04:00:00.000Z",
+      "deathDate": "1997-07-17T04:00:00.000Z"
+    },
+    {
+      "id": 105,
+      "name": "Nellie",
+      "gender": "Female",
+      "lastName": "Bigi",
+      "birthDate": "2000-05-10T04:00:00.000Z",
+      "deathDate": "2081-06-21T04:00:00.000Z"
+    },
+    {
+      "id": 106,
+      "name": "Alice",
+      "gender": "Female",
+      "lastName": "Blank",
+      "birthDate": "1962-03-03T05:00:00.000Z",
+      "deathDate": "2004-05-28T04:00:00.000Z"
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 1,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 0,
+      "target": 2,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 1,
+      "target": 2,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 2,
+      "target": 3,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 2,
+      "target": 4,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 3,
+      "target": 4,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 4,
+      "target": 5,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 4,
+      "target": 6,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 4,
+      "target": 7,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 5,
+      "target": 7,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 4,
+      "target": 8,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 5,
+      "target": 8,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 4,
+      "target": 9,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 5,
+      "target": 9,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 4,
+      "target": 10,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 5,
+      "target": 10,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 2,
+      "target": 11,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 3,
+      "target": 11,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 11,
+      "target": 12,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 11,
+      "target": 13,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 12,
+      "target": 13,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 11,
+      "target": 14,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 12,
+      "target": 14,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 11,
+      "target": 15,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 12,
+      "target": 15,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 11,
+      "target": 16,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 12,
+      "target": 16,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 2,
+      "target": 17,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 3,
+      "target": 17,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 17,
+      "target": 18,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 17,
+      "target": 19,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 18,
+      "target": 19,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 17,
+      "target": 20,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 18,
+      "target": 20,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 17,
+      "target": 21,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 18,
+      "target": 21,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 17,
+      "target": 22,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 18,
+      "target": 22,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 17,
+      "target": 23,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 18,
+      "target": 23,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 10,
+      "target": 13,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 10,
+      "target": 24,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 13,
+      "target": 24,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 24,
+      "target": 25,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 24,
+      "target": 26,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 25,
+      "target": 26,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 26,
+      "target": 27,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 26,
+      "target": 28,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 27,
+      "target": 28,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 26,
+      "target": 29,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 27,
+      "target": 29,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 26,
+      "target": 30,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 27,
+      "target": 30,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 10,
+      "target": 31,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 13,
+      "target": 31,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 31,
+      "target": 32,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 31,
+      "target": 33,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 32,
+      "target": 33,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 33,
+      "target": 34,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 33,
+      "target": 35,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 34,
+      "target": 35,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 33,
+      "target": 36,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 34,
+      "target": 36,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 33,
+      "target": 37,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 34,
+      "target": 37,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 33,
+      "target": 38,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 34,
+      "target": 38,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 33,
+      "target": 39,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 34,
+      "target": 39,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 31,
+      "target": 40,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 32,
+      "target": 40,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 40,
+      "target": 41,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 40,
+      "target": 42,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 41,
+      "target": 42,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 40,
+      "target": 43,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 41,
+      "target": 43,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 40,
+      "target": 44,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 41,
+      "target": 44,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 40,
+      "target": 45,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 41,
+      "target": 45,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 16,
+      "target": 19,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 16,
+      "target": 46,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 19,
+      "target": 46,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 46,
+      "target": 47,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 46,
+      "target": 48,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 47,
+      "target": 48,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 48,
+      "target": 49,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 48,
+      "target": 50,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 49,
+      "target": 50,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 48,
+      "target": 51,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 49,
+      "target": 51,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 48,
+      "target": 52,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 49,
+      "target": 52,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 16,
+      "target": 53,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 19,
+      "target": 53,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 53,
+      "target": 54,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 53,
+      "target": 55,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 54,
+      "target": 55,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 55,
+      "target": 56,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 55,
+      "target": 57,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 56,
+      "target": 57,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 55,
+      "target": 58,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 56,
+      "target": 58,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 55,
+      "target": 59,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 56,
+      "target": 59,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 53,
+      "target": 60,
+      "relation": "parent",
+      "color": "#800080"
+    },
+    {
+      "source": 54,
+      "target": 60,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 60,
+      "target": 61,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 16,
+      "target": 62,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 19,
+      "target": 62,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 62,
+      "target": 63,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 16,
+      "target": 64,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 19,
+      "target": 64,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 64,
+      "target": 65,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 64,
+      "target": 66,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 65,
+      "target": 66,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 66,
+      "target": 67,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 66,
+      "target": 68,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 67,
+      "target": 68,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 66,
+      "target": 69,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 67,
+      "target": 69,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 66,
+      "target": 70,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 67,
+      "target": 70,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 66,
+      "target": 71,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 67,
+      "target": 71,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 64,
+      "target": 72,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 65,
+      "target": 72,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 72,
+      "target": 73,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 64,
+      "target": 74,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 65,
+      "target": 74,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 74,
+      "target": 75,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 74,
+      "target": 76,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 75,
+      "target": 76,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 64,
+      "target": 77,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 65,
+      "target": 77,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 77,
+      "target": 78,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 77,
+      "target": 79,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 78,
+      "target": 79,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 77,
+      "target": 80,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 78,
+      "target": 80,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 77,
+      "target": 81,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 78,
+      "target": 81,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 77,
+      "target": 82,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 78,
+      "target": 82,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 64,
+      "target": 83,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 65,
+      "target": 83,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 83,
+      "target": 84,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 83,
+      "target": 85,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 84,
+      "target": 85,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 16,
+      "target": 86,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 19,
+      "target": 86,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 86,
+      "target": 87,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 86,
+      "target": 88,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 87,
+      "target": 88,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 88,
+      "target": 89,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 88,
+      "target": 90,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 89,
+      "target": 90,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 88,
+      "target": 91,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 89,
+      "target": 91,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 88,
+      "target": 92,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 89,
+      "target": 92,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 88,
+      "target": 93,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 89,
+      "target": 93,
+      "relation": "mother",
+      "color": "#FFC0CB"
+    },
+    {
+      "source": 86,
+      "target": 94,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 87,
+      "target": 94,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 94,
+      "target": 95,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 94,
+      "target": 96,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 95,
+      "target": 96,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 94,
+      "target": 97,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 95,
+      "target": 97,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 94,
+      "target": 98,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 95,
+      "target": 98,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 94,
+      "target": 99,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 95,
+      "target": 99,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 86,
+      "target": 100,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 87,
+      "target": 100,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 100,
+      "target": 101,
+      "relation": "spouse",
+      "color": "#cc0"
+    },
+    {
+      "source": 100,
+      "target": 102,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 101,
+      "target": 102,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 100,
+      "target": 103,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 101,
+      "target": 103,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 100,
+      "target": 104,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 101,
+      "target": 104,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 86,
+      "target": 105,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 87,
+      "target": 105,
+      "relation": "father",
+      "color": "#0000FF"
+    },
+    {
+      "source": 105,
+      "target": 106,
+      "relation": "spouse",
+      "color": "#cc0"
+    }
+  ]
 }

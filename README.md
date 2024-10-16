@@ -5,6 +5,7 @@ Family Tree Data Expression Engine
 
 See a live demo at
 http://www.bengarvey.com/lineage
+(still an older version)
 
 ## Running locally
 You can run this locally by running `python3 -m http.server 8000` from a terminal or running the following commands
@@ -21,52 +22,36 @@ And then every time after that running `node server.js`
 All configuration is done in the `config.json` file.
 This is what its keys do:
 
-### `data`
-Points to the JSON-file containing your data.
-Per default, this points to the example file located at
-`data/familyData.json`.
+- **`data`**: Points to the JSON file containing your data. By default, it points to the example file located at `data/familyData.json`.
+  
+- **`startYear`**: Start year of the timeline.
 
-### `filter`
-In the web view's menu bar you can filter for specific names using the provided
-input field.
-This key allows you to set an initial filter which will be active when the web
-view is freshly loaded.
+- **`endYear`**: End year of the timeline.
 
-### `startYear`
-StartYear
+- **`speed`**: Defines how many milliseconds one year takes when you hit the "Play" button. The default value is 100, meaning 10 years pass per second (100ms = 1/10th of a second).
 
-### `endYear`
-EndYear
+- **`menuDefaultOpen`**: If set to `true`, the menu is instantly opened when the web view is loaded. The default is `true`.
 
-### `speed`
-How many milliseconds does one year take when you hit the "Play" button?
-Default value is 100 which makes 10 years pass per second
-(100ms = 1/10th of a second).
+- **`debug`**: This key does not affect the observable behavior of lineage and only affects the background logging.
 
-### `menuDefaultOpen`
-If this is set to `true`, the menu is instantly opened when the web view is
-loaded.
-Defaults to `true`.
+- **`showDead`**: If set to `false`, only people alive at the time of the currently active year are shown in the graphs. If set to `true`, everyone born by this time (regardless of death date) is shown.
 
-### `debug`
-This key is irrelevant to the observable behavior of lineage and only affects
-the logging which happens in the background.
-
-### `showDead`
-If this is false, only people who are alive at the time of the currently active
-year are shown in the graphs.
-If it's true, everybody who has been born at this time (regardless of death
-date) is shown.
-
+- **`filter`**: In the web view's menu bar, you can filter for specific names using the provided input field. This key allows you to set an initial filter that will be active when the web view is freshly loaded.
 
 ## Notes
 - For viewing large datasets, it may help to zoom out your browser
 - If you lose the ui, move your mouse to the edge of the screen at the top left
 - To run the demo in play mode, just press play and watch the years tick by
 - To hear the music, check the music checkbox and press play
-- To see the full dataset in the demo, remove all the names from the search /
-    filter box
 
+## Generating new datasets
+- There's a script in the script directory called famgen.js. Run it like this to generate new datasets. 
+```
+node script/famgen.js > data/familyData.json
+```
 
 ## Upcoming features / ToDo
-- Move to D3v7?
+- Better readme for using this with your own data
+- Support for incrementing by day instead of year
+- Handle more generic network data that needs to be viewed in a time series
+- Non-browser zoom, since the browser zoom is limited. 
