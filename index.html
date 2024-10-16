@@ -14,8 +14,10 @@
   <script>
     var lineage = null;
     var menuStatus = false;
+    var config = null;
     function start() {
-      $.getJSON("config/config.json", function(config) {
+      $.getJSON("config/config.json", function(configuration) {
+          config = configuration;
           config.startYear = isNaN(startYear) ? config.startYear : startYear;
           lineage = new Lineage;
           lineage(config);
@@ -79,7 +81,7 @@
     </div>
     <div class="time">
       <button class="btn btn-default time__button" id="firstButton"
-        onClick="lineage.setYear(1800)">First</button>
+        onClick="lineage.setYear(config.startYear)">First</button>
       <button class="btn btn-default time__button" id="playButton"
         onClick="lineage.setYearIncrement(1);lineage.playMusic();">
         Play
@@ -89,7 +91,7 @@
         Stop
       </button>
       <button class="btn btn-default time__button" id="lastButton"
-        onClick="lineage.setYear(2014)">
+        onClick="lineage.setYear(config.endYear)">
         Last
       </button>
     </div>
