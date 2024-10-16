@@ -15,7 +15,7 @@ git clone git@github.com:bengarvey/lineage.git
 cd lineage
 python3 -m http.server 8000
 ```
-Click [http://localhost:8000]
+Click [http://localhost:8000](http://localhost:8000)
 
 ## Slowstart guide
 
