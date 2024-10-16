@@ -5,7 +5,7 @@ function Lineage() {
     initNightMode();
     initSlider();
     config = conf;
-    year = config.startYear;
+    year = config.endYear;
     initShowDead(config.showDead);
     document.getElementById('search').value = conf.filter;
   }
@@ -514,7 +514,6 @@ function Lineage() {
   }
 
   lin.setYear = function(value) {
-    console.log(value);
     year = value;
     forceRefresh = true;
   }

@@ -7,6 +7,18 @@ See a live demo at
 http://www.bengarvey.com/lineage
 (still an older version)
 
+## Quickstart guide
+
+Clone this repo
+```
+git clone git@github.com:bengarvey/lineage.git
+cd lineage
+python3 -m http.server 8000
+```
+Click [http://localhost:8000](http://localhost:8000)
+
+## Slowstart guide
+
 ## Running locally
 You can run this locally by running `python3 -m http.server 8000` from a terminal or running the following commands
 
