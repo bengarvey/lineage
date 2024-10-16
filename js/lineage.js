@@ -514,6 +514,7 @@ function Lineage() {
   }
 
   lin.setYear = function(value) {
+    console.log(value);
     year = value;
     forceRefresh = true;
   }
