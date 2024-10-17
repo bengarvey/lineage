@@ -433,7 +433,7 @@ function Lineage() {
     users.forEach( function(user) {
       var d = user[0];
       var scale = ((d.birthDate.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
-      d.x += (width * scale - d.x) * TIMELINE_SPEED * transform.k;
+      d.x += (width * scale - d.x) * TIMELINE_SPEED;
     });
 
     users.forEach(function(user) {
