@@ -66,6 +66,22 @@ function Lineage() {
 
   var forceRefresh = true;
 
+  // Adding zoom and pan behavior
+  var zoom = d3.zoom()
+      .scaleExtent([0.1, 5]) // Adjust the zoom scale for better zoom-out
+      .on("zoom", zoomed);
+
+  // Apply zoom to the canvas (this will now handle both zooming and panning)
+  d3.select("canvas").call(zoom);
+
+  // Define zoom transform variable
+  var transform = d3.zoomIdentity;
+
+  function zoomed(event) {
+    transform = event.transform; // Capture zoom and pan transformations
+    restart(); // Redraw with updated transformation
+  }
+
   function initShowDead(value) {
     showDead = value;
     $('#showDead').prop('checked', showDead);
@@ -349,6 +365,10 @@ function Lineage() {
     updateYear(year);
     users = d3.group(nodes, d => d.id);
 
+    context.save();
+    context.translate(transform.x, transform.y); // Apply zoom translation for panning
+    context.scale(transform.k, transform.k);     // Apply zoom scaling
+
     simulation.nodes(nodes);
     if (mode == 'tree') {
       simulation.force("link").links(links);
@@ -356,11 +376,15 @@ function Lineage() {
       simulation.force("link").links(links).strength(0);
     }
     simulation.alpha(1).restart();
+
+    context.restore();
   }
 
   function clusterTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y); // Apply zoom translation for panning
+    context.scale(transform.k, transform.k);     // Apply zoom scaling
     context.translate(width / 2, height / 2);
 
     var k = 0.1 * simulation.alpha;
@@ -383,6 +407,8 @@ function Lineage() {
   function treeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y); // Apply zoom translation for panning
+    context.scale(transform.k, transform.k);     // Apply zoom scaling
     context.translate(width / 2, height / 2);
 
     links.forEach(drawLink);
@@ -400,12 +426,14 @@ function Lineage() {
   function timeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y); // Apply zoom translation for panning
+    context.scale(transform.k, transform.k);     // Apply zoom scaling
     context.translate(width / 2, height / 2);
 
     users.forEach( function(user) {
       var d = user[0];
-      var scale = ((d.birthDate.substring(0, 4) - 1800) / (2004 - 1800) - 0.5);
-      d.x += (width * scale - d.x) * TIMELINE_SPEED;
+      var scale = ((d.birthDate.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
+      d.x += (width * scale - d.x) * TIMELINE_SPEED * transform.k;
     });
 
     users.forEach(function(user) {
