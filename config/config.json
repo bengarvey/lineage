@@ -6,5 +6,6 @@
   "speed": 10,
   "debug": false,
   "menuDefaultOpen": true,
-  "showDead": true
+  "showDead": true,
+  "timeStep": "week"
 }
