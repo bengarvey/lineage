@@ -66,6 +66,19 @@ function Lineage() {
 
   var forceRefresh = true;
 
+  var zoom = d3.zoom()
+      .scaleExtent([0.1, 5]) 
+      .on("zoom", zoomed);
+
+  d3.select("canvas").call(zoom);
+
+  var transform = d3.zoomIdentity;
+
+  function zoomed(event) {
+    transform = event.transform;
+    restart(); 
+  }
+
   function initShowDead(value) {
     showDead = value;
     $('#showDead').prop('checked', showDead);
@@ -349,6 +362,10 @@ function Lineage() {
     updateYear(year);
     users = d3.group(nodes, d => d.id);
 
+    context.save();
+    context.translate(transform.x, transform.y); 
+    context.scale(transform.k, transform.k);     
+
     simulation.nodes(nodes);
     if (mode == 'tree') {
       simulation.force("link").links(links);
@@ -356,11 +373,15 @@ function Lineage() {
       simulation.force("link").links(links).strength(0);
     }
     simulation.alpha(1).restart();
+
+    context.restore();
   }
 
   function clusterTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y);
+    context.scale(transform.k, transform.k);    
     context.translate(width / 2, height / 2);
 
     var k = 0.1 * simulation.alpha;
@@ -383,6 +404,8 @@ function Lineage() {
   function treeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y); 
+    context.scale(transform.k, transform.k);     
     context.translate(width / 2, height / 2);
 
     links.forEach(drawLink);
@@ -400,11 +423,13 @@ function Lineage() {
   function timeTicked() {
     context.clearRect(0, 0, width, height);
     context.save();
+    context.translate(transform.x, transform.y); 
+    context.scale(transform.k, transform.k);     
     context.translate(width / 2, height / 2);
 
     users.forEach( function(user) {
       var d = user[0];
-      var scale = ((d.birthDate.substring(0, 4) - 1800) / (2004 - 1800) - 0.5);
+      var scale = ((d.birthDate.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
     });
 

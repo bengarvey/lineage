@@ -3,7 +3,7 @@
   "filter": "",
   "startYear": 1900,
   "endYear": 2014,
-  "speed": 100,
+  "speed": 10,
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true
