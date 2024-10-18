@@ -3,7 +3,6 @@ function Lineage() {
   function lin(conf) {
     log("Initializing", conf);
     initNightMode();
-    initSlider();
     config = conf;
     
     // Initialize startDate, lastDate, and firstDate in Date format
@@ -225,10 +224,9 @@ function Lineage() {
     var oldDate = currentTime;
     currentTime = advanceTime(currentTime);
 
-    updateSlider();
     updateFilter();
 
-    if (currentTime.getTime() !== oldDate.getTime()) {
+    if (currentTime != null && currentTime.getTime() !== oldDate.getTime()) {
       forceRefresh = true;
     }
 
@@ -245,8 +243,12 @@ function Lineage() {
   }
 
   function advanceTime(currentTime) {
+
     var msIncrement;
     switch (config.timeStep) {
+      case 'pause':
+        msIncrement = 0
+        break;
       case 'day':
         msIncrement = MS_IN_A_DAY;
         break;
@@ -257,6 +259,10 @@ function Lineage() {
       default:
         msIncrement = MS_IN_A_YEAR;
         break;
+    }
+
+    if (config.pause == true) {
+      msIncrement = 0;
     }
 
     var newTime = new Date(currentTime.getTime() + msIncrement);
@@ -330,19 +336,6 @@ function Lineage() {
     }
   }
 
-  function updateSlider() {
-    var position = ((currentTime.getTime() - config.startDate.getTime()) / (config.lastDate.getTime() - config.startDate.getTime())) * 100;
-    $("#yearSlider").val(position);
-  }
-
-  function initSlider() {
-    $('#yearSlider').on('change', function() {
-      var position = $("#yearSlider").val();
-      var newTime = new Date(config.startDate.getTime() + ((config.lastDate.getTime() - config.startDate.getTime()) * (position / 100)));
-      currentTime = newTime; // Adjust currentTime when slider changes
-    });
-  }
-
   function prepareData(data, filters) {
     var filterItems = filters.split(" ");
     filterItems = filterItems.filter(function(i) {
@@ -377,7 +370,7 @@ function Lineage() {
   }
 
   function updateYear(currentTime) {
-    $('#year').html(currentTime.getFullYear())
+    $('#year').html(currentTime.toUTCString())
       .css('left', width / 2 - 105)
       .css('top', height - 140);
   }
@@ -572,12 +565,22 @@ function Lineage() {
   }
 
   lin.setYear = function(value) {
-    currentTime = new Date(value, 0, 1);
+    console.log(value);
+    currentTime = new Date(value);
     forceRefresh = true;
   }
 
+  lin.setTimeStep = function(timeStep) {
+    config.timeStep = timeStep;
+    forceRefresh = true;
+  }
+
+  lin.setPause = function(value) {
+    config.pause = value;
+  }
+
   lin.moveYear = function(value) {
-    currentTime.setFullYear(currentTime.getFullYear() + value);
+    currentTime.setFullYear(currentTime.currentTime.getFullYear());
     forceRefresh = true;
   }
 

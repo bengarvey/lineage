@@ -81,17 +81,17 @@
     </div>
     <div class="time">
       <button class="btn btn-default time__button" id="firstButton"
-        onClick="lineage.setYear(config.startYear)">First</button>
+        onClick="lineage.setYear(config.firstDate)">First</button>
       <button class="btn btn-default time__button" id="playButton"
-        onClick="lineage.setYearIncrement(1);lineage.playMusic();">
+        onClick="lineage.setPause(false);lineage.playMusic();">
         Play
       </button>
       <button class="btn btn-default time__button" id="stopButton"
-        onClick="lineage.setYearIncrement(0);lineage.pauseMusic();">
+        onClick="lineage.setPause(true);lineage.pauseMusic();">
         Stop
       </button>
       <button class="btn btn-default time__button" id="lastButton"
-        onClick="lineage.setYear(config.endYear)">
+        onClick="lineage.setYear(config.lastDate)">
         Last
       </button>
     </div>
