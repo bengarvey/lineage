@@ -565,7 +565,6 @@ function Lineage() {
   }
 
   lin.setYear = function(value) {
-    console.log(value);
     currentTime = new Date(value);
     forceRefresh = true;
   }
