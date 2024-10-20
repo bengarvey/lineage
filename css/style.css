@@ -59,7 +59,7 @@ body {
   line-height: 12px;
 }
 
-#year {
+#currentDate {
   font-family: helvetica, arial;
   font-size: 70pt;
   color: #000;

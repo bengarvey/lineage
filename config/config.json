@@ -4,9 +4,9 @@
   "startDate": "2024-10-17 00:00:00",
   "firstDate": "1900-01-01 00:00:00",
   "lastDate": "2024-10-17 00:00:00",
-  "speed": 10,
+  "speed": 100,
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true,
-  "timeStep": "week"
+  "timeStep": "day"
 }

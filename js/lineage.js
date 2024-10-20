@@ -370,7 +370,7 @@ function Lineage() {
   }
 
   function updateYear(currentTime) {
-    $('#year').html(currentTime.toUTCString())
+    $('#year').html(currentTime.toDateString())
       .css('left', width / 2 - 105)
       .css('top', height - 140);
   }
