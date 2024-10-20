@@ -7,7 +7,7 @@
 function Lineage() {
   let config = {
     startDate: '2014-01-01',
-    lastDate: '2014-12-31', 
+    lastDate: '2014-12-31',
     speed: 100,
     debug: false,
   };
@@ -20,7 +20,7 @@ function Lineage() {
   const MS_IN_A_WEEK = 7 * MS_IN_A_DAY;
   const MS_IN_A_YEAR = 365.25 * MS_IN_A_DAY; // Approximation
 
-  let currentTime = new Date(config.startDate); 
+  let currentTime = new Date(config.startDate);
 
   const CLUSTER_COL_SPACING = 10;
   const CLUSTER_ROW_SPACING = 40;
