@@ -12,32 +12,38 @@
   <script src="js/lineage.js"></script>
 
   <script>
-    var lineage = null;
-    var menuStatus = false;
-    var config = null;
-    function start() {
-      $.getJSON("config/config.json", function(configuration) {
-          config = configuration;
-          config.startYear = isNaN(startYear) ? config.startYear : startYear;
-          lineage = new Lineage;
-          lineage(config);
-          lineage.loadJson(config.data);
+        /* globals
+      Lineage
+      d3
+    */
 
-          if (config.menuDefaultOpen) toggleMenu();
-      });
-    }
+let lineage = null;
+let menuStatus = false;
+let config = null;
+const urlParams = new URLSearchParams(window.location.search);
+const startYear = parseInt(urlParams.get('startYear'), 10);
 
-    function toggleMenu() {
-      menuStatus = !menuStatus;
-      menu = d3.select('#menu');
-      left = menuStatus ? '0px' : '-341px';
-      menu.transition().duration(500).style('left', left);
-    }
+/* eslint-disable no-unused-vars */
+function start() {
+  $.getJSON('config/config.json', (configuration) => {
+            config = configuration;
+            config.startYear = Number.isNaN(startYear) ? config.startYear : startYear;
+            lineage = new Lineage();
+            lineage(config);
+            lineage.loadJson(config.data);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const startYear = parseInt(urlParams.get('startYear'));
+            if (config.menuDefaultOpen) toggleMenu();
+  });
+}
+/* eslint-enable no-unused-vars */
 
-  </script>
+function toggleMenu() {
+  menuStatus = !menuStatus;
+  const menu = d3.select('#menu');
+  const left = menuStatus ? '0px' : '-341px';
+  menu.transition().duration(500).style('left', left);
+}
+</script>
 
 </head>
 <body onLoad="start()">
@@ -98,10 +104,6 @@
     <input id="search" class="form-control input-lg"
       value=""
       placeholder="Filter, e.g.: 'Kenobi Skywalker'">
-    <input id="goToYear" type="number" class="form-control input-lg"
-      value=""
-      onchange="lineage.setYear(Number(this.value));"
-      placeholder="Jump to this year, e.g. 2002">
   </div>
   <div id="year"></div>
   <canvas height="1000" width="1000"></canvas>
