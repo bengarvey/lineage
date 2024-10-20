@@ -6,8 +6,8 @@
 
 function Lineage() {
   let config = {
-    startDate: '2014-01-01', // Change from startYear to startDate in the configuration (ISO format)
-    lastDate: '2014-12-31', // Change from endYear to lastDate in the configuration (ISO format)
+    startDate: '2014-01-01',
+    lastDate: '2014-12-31', 
     speed: 100,
     debug: false,
   };
@@ -16,19 +16,17 @@ function Lineage() {
 
   let showDead = true;
 
-  // Constants for different time intervals (in milliseconds)
   const MS_IN_A_DAY = 24 * 60 * 60 * 1000;
   const MS_IN_A_WEEK = 7 * MS_IN_A_DAY;
   const MS_IN_A_YEAR = 365.25 * MS_IN_A_DAY; // Approximation
 
-  let currentTime = new Date(config.startDate); // Start from the configured start date
+  let currentTime = new Date(config.startDate); 
 
   const CLUSTER_COL_SPACING = 10;
   const CLUSTER_ROW_SPACING = 40;
 
   const TIMELINE_SPEED = 0.8;
 
-  // const svg = d3.select('svg');
   let width = window.innerWidth;
   let height = window.innerHeight;
   const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -54,7 +52,7 @@ function Lineage() {
   let filters = $('#search').val();
   const searchRadius = 40;
   let simulation = d3.forceSimulation();
-  // const g = null;
+
   let users = [];
   let interval = null;
   let mode = 'tree';
