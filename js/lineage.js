@@ -3,24 +3,36 @@ function Lineage() {
   function lin(conf) {
     log("Initializing", conf);
     initNightMode();
-    initSlider();
     config = conf;
-    year = config.endYear;
+    
+    // Initialize startDate, lastDate, and firstDate in Date format
+    config.startDate = new Date(config.startDate);
+    config.lastDate = new Date(config.lastDate);
+    config.firstDate = findFirstDate(config.nodes); // Set earliest birth date
+    
+    currentTime = config.startDate; // Set the app to start at the configured start date
     initShowDead(config.showDead);
     document.getElementById('search').value = conf.filter;
   }
 
   // Will be overwritten by `lin()`
   var config = {
-    startYear: 2014,
-    endYear: 2014,
+    startDate: '2014-01-01', // Change from startYear to startDate in the configuration (ISO format)
+    lastDate: '2014-12-31',  // Change from endYear to lastDate in the configuration (ISO format)
     speed: 100,
     debug: false
   };
 
   timeStart('init', config);
 
-  var year = 1800;
+  var showDead = true;
+
+  // Constants for different time intervals (in milliseconds)
+  const MS_IN_A_DAY = 24 * 60 * 60 * 1000;
+  const MS_IN_A_WEEK = 7 * MS_IN_A_DAY;
+  const MS_IN_A_YEAR = 365.25 * MS_IN_A_DAY; // Approximation
+
+  var currentTime = new Date(config.startDate); // Start from the configured start date
   var showDead = true;
 
   var CLUSTER_COL_SPACING = 10;
@@ -55,7 +67,6 @@ function Lineage() {
       .attr("height", height);
 
   var audio = new Audio('music/graph.mp3');
-  var yearIncrement = 0;
   var filters = $('#search').val();
   var searchRadius = 40;
   var simulation = d3.forceSimulation();
@@ -210,12 +221,12 @@ function Lineage() {
   function loop() {
     timeStart("loop", config);
     resizeScreen();
-    var oldYear = year;
-    year = advanceYear(year);
-    updateSlider();
+    var oldDate = currentTime;
+    currentTime = advanceTime(currentTime);
+
     updateFilter();
 
-    if (year != oldYear) {
+    if (currentTime != null && currentTime.getTime() !== oldDate.getTime()) {
       forceRefresh = true;
     }
 
@@ -231,24 +242,49 @@ function Lineage() {
     forceRefresh = false;
   }
 
-  function addRemoveNode(n) {
-    if (n.birthDate != null) {
-      var birthYear = n.birthDate.substring(0, 4);
-      if (nodes.indexOf(n) == -1 && birthYear <= year) {
-        nodes.push(n);
-      } else if (nodes.indexOf(n) != -1 && (birthYear > year)) {
-        nodes.splice(nodes.indexOf(n), 1);
-      }
+  function advanceTime(currentTime) {
+
+    var msIncrement;
+    switch (config.timeStep) {
+      case 'pause':
+        msIncrement = 0
+        break;
+      case 'day':
+        msIncrement = MS_IN_A_DAY;
+        break;
+      case 'week':
+        msIncrement = MS_IN_A_WEEK;
+        break;
+      case 'year':
+      default:
+        msIncrement = MS_IN_A_YEAR;
+        break;
     }
 
-    if (!showDead) {
-      if (n.deathDate != null && n.deathDate != "") {
-        var deathYear = Number(n.deathDate.substring(0, 4));
-        if (isNaN(deathYear)) return;
+    if (config.pause == true) {
+      msIncrement = 0;
+    }
 
-        if (nodes.indexOf(n) != -1 && deathYear < year) {
-          nodes.splice(nodes.indexOf(n), 1);
-        }
+    var newTime = new Date(currentTime.getTime() + msIncrement);
+    if (newTime.getTime() > config.lastDate.getTime()) {
+      newTime = config.lastDate;
+    }
+
+    return newTime;
+  }
+
+  function addRemoveNode(n) {
+    var birthDate = new Date(n.birthDate);
+    if (nodes.indexOf(n) == -1 && birthDate <= currentTime) {
+      nodes.push(n);
+    } else if (nodes.indexOf(n) != -1 && birthDate > currentTime) {
+      nodes.splice(nodes.indexOf(n), 1);
+    }
+
+    if (!showDead && n.deathDate != null) {
+      var deathDate = new Date(n.deathDate);
+      if (nodes.indexOf(n) != -1 && deathDate < currentTime) {
+        nodes.splice(nodes.indexOf(n), 1);
       }
     }
   }
@@ -282,12 +318,15 @@ function Lineage() {
     return clusters;
   }
 
-  function advanceYear(year) {
-    year += yearIncrement;
-    if (year >= config.endYear) {
-      year = config.endYear;
+  function findFirstDate(nodes) {
+    if (!nodes || nodes.length === 0) {
+      return new Date('1900-01-01'); 
     }
-    return year;
+  
+    return nodes.reduce((earliest, node) => {
+      var birthDate = new Date(node.birthDate);
+      return birthDate < earliest ? birthDate : earliest;
+    }, new Date());
   }
 
   function updateFilter() {
@@ -297,20 +336,7 @@ function Lineage() {
     }
   }
 
-  function updateSlider() {
-    var position = ((year - config.startYear) / (config.endYear - config.startYear)) * 100;
-    $("#yearSlider").val(position);
-  }
-
-  function initSlider() {
-    $('#yearSlider').on('change', function() {
-      var position = $("#yearSlider").val();
-      year = Math.round(((config.endYear - config.startYear) * (position / 100)) + config.startYear);
-    });
-  }
-
   function prepareData(data, filters) {
-
     var filterItems = filters.split(" ");
     filterItems = filterItems.filter(function(i) {
       return i.length > 0;
@@ -343,8 +369,8 @@ function Lineage() {
     return false;
   }
 
-  function updateYear(year) {
-    $('#year').html(year)
+  function updateYear(currentTime) {
+    $('#year').html(currentTime.toDateString())
       .css('left', width / 2 - 105)
       .css('top', height - 140);
   }
@@ -359,7 +385,7 @@ function Lineage() {
   }
 
   function restart() {
-    updateYear(year);
+    updateYear(currentTime);
     users = d3.group(nodes, d => d.id);
 
     context.save();
@@ -539,12 +565,21 @@ function Lineage() {
   }
 
   lin.setYear = function(value) {
-    year = value;
+    currentTime = new Date(value);
     forceRefresh = true;
   }
 
+  lin.setTimeStep = function(timeStep) {
+    config.timeStep = timeStep;
+    forceRefresh = true;
+  }
+
+  lin.setPause = function(value) {
+    config.pause = value;
+  }
+
   lin.moveYear = function(value) {
-    year += value;
+    currentTime.setFullYear(currentTime.currentTime.getFullYear());
     forceRefresh = true;
   }
 
@@ -574,3 +609,4 @@ function Lineage() {
 
   return lin;
 }
+
