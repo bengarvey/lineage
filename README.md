@@ -24,8 +24,6 @@ You can run this locally by running `python3 -m http.server 8000` from a termina
 
 ```
 npm install
-npm install connect
-npm install serve-static
 ```
 And then every time after that running `node server.js`
 
@@ -36,11 +34,15 @@ This is what its keys do:
 
 - **`data`**: Points to the JSON file containing your data. By default, it points to the example file located at `data/familyData.json`.
   
-- **`startYear`**: Start year of the timeline.
+- **`startDate`**: The initial date when the graph is loaded.
 
-- **`endYear`**: End year of the timeline.
+- **`firstDate`**: Earliest date you can go back to.
 
-- **`speed`**: Defines how many milliseconds one year takes when you hit the "Play" button. The default value is 100, meaning 10 years pass per second (100ms = 1/10th of a second).
+- **`lastDate`**: Latest date you can go to. 
+
+- **`speed`**: Defines how many milliseconds before the next "tick" of the timer runs.
+
+- **`timeStep`**: How much real time passes with each tick of the timer. Valid values are "day", "week" and "year"
 
 - **`menuDefaultOpen`**: If set to `true`, the menu is instantly opened when the web view is loaded. The default is `true`.
 
