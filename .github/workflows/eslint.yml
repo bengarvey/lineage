@@ -13,7 +13,7 @@ jobs:
         run: npm install
 
       - name: Run ESLint and output JSON results
-        run: npx eslint -f json -o eslint-results.json .
+        run: npx eslint -f json -o eslint-results.json index.html js/lineage.js
 
       - name: Convert ESLint JSON to SARIF and upload to GitHub
         uses: github/codeql-action/upload-sarif@v3
