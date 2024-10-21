@@ -6,6 +6,7 @@
     "serve-static": "^1.16.2"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-airbnb-base": "^0.0.1-security",
