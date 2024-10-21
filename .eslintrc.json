@@ -9,6 +9,7 @@
         "sourceType": "module"
     },
     "plugins": ["html"],
+    "extends": ["airbnb"],
     "rules": {
         "no-unused-expressions": ["error", { "allowTernary": true }],
         "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": true }],
