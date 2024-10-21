@@ -15,8 +15,7 @@ function Lineage() {
   timeStart('init', config);
 
   let showDead = true;
-  let showDead = true;
-  
+
   const MS_IN_A_DAY = 24 * 60 * 60 * 1000;
   const MS_IN_A_WEEK = 7 * MS_IN_A_DAY;
   const MS_IN_A_YEAR = 365.25 * MS_IN_A_DAY; // Approximation
