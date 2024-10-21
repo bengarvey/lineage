@@ -15,7 +15,10 @@ jobs:
       - name: Run ESLint and output JSON results
         run: npx eslint -f json -o eslint-results.json index.html js/lineage.js
 
-      - name: Convert ESLint JSON to SARIF and upload to GitHub
+      - name: Convert ESLint JSON to SARIF
+        run: npx eslint-sarif-converter eslint-results.json -o eslint-results.sarif
+
+      - name: Upload SARIF results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: eslint-results.json
+          sarif_file: eslint-results.sarif
