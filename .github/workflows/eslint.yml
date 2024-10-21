@@ -13,4 +13,4 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npx eslint js/lineage.js index.html
+        run: npx eslint js/lineage.js index.html scripts/famgen.js
