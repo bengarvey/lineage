@@ -8,5 +8,11 @@
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true,
-  "timeStep": "year"
+  "timeStep": "month",
+  "column_mappings": {
+    "description": "name",
+    "createdAt": "birthDate",
+    "deletedAt": "deathDate",
+    "category": "lastName"
+  }
 }

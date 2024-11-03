@@ -208,7 +208,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.name} ${d.lastName}<br><span class='birthYear'>${d.birthDate.substring(0, 4)}</span>`);
+    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0, 4)}</span>`);
   }
 
   function loop() {
@@ -266,16 +266,16 @@ function Lineage() {
   }
 
   function addRemoveNode(n) {
-    const birthDate = new Date(n.birthDate);
-    if (nodes.indexOf(n) === -1 && birthDate <= currentTime) {
+    const createdAt = new Date(n.createdAt);
+    if (nodes.indexOf(n) === -1 && createdAt <= currentTime) {
       nodes.push(n);
-    } else if (nodes.indexOf(n) !== -1 && birthDate > currentTime) {
+    } else if (nodes.indexOf(n) !== -1 && createdAt > currentTime) {
       nodes.splice(nodes.indexOf(n), 1);
     }
 
-    if (!showDead && n.deathDate !== null) {
-      const deathDate = new Date(n.deathDate);
-      if (nodes.indexOf(n) !== -1 && deathDate < currentTime) {
+    if (!showDead && n.deletedAt !== null) {
+      const deletedAt = new Date(n.deletedAt);
+      if (nodes.indexOf(n) !== -1 && deletedAt < currentTime) {
         nodes.splice(nodes.indexOf(n), 1);
       }
     }
@@ -301,10 +301,10 @@ function Lineage() {
     const rowCount = 11;
     const colCount = 13;
     clusterNodes.forEach((n, i) => {
-      if (clusters[n.lastName] == null) {
+      if (clusters[n.category] == null) {
         const x = Math.round(i / colCount) + Math.round(i / colCount) * CLUSTER_COL_SPACING - width;
         const y = (i % rowCount) + Math.round(i % rowCount) * CLUSTER_ROW_SPACING - height;
-        clusters[n.lastName] = { x, y };
+        clusters[n.category] = { x, y };
       }
     });
     return clusters;
@@ -316,8 +316,8 @@ function Lineage() {
     }
 
     return nodes.reduce((earliest, node) => {
-      const birthDate = new Date(node.birthDate);
-      return birthDate < earliest ? birthDate : earliest;
+      const createdAt = new Date(node.createdAt);
+      return createdAt < earliest ? createdAt : earliest;
     }, new Date());
   }
 
@@ -328,7 +328,21 @@ function Lineage() {
     }
   }
 
+  function mapColumns(dataOb) {
+    const mappings = config.column_mappings;
+    dataOb.nodes.forEach((node, index) => {
+      Object.keys(mappings).forEach((key) => {
+        const value = mappings[key];
+        dataOb.nodes[index][key] = node[value];
+        delete dataOb.nodes[index][value];
+      });
+    });
+
+    return dataOb;
+  }
+
   function prepareData(dataOb, filterString) {
+    dataOb = mapColumns(dataOb);
     let filterItems = filterString.split(' ');
     filterItems = filterItems.filter((i) => i.length > 0);
     for (let i = 0; i < dataOb.nodes.length; i += 1) {
@@ -403,14 +417,14 @@ function Lineage() {
     // const k = 0.1 * simulation.alpha;
     users.forEach((o) => {
       const u = o[0];
-      u.y += (clusters[u.lastName].y - u.y) * 0.08;
-      u.x += (clusters[u.lastName].x - u.x) * 0.08;
+      u.y += (clusters[u.category].y - u.y) * 0.08;
+      u.x += (clusters[u.category].x - u.x) * 0.08;
     });
 
     users.forEach((user) => {
       context.beginPath();
       user.forEach(drawNode);
-      context.fillStyle = color(user[0].lastName);
+      context.fillStyle = color(user[0].category);
       context.fill();
     });
 
@@ -429,7 +443,7 @@ function Lineage() {
     users.forEach((user) => {
       context.beginPath();
       user.forEach(drawNode);
-      context.fillStyle = color(user[0].lastName);
+      context.fillStyle = color(user[0].category);
       context.fill();
     });
 
@@ -445,14 +459,14 @@ function Lineage() {
 
     users.forEach((user) => {
       const d = user[0];
-      const scale = ((d.birthDate.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
+      const scale = ((d.createdAt.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
     });
 
     users.forEach((user) => {
       context.beginPath();
       user.forEach(drawNode);
-      context.fillStyle = color(user[0].lastName);
+      context.fillStyle = color(user[0].category);
       context.fill();
     });
 
