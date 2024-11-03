@@ -208,7 +208,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.created_at.substring(0, 4)}</span>`);
+    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0, 4)}</span>`);
   }
 
   function loop() {
@@ -266,16 +266,16 @@ function Lineage() {
   }
 
   function addRemoveNode(n) {
-    const created_at = new Date(n.created_at);
-    if (nodes.indexOf(n) === -1 && created_at <= currentTime) {
+    const createdAt = new Date(n.createdAt);
+    if (nodes.indexOf(n) === -1 && createdAt <= currentTime) {
       nodes.push(n);
-    } else if (nodes.indexOf(n) !== -1 && created_at > currentTime) {
+    } else if (nodes.indexOf(n) !== -1 && createdAt > currentTime) {
       nodes.splice(nodes.indexOf(n), 1);
     }
 
-    if (!showDead && n.deleted_at !== null) {
-      const deleted_at = new Date(n.deleted_at);
-      if (nodes.indexOf(n) !== -1 && deleted_at < currentTime) {
+    if (!showDead && n.deletedAt !== null) {
+      const deletedAt = new Date(n.deletedAt);
+      if (nodes.indexOf(n) !== -1 && deletedAt < currentTime) {
         nodes.splice(nodes.indexOf(n), 1);
       }
     }
@@ -316,8 +316,8 @@ function Lineage() {
     }
 
     return nodes.reduce((earliest, node) => {
-      const created_at = new Date(node.created_at);
-      return created_at < earliest ? created_at : earliest;
+      const createdAt = new Date(node.createdAt);
+      return createdAt < earliest ? createdAt : earliest;
     }, new Date());
   }
 
@@ -329,17 +329,17 @@ function Lineage() {
   }
 
   function mapColumns(dataOb) {
-    mappings = config.column_mappings;
-    dataOb.nodes.forEach( (node, index) => {
-      Object.keys(mappings).forEach( (key) => {
-        value = mappings[key];
+    const mappings = config.column_mappings;
+    dataOb.nodes.forEach((node, index) => {
+      Object.keys(mappings).forEach((key) => {
+        const value = mappings[key];
         dataOb.nodes[index][key] = node[value];
         delete dataOb.nodes[index][value];
-      })
-    })
+      });
+    });
 
     return dataOb;
-}
+  }
 
   function prepareData(dataOb, filterString) {
     dataOb = mapColumns(dataOb);
@@ -459,7 +459,7 @@ function Lineage() {
 
     users.forEach((user) => {
       const d = user[0];
-      const scale = ((d.created_at.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
+      const scale = ((d.createdAt.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
     });
 

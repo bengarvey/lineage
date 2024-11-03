@@ -11,8 +11,8 @@
   "timeStep": "month",
   "column_mappings": {
     "description": "name",
-    "created_at": "birthDate",
-    "deleted_at": "deathDate",
+    "createdAt": "birthDate",
+    "deletedAt": "deathDate",
     "category": "lastName"
   }
 }
