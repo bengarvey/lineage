@@ -437,7 +437,6 @@ function Lineage() {
   }
 
   function treeTicked() {
-    console.time('tree');
     context.clearRect(0, 0, width, height);
     context.save();
     context.translate(transform.x, transform.y);
@@ -448,8 +447,6 @@ function Lineage() {
     context.lineWidth = 1;
     links.forEach(drawLink);
 
-    console.timeLog('tree', 'after drawLink');
-
     users.forEach((user) => {
       context.beginPath();
       drawNode(user[0]);
@@ -457,11 +454,7 @@ function Lineage() {
       context.fill();
     });
 
-    console.timeLog('tree', 'after drawNodes');
-
     context.restore();
-    console.timeLog('tree', 'after restore');
-    console.timeEnd('tree');
   }
 
   function timeTicked() {
