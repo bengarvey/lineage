@@ -115,6 +115,8 @@ function Lineage() {
 
     users = d3.group(nodes, (d) => d.id);
     data = prepareData(data, filters);
+    console.log(`${data.nodes.length} nodes`);
+    console.log(`${data.links.length} links`);
     simulation = d3.forceSimulation(nodes);
     [canvas, simulation] = getCanvasSimulation(mode);
 
@@ -125,6 +127,7 @@ function Lineage() {
   }
 
   function getCanvasSimulation(simulationMode) {
+    console.log('getCanvasSim');
     canvas
       .on('mousemove', mousemoved)
       .call(d3.drag()
@@ -218,19 +221,18 @@ function Lineage() {
     currentTime = advanceTime(currentTime);
 
     updateFilter();
-
     if (currentTime !== null && currentTime.getTime() !== oldDate.getTime()) {
       forceRefresh = true;
     }
-
     if (forceRefresh) {
       data.nodes.forEach(addRemoveNode);
       if (mode === 'tree') {
         data.links.forEach(addRemoveLink);
       }
     }
-
-    restart();
+    if (forceRefresh) {
+      restart();
+    }
     timeEnd('loop', config);
     forceRefresh = false;
   }
@@ -391,7 +393,6 @@ function Lineage() {
   function restart() {
     updateYear(currentTime);
     users = d3.group(nodes, (d) => d.id);
-
     context.save();
     context.translate(transform.x, transform.y);
     context.scale(transform.k, transform.k);
@@ -432,22 +433,31 @@ function Lineage() {
   }
 
   function treeTicked() {
+    console.time('tree');
     context.clearRect(0, 0, width, height);
     context.save();
     context.translate(transform.x, transform.y);
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
+    console.timeLog('tree', 'after transform');
 
+    context.lineWidth = 1;
     links.forEach(drawLink);
+
+    console.timeLog('tree', 'after drawLink');
 
     users.forEach((user) => {
       context.beginPath();
-      user.forEach(drawNode);
+      drawNode(user[0]);
       context.fillStyle = color(user[0].category);
       context.fill();
     });
 
+    console.timeLog('tree', 'after drawNodes');
+
     context.restore();
+    console.timeLog('tree', 'after restore');
+    console.timeEnd('tree');
   }
 
   function timeTicked() {
@@ -502,7 +512,6 @@ function Lineage() {
   function drawLink(d) {
     context.beginPath();
     context.moveTo(d.source.x, d.source.y);
-    context.lineWidth = 1;
     context.strokeStyle = d.color;
     context.lineTo(d.target.x, d.target.y);
     context.stroke();
