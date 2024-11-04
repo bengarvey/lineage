@@ -18,6 +18,7 @@ function Lineage() {
 
   const MS_IN_A_DAY = 24 * 60 * 60 * 1000;
   const MS_IN_A_WEEK = 7 * MS_IN_A_DAY;
+  const MS_IN_A_MONTH = 30.437 * MS_IN_A_DAY; // Approximation
   const MS_IN_A_YEAR = 365.25 * MS_IN_A_DAY; // Approximation
 
   let currentTime = new Date(config.startDate);
@@ -248,6 +249,9 @@ function Lineage() {
         break;
       case 'week':
         msIncrement = MS_IN_A_WEEK;
+        break;
+      case 'month':
+        msIncrement = MS_IN_A_MONTH;
         break;
       case 'year':
       default:
