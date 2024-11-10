@@ -1,18 +1,23 @@
 {
-  "data": "data/familyData.json",
+  "data": "data/cp_data.json",
   "filter": "",
   "startDate": "2024-10-17 00:00:00",
-  "firstDate": "1900-01-01 00:00:00",
+  "firstDate": "2021-09-01 00:00:00",
   "lastDate": "2024-10-17 00:00:00",
-  "speed": 10,
+  "speed": 50,
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true,
-  "timeStep": "month",
-  "column_mappings": {
+  "timeStep": "day",
+  "hideOrphans": true,
+  "nodeColumnMappings": {
     "description": "name",
     "createdAt": "birthDate",
     "deletedAt": "deathDate",
-    "category": "lastName"
+    "category": "email_domain",
+    "id": "email"
+  },
+  "linkColumnMappings": {
+    "color": "status"
   }
 }

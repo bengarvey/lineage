@@ -76,7 +76,7 @@ function Lineage() {
     // Initialize startDate, lastDate, and firstDate in Date format
     config.startDate = new Date(config.startDate);
     config.lastDate = new Date(config.lastDate);
-    config.firstDate = findFirstDate(config.nodes); // Set earliest birth date
+    config.firstDate = new Date(config.firstDate); // findFirstDate(config.nodes); // Set earliest birth date
 
     currentTime = config.startDate; // Set the app to start at the configured start date
     initShowDead(config.showDead);
@@ -128,7 +128,6 @@ function Lineage() {
   }
 
   function getCanvasSimulation(simulationMode) {
-    console.log('getCanvasSim');
     canvas
       .on('mousemove', mousemoved)
       .call(d3.drag()
@@ -167,7 +166,7 @@ function Lineage() {
     simulation
       .force('charge', d3.forceManyBody().strength(-50))
       .force('centering', d3.forceCenter(0, 0))
-      .force('link', d3.forceLink(links).distance(30).strength(0.5))
+      .force('link', d3.forceLink(links).distance(30).strength(0.2))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
       .alphaTarget(1)
@@ -178,7 +177,7 @@ function Lineage() {
 
   function getTimelineSimulation() {
     simulation
-      .force('charge', d3.forceManyBody().strength(-5))
+      .force('charge', d3.forceManyBody().strength(-2))
       .force('link', d3.forceLink([]).strength(-1))
       .force('y', d3.forceY())
       .force('x', d3.forceX(0))
@@ -189,12 +188,15 @@ function Lineage() {
   }
 
   function mousemoved(event) {
-    const m = d3.pointer(event, this);
-    const d = simulation.find(m[0] - width / 2, m[1] - height / 2, searchRadius);
+    const [mouseX, mouseY] = d3.pointer(event, this);
+    const transformedX = (mouseX - transform.x) / transform.k - width / 2;
+    const transformedY = (mouseY - transform.y) / transform.k - height / 2;
+  
+    const d = simulation.find(transformedX, transformedY, searchRadius);
     if (!d) {
       hideMemberDetails();
     } else {
-      highlightNode(d, m);
+      highlightNode(d, [mouseX, mouseY]); 
     }
   }
 
@@ -212,7 +214,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0, 4)}</span>`);
+    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt}</span>`);
   }
 
   function loop() {
@@ -335,12 +337,21 @@ function Lineage() {
   }
 
   function mapColumns(dataOb) {
-    const mappings = config.column_mappings;
+    const nodeMappings = config.nodeColumnMappings;
     dataOb.nodes.forEach((node, index) => {
-      Object.keys(mappings).forEach((key) => {
-        const value = mappings[key];
+      Object.keys(nodeMappings).forEach((key) => {
+        const value = nodeMappings[key];
         dataOb.nodes[index][key] = node[value];
         delete dataOb.nodes[index][value];
+      });
+    });
+
+    const linkMappings = config.linkColumnMappings;
+    dataOb.links.forEach((link, index) => {
+      Object.keys(linkMappings).forEach((key) => {
+        const value = linkMappings[key];
+        dataOb.links[index][key] = link[value];
+        delete dataOb.links[index][value];
       });
     });
 
@@ -351,18 +362,41 @@ function Lineage() {
     dataOb = mapColumns(dataOb);
     let filterItems = filterString.split(' ');
     filterItems = filterItems.filter((i) => i.length > 0);
+
+    dataOb.links.forEach((link) => {
+      source = getNodeById(data.nodes, link.source);
+      target = getNodeById(data.nodes, link.target);
+
+      if (source != -1 && target != -1) {
+        incrementLinkTotal(source);
+        incrementLinkTotal(target);
+      }
+
+      link.source = source;
+      link.target = target;
+    
+    });
+
     for (let i = 0; i < dataOb.nodes.length; i += 1) {
-      if (!inFilter(dataOb.nodes[i], filterItems)) {
+      if (!inFilter(dataOb.nodes[i], filterItems) || (dataOb.nodes[i].linkTotal === undefined && config.hideOrphans) ) {
         dataOb.nodes.splice(i, 1);
         i -= 1;
       }
     }
 
-    data.links.forEach((link) => {
-      link.source = getNodeById(data.nodes, link.source);
-      link.target = getNodeById(data.nodes, link.target);
-    });
+
+
     return data;
+  }
+
+  function incrementLinkTotal(node) {
+    if (node.linkTotal === undefined) {
+      node.linkTotal = 0;
+    }
+    else {
+      node.linkTotal += 1;
+    }
+    return node;
   }
 
   function inFilter(node, filterItems) {
@@ -442,9 +476,9 @@ function Lineage() {
     context.translate(transform.x, transform.y);
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
-    console.timeLog('tree', 'after transform');
 
     context.lineWidth = 1;
+
     links.forEach(drawLink);
 
     users.forEach((user) => {
@@ -464,9 +498,15 @@ function Lineage() {
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
 
+    const startDate = new Date(config.firstDate);
+    const endDate = new Date(config.lastDate);
+    const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
     users.forEach((user) => {
       const d = user[0];
-      const scale = ((d.createdAt.substring(0, 4) - 1900) / (2014 - 1900) - 0.5);
+      const createdAt = new Date(d.createdAt);
+      const daysFromStart = (createdAt - startDate) / (1000 * 60 * 60 * 24);
+      const scale = (daysFromStart / totalDays) - 0.5;
       d.x += (width * scale - d.x) * TIMELINE_SPEED;
     });
 
@@ -509,7 +549,7 @@ function Lineage() {
   function drawLink(d) {
     context.beginPath();
     context.moveTo(d.source.x, d.source.y);
-    context.strokeStyle = d.color;
+    context.strokeStyle = color(d.color);
     context.lineTo(d.target.x, d.target.y);
     context.stroke();
   }

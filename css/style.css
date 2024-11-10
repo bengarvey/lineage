@@ -60,8 +60,8 @@ body {
 }
 
 #year {
-  font-family: helvetica, arial;
-  font-size: 70pt;
+  font-family: monospace;
+  font-size: 60pt;
   color: #000;
   position: absolute;
   top: 0;
