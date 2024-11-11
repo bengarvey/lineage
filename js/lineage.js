@@ -127,6 +127,7 @@ function Lineage() {
   }
 
   function getCanvasSimulation(simulationMode) {
+    console.log('getCanvasSim');
     canvas
       .on('mousemove', mousemoved)
       .call(d3.drag()
@@ -485,9 +486,9 @@ function Lineage() {
     context.translate(transform.x, transform.y);
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
+    console.timeLog('tree', 'after transform');
 
     context.lineWidth = 1;
-
     links.forEach(drawLink);
 
     users.forEach((user) => {
