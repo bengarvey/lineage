@@ -73,12 +73,11 @@ function Lineage() {
     initNightMode();
     config = conf;
 
-    // Initialize startDate, lastDate, and firstDate in Date format
     config.startDate = new Date(config.startDate);
     config.lastDate = new Date(config.lastDate);
-    config.firstDate = new Date(config.firstDate); // findFirstDate(config.nodes); // Set earliest birth date
+    config.firstDate = new Date(config.firstDate);
 
-    currentTime = config.startDate; // Set the app to start at the configured start date
+    currentTime = config.startDate;
     initShowDead(config.showDead);
     document.getElementById('search').value = conf.filter;
   }
@@ -191,12 +190,12 @@ function Lineage() {
     const [mouseX, mouseY] = d3.pointer(event, this);
     const transformedX = (mouseX - transform.x) / transform.k - width / 2;
     const transformedY = (mouseY - transform.y) / transform.k - height / 2;
-  
+
     const d = simulation.find(transformedX, transformedY, searchRadius);
     if (!d) {
       hideMemberDetails();
     } else {
-      highlightNode(d, [mouseX, mouseY]); 
+      highlightNode(d, [mouseX, mouseY]);
     }
   }
 
@@ -318,17 +317,6 @@ function Lineage() {
     return clusters;
   }
 
-  function findFirstDate(someNodes) {
-    if (!someNodes || someNodes.length === 0) {
-      return new Date('1900-01-01');
-    }
-
-    return nodes.reduce((earliest, node) => {
-      const createdAt = new Date(node.createdAt);
-      return createdAt < earliest ? createdAt : earliest;
-    }, new Date());
-  }
-
   function updateFilter() {
     if (filters !== $('#search').val()) {
       filters = $('#search').val();
@@ -364,27 +352,24 @@ function Lineage() {
     filterItems = filterItems.filter((i) => i.length > 0);
 
     dataOb.links.forEach((link) => {
-      source = getNodeById(data.nodes, link.source);
-      target = getNodeById(data.nodes, link.target);
+      const source = getNodeById(data.nodes, link.source);
+      const target = getNodeById(data.nodes, link.target);
 
-      if (source != -1 && target != -1) {
+      if (source !== -1 && target !== -1) {
         incrementLinkTotal(source);
         incrementLinkTotal(target);
       }
 
       link.source = source;
       link.target = target;
-    
     });
 
     for (let i = 0; i < dataOb.nodes.length; i += 1) {
-      if (!inFilter(dataOb.nodes[i], filterItems) || (dataOb.nodes[i].linkTotal === undefined && config.hideOrphans) ) {
+      if (!inFilter(dataOb.nodes[i], filterItems) || (dataOb.nodes[i].linkTotal === undefined && config.hideOrphans)) {
         dataOb.nodes.splice(i, 1);
         i -= 1;
       }
     }
-
-
 
     return data;
   }
@@ -392,8 +377,7 @@ function Lineage() {
   function incrementLinkTotal(node) {
     if (node.linkTotal === undefined) {
       node.linkTotal = 0;
-    }
-    else {
+    } else {
       node.linkTotal += 1;
     }
     return node;
@@ -406,7 +390,6 @@ function Lineage() {
     let regex = null;
     for (let i = 0; i < filterItems.length; i += 1) {
       regex = new RegExp(filterItems[i], 'ig');
-      debugger;
       if (node.description != null && node.description.match(regex)) {
         return true;
       }
