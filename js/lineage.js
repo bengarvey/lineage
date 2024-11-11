@@ -164,7 +164,7 @@ function Lineage() {
 
   function getTreeSimulation() {
     simulation
-      .force('charge', d3.forceManyBody().strength(-50))
+      .force('charge', d3.forceManyBody().strength(-45))
       .force('centering', d3.forceCenter(0, 0))
       .force('link', d3.forceLink(links).distance(30).strength(0.2))
       .force('x', d3.forceX())
@@ -406,7 +406,8 @@ function Lineage() {
     let regex = null;
     for (let i = 0; i < filterItems.length; i += 1) {
       regex = new RegExp(filterItems[i], 'ig');
-      if (node.name.match(regex)) {
+      debugger;
+      if (node.description != null && node.description.match(regex)) {
         return true;
       }
     }
