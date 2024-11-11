@@ -150,7 +150,7 @@ function Lineage() {
 
   function getClusterSimulation() {
     simulation
-      .force('charge', d3.forceManyBody().strength(-5))
+      .force('charge', d3.forceManyBody().strength(-10))
       .force('centering', d3.forceCenter(0, 0))
       .force('link', d3.forceLink([]).strength(-1))
       .force('x', d3.forceX())
@@ -213,7 +213,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt}</span>`);
+    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0,10)}</span>`);
   }
 
   function loop() {
@@ -317,6 +317,17 @@ function Lineage() {
     return clusters;
   }
 
+  function findFirstDate(someNodes) {
+    if (!someNodes || someNodes.length === 0) {
+      return new Date('1900-01-01');
+    }
+
+    return nodes.reduce((earliest, node) => {
+      const createdAt = new Date(node.createdAt);
+      return createdAt < earliest ? createdAt : earliest;
+    }, new Date());
+  }
+
   function updateFilter() {
     if (filters !== $('#search').val()) {
       filters = $('#search').val();
@@ -328,18 +339,22 @@ function Lineage() {
     const nodeMappings = config.nodeColumnMappings;
     dataOb.nodes.forEach((node, index) => {
       Object.keys(nodeMappings).forEach((key) => {
-        const value = nodeMappings[key];
-        dataOb.nodes[index][key] = node[value];
-        delete dataOb.nodes[index][value];
+        if (key !== nodeMappings[key]) { // Skip if they're the same
+          const value = nodeMappings[key];
+          dataOb.nodes[index][key] = node[value];
+          delete dataOb.nodes[index][value];
+        }
       });
     });
 
     const linkMappings = config.linkColumnMappings;
     dataOb.links.forEach((link, index) => {
       Object.keys(linkMappings).forEach((key) => {
-        const value = linkMappings[key];
-        dataOb.links[index][key] = link[value];
-        delete dataOb.links[index][value];
+        if (key !== linkMappings[key]) { // Skip if they're the same
+          const value = linkMappings[key];
+          dataOb.links[index][key] = link[value];
+          delete dataOb.links[index][value];
+        }
       });
     });
 
@@ -350,7 +365,6 @@ function Lineage() {
     dataOb = mapColumns(dataOb);
     let filterItems = filterString.split(' ');
     filterItems = filterItems.filter((i) => i.length > 0);
-
     dataOb.links.forEach((link) => {
       const source = getNodeById(data.nodes, link.source);
       const target = getNodeById(data.nodes, link.target);
@@ -482,7 +496,7 @@ function Lineage() {
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
 
-    const startDate = new Date(config.firstDate);
+    const startDate = findFirstDate(config.nodes);
     const endDate = new Date(config.lastDate);
     const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
