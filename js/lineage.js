@@ -113,7 +113,7 @@ function Lineage() {
 
     users = d3.group(nodes, (d) => d.id);
     data = prepareData(data, filters);
-    config.firstDate =  new Date(findFirstDate(config.nodes));
+    config.firstDate = new Date(findFirstDate(config.nodes));
     config.lastDate = new Date(findLastDate(config.nodes));
     console.log(`${data.nodes.length} nodes`);
     console.log(`${data.links.length} links`);
@@ -213,7 +213,7 @@ function Lineage() {
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0,10)}</span>`);
+    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0, 10)}</span>`);
   }
 
   function loop() {
@@ -507,7 +507,7 @@ function Lineage() {
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
 
-    const startDate = config.firstDate
+    const startDate = config.firstDate;
     const endDate = config.lastDate;
     const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
