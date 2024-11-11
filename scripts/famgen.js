@@ -3,8 +3,8 @@ import Chance from 'chance';
 const chance = new Chance();
 
 // Constants
-const TOTAL_NODES = 100; // This is the number we start with, but we'll end up with more when we add spouses/kids
-const MAX_CHILDREN = 6; // Max children per family
+const TOTAL_NODES = 10; // This is the number we start with, but we'll end up with more when we add spouses/kids
+const MAX_CHILDREN = 5; // Max children per family
 const MIN_CHILDREN = 0; // Min children per family
 const GENDER_NEUTRAL_NAMES = [
   'Alex', 'Jordan', 'Taylor', 'Casey', 'Morgan', 'Riley', 'Avery', 'Quinn', 'Cameron', 'Peyton',
