@@ -74,8 +74,6 @@ function Lineage() {
     config = conf;
 
     config.startDate = new Date(config.startDate);
-    config.lastDate = new Date(config.lastDate);
-    config.firstDate = new Date(config.firstDate);
 
     currentTime = config.startDate;
     initShowDead(config.showDead);
@@ -115,6 +113,8 @@ function Lineage() {
 
     users = d3.group(nodes, (d) => d.id);
     data = prepareData(data, filters);
+    config.firstDate =  new Date(findFirstDate(config.nodes));
+    config.lastDate = new Date(findLastDate(config.nodes));
     console.log(`${data.nodes.length} nodes`);
     console.log(`${data.links.length} links`);
     simulation = d3.forceSimulation(nodes);
@@ -328,6 +328,17 @@ function Lineage() {
     }, new Date());
   }
 
+  function findLastDate(someNodes) {
+    if (!someNodes || someNodes.length === 0) {
+      return new Date();
+    }
+
+    return nodes.reduce((latest, node) => {
+      const createdAt = new Date(node.createdAt);
+      return createdAt > latest ? createdAt : latest;
+    }, new Date());
+  }
+
   function updateFilter() {
     if (filters !== $('#search').val()) {
       filters = $('#search').val();
@@ -496,8 +507,8 @@ function Lineage() {
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
 
-    const startDate = findFirstDate(config.nodes);
-    const endDate = new Date(config.lastDate);
+    const startDate = config.firstDate
+    const endDate = config.lastDate;
     const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
     users.forEach((user) => {
