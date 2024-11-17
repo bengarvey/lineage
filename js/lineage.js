@@ -548,12 +548,8 @@ function Lineage() {
   }
 
   function getNodeById(someNodes, id) {
-    for (let i = 0; i < someNodes.length; i += 1) {
-      if (someNodes[i].id === id) {
-        return someNodes[i];
-      }
-    }
-    return -1;
+    const nodeMap = new Map(someNodes.map(node => [node.id, node]));
+    return nodeMap.get(id) || -1;
   }
 
   function drawLink(d) {
