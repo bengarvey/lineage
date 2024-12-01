@@ -193,6 +193,7 @@ function Lineage() {
     const transformedY = (mouseY - transform.y) / transform.k - height / 2;
 
     const d = simulation.find(transformedX, transformedY, searchRadius);
+    console.log(d);
     if (!d) {
       hideMemberDetails();
     } else {
@@ -210,11 +211,29 @@ function Lineage() {
   }
 
   function highlightNode(d, m) {
+    drawCircle(m);
     d3.selectAll('#memberDetails')
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${d.category} <br><span class='birthYear'>${d.createdAt.substring(0, 10)}</span>`);
+    d3.select('#name').html(`${d.description} ${showCategory(config.showCategory, d.category)} <br><span class='birthYear'>
+    ${showCreatedAt(d.createdAt)}</span>`);
+  }
+
+  function showCreatedAt(createdAt) {
+    if (createdAt) {
+      return createdAt.substring(0, 10);
+    }
+    else {
+      return '';
+    }
+  }
+
+  function showCategory(showIt, category) {
+    if (showIt) {
+      return category;
+    }
+    return '';
   }
 
   function loop() {
@@ -486,7 +505,6 @@ function Lineage() {
     context.translate(transform.x, transform.y);
     context.scale(transform.k, transform.k);
     context.translate(width / 2, height / 2);
-    console.timeLog('tree', 'after transform');
 
     context.lineWidth = 1;
     links.forEach(drawLink);
@@ -496,9 +514,21 @@ function Lineage() {
       drawNode(user[0]);
       context.fillStyle = color(user[0].category);
       context.fill();
+      if (user[0].highlighted) {
+        // drawCircle([user[0].x, user[0].y]);
+      }
     });
 
     context.restore();
+  }
+
+  function drawCircle(m) {
+    console.log(m);
+    context.beginPath();
+    context.moveTo(m[0], m[1]);
+    context.arc(m[0], m[1], 10, 0, 2 * Math.PI);
+    context.fillStyle = '#000000';
+    context.fill();
   }
 
   function timeTicked() {

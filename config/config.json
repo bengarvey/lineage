@@ -1,6 +1,6 @@
 {
-  "data": "data/familyData.json",
-  "filter": "",
+  "data": "data/haley.json",
+  "filter": "garvey haley quinn delpino innes fales penza fucetola phero dokmanus patterson dvorak turner pederson waite dvorak vaughn hackeloer koch loffredo",
   "startDate": "2024-10-17 00:00:00",
   "speed": 50,
   "debug": false,
@@ -8,6 +8,7 @@
   "showDead": true,
   "timeStep": "year",
   "hideOrphans": true,
+  "showCategory": false,
   "nodeColumnMappings": {
     "description": "name",
     "createdAt": "birthDate",
