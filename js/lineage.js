@@ -657,6 +657,12 @@ function Lineage() {
     forceRefresh = true;
   };
 
+  lin.setFirst = function () {
+    config.firstDate = findFirstDate(nodes);
+    currentTime = new Date(config.firstDate);
+    forceRefresh = true;
+  };
+
   lin.setTimeStep = function (timeStep) {
     config.timeStep = timeStep;
     forceRefresh = true;
