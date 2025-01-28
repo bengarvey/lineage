@@ -1,22 +1,39 @@
 {
-  "data": "data/haley.json",
-  "filter": "garvey haley quinn delpino innes fales penza fucetola phero dokmanus patterson dvorak turner pederson waite dvorak vaughn hackeloer koch loffredo",
+  "data": "data/tp_data.json",
+  "filter": "",
   "startDate": "2024-10-17 00:00:00",
-  "speed": 1000,
+  "speed": 525,
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true,
   "timeStep": "year",
-  "hideOrphans": true,
+  "hideOrphans": false,
   "showCategory": false,
   "nodeColumnMappings": {
     "description": "name",
     "createdAt": "birthDate",
     "deletedAt": "deathDate",
-    "category": "lastName",
+    "category": "category",
     "id": "id"
   },
   "linkColumnMappings": {
-    "color": "color"
+    "color": "relation"
+  },
+  "colorKeys": {
+    "criminal": "#000000",
+    "insurance": "#b0b857",
+    "fbi": "#3c59a8",
+    "mill": "#805732",
+    "great northern": "#ebaa71",
+    "diner": "#ad4855",
+    "casino": "#2a6e33",
+    "mystic": "#faf202",
+    "twin peaks": "#aaaaaa",
+    "police": "#40c3ff"
+  },
+  "treeSim": {
+    "charge": -105,
+    "link": 0.2,
+    "alphaTarget": 1
   }
 }

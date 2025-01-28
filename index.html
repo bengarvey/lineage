@@ -24,14 +24,25 @@ const startYear = parseInt(urlParams.get('startYear'), 10);
 
 /* eslint-disable no-unused-vars */
 function start() {
-  $.getJSON('config/config.json', (configuration) => {
-            config = configuration;
-            config.startYear = Number.isNaN(startYear) ? config.startYear : startYear;
-            lineage = new Lineage();
-            lineage(config);
-            lineage.loadJson(config.data);
+  $.getJSON('config/configs.json', (configsList) => {
+    let x = 1;
+    if (!configsList.configs || configsList.configs.length === 0) {
+      console.error('No configs found in configs.json');
+      return;
+    }
 
-            if (config.menuDefaultOpen) toggleMenu();
+    // Use first config as default
+    const configPath = configsList.configs[0];
+    
+    $.getJSON(configPath, (configuration) => {
+      config = configuration;
+      config.startYear = Number.isNaN(startYear) ? config.startYear : startYear;
+      lineage = new Lineage();
+      lineage(config);
+      lineage.loadJson(config.data);
+
+      if (config.menuDefaultOpen) toggleMenu();
+    });
   });
 }
 /* eslint-enable no-unused-vars */

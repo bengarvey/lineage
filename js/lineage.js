@@ -30,7 +30,7 @@ function Lineage() {
 
   let width = window.innerWidth;
   let height = window.innerHeight;
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  const scale = d3.scaleOrdinal(d3.schemeTableau10);
 
   let context;
   if (document.querySelector('canvas')) {
@@ -67,6 +67,15 @@ function Lineage() {
   d3.select('canvas').call(zoom);
 
   let transform = d3.zoomIdentity;
+
+  function color(key) {
+    key = key != null ? key.toLowerCase() : null;
+    if (config.colorKeys[key])
+      return config.colorKeys[key];
+    else {
+      return scale(key);
+    }
+  }
 
   function lin(conf) {
     log('Initializing', conf);
@@ -106,24 +115,49 @@ function Lineage() {
   }
 
   function init(response) {
+    timeStart('init', config);
     nodes = [];
     links = [];
     originalData = jQuery.extend(true, {}, response);
     data = response;
 
     users = d3.group(nodes, (d) => d.id);
+    console.timeLog('init', "users");
     data = prepareData(data, filters);
+    console.timeLog('init', "prep data");
     config.firstDate = new Date(findFirstDate(config.nodes));
     config.lastDate = new Date(findLastDate(config.nodes));
+    console.timeLog('init', "data");
+
+    config = initConfig(config);
+
     console.log(`${data.nodes.length} nodes`);
     console.log(`${data.links.length} links`);
     simulation = d3.forceSimulation(nodes);
+    console.timeLog('init', "sim");
     [canvas, simulation] = getCanvasSimulation(mode);
+    console.timeLog('init', "getSim");
 
     clusters = resetClusters(data.nodes);
+    console.timeLog('init', "resetClusters");
     restart();
-
     timeEnd('init', config);
+  }
+
+  function initConfig(config) {
+    const defaultTreeSim = {
+      charge: -105,
+      link: 0.2,
+      alphaTarget: 1,
+    };
+  
+    return {
+      ...config,
+      treeSim: {
+        ...defaultTreeSim,
+        ...config.treeSim,
+      },
+    };
   }
 
   function getCanvasSimulation(simulationMode) {
@@ -164,12 +198,13 @@ function Lineage() {
 
   function getTreeSimulation() {
     simulation
-      .force('charge', d3.forceManyBody().strength(-45))
+      //.force('charge', d3.forceManyBody().strength(-45))
+      .force('charge', d3.forceManyBody().strength(config.treeSim.charge))
       .force('centering', d3.forceCenter(0, 0))
-      .force('link', d3.forceLink(links).distance(30).strength(0.2))
+      .force('link', d3.forceLink(links).distance(30).strength(config.treeSim.link))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
-      .alphaTarget(1)
+      .alphaTarget(config.treeSim.alphaTarget)
       .on('tick', treeTicked);
 
     return simulation;
@@ -177,7 +212,7 @@ function Lineage() {
 
   function getTimelineSimulation() {
     simulation
-      .force('charge', d3.forceManyBody().strength(-2))
+      .force('charge', d3.forceManyBody().strength(-5))
       .force('link', d3.forceLink([]).strength(-1))
       .force('y', d3.forceY())
       .force('x', d3.forceX(0))
@@ -193,7 +228,6 @@ function Lineage() {
     const transformedY = (mouseY - transform.y) / transform.k - height / 2;
 
     const d = simulation.find(transformedX, transformedY, searchRadius);
-    console.log(d);
     if (!d) {
       hideMemberDetails();
     } else {
@@ -211,13 +245,17 @@ function Lineage() {
   }
 
   function highlightNode(d, m) {
-    drawCircle(m);
     d3.selectAll('#memberDetails')
       .style('display', 'block')
       .style('top', m[1] - 20)
       .style('left', m[0] + 20);
-    d3.select('#name').html(`${d.description} ${showCategory(config.showCategory, d.category)} <br><span class='birthYear'>
-    ${showCreatedAt(d.createdAt)}</span>`);
+    d3.select('#name').html(`${d.id} ${d.description} ${showCategory(config.showCategory, d.category)} <br><span class='birthYear'>
+    ${showCreatedAt(d.createdAt)} ${printLinks(d)}</span>`);
+  }
+
+  function printLinks(d) {
+    printlinks = data.links.filter( link => link.source.id == d.id || link.target.id == d.id )
+    return printlinks.map(link => link.description || "").join("<br>")
   }
 
   function showCreatedAt(createdAt) {
@@ -296,7 +334,7 @@ function Lineage() {
     const createdAt = new Date(n.createdAt);
     if (nodes.indexOf(n) === -1 && createdAt <= currentTime) {
       nodes.push(n);
-    } else if (nodes.indexOf(n) !== -1 && createdAt > currentTime) {
+    } else if ((nodes.indexOf(n) !== -1 && createdAt > currentTime)) {
       nodes.splice(nodes.indexOf(n), 1);
     }
 
@@ -393,30 +431,65 @@ function Lineage() {
   }
 
   function prepareData(dataOb, filterString) {
+
     dataOb = mapColumns(dataOb);
-    let filterItems = filterString.split(' ');
-    filterItems = filterItems.filter((i) => i.length > 0);
-    dataOb.links.forEach((link) => {
-      const source = getNodeById(data.nodes, link.source);
-      const target = getNodeById(data.nodes, link.target);
-
-      if (source !== -1 && target !== -1) {
-        incrementLinkTotal(source);
-        incrementLinkTotal(target);
-      }
-
-      link.source = source;
-      link.target = target;
-    });
-
-    for (let i = 0; i < dataOb.nodes.length; i += 1) {
-      if (!inFilter(dataOb.nodes[i], filterItems) || (dataOb.nodes[i].linkTotal === undefined && config.hideOrphans)) {
-        dataOb.nodes.splice(i, 1);
-        i -= 1;
-      }
+    // Debug logging
+    if (true) {
+      console.log('Sample node:', dataOb.nodes[0]);
+      console.log('Sample link before lookup:', {
+        source: dataOb.links[0]?.source,
+        target: dataOb.links[0]?.target,
+        sourceType: typeof dataOb.links[0]?.source,
+        targetType: typeof dataOb.links[0]?.target
+      });
     }
 
-    return data;
+    const nodeMap = new Map(dataOb.nodes.map(node => [node.id, node]));
+    
+    const filterPatterns = filterString.split(' ')
+      .filter(i => i.length > 0)
+      .map(pattern => new RegExp(pattern, 'ig'));
+
+    const linkTotals = new Map(); 
+    dataOb.links = dataOb.links.filter(link => {
+      const source = nodeMap.get(link.source);
+      const target = nodeMap.get(link.target);
+      
+      if (source && target) {
+        // Count links for each node
+        linkTotals.set(source.id, (linkTotals.get(source.id) || 0) + 1);
+        linkTotals.set(target.id, (linkTotals.get(target.id) || 0) + 1);
+        
+        // Update link references
+        link.source = source;
+        link.target = target;
+        return true;
+      }
+      return false;
+    });
+  
+    dataOb.nodes = dataOb.nodes.filter(node => {
+      
+      node.linkTotal = linkTotals.get(node.id);
+      
+      return (
+        (!config.hideOrphans) && 
+        (filterPatterns.length === 0 || matchesFilter(node, filterPatterns))
+      );
+    });
+
+    return dataOb;
+  }
+  
+  // Separate filter matching function for clarity and reuse
+  function matchesFilter(node, patterns) {
+    if (!node.description) return false;
+    
+    // Return true if any pattern matches
+    return patterns.some(regex => {
+      regex.lastIndex = 0; // Reset regex state
+      return regex.test(node.description);
+    });
   }
 
   function incrementLinkTotal(node) {
@@ -514,21 +587,29 @@ function Lineage() {
       drawNode(user[0]);
       context.fillStyle = color(user[0].category);
       context.fill();
-      if (user[0].highlighted) {
-        // drawCircle([user[0].x, user[0].y]);
-      }
     });
 
-    context.restore();
-  }
+    // Map nodes to unique categories with color and label
+    const nodeCategories = Array.from(
+      new Map(
+        nodes.map(node => [node.category, { color: color(node.category), label: node.category }])
+      ).values()
+    );
 
-  function drawCircle(m) {
-    console.log(m);
-    context.beginPath();
-    context.moveTo(m[0], m[1]);
-    context.arc(m[0], m[1], 10, 0, 2 * Math.PI);
-    context.fillStyle = '#000000';
-    context.fill();
+    // Map links to unique relations with color and label
+    const linkRelations = Array.from(
+      new Map(
+        links.map(link => [link.color, { color: color(link.color), label: link.color }])
+      ).values()
+    );
+
+    drawLegend(
+      {
+        nodeCategories: nodeCategories, 
+        linkRelations: linkRelations
+      });
+
+    context.restore();
   }
 
   function timeTicked() {
@@ -544,17 +625,18 @@ function Lineage() {
 
     users.forEach((user) => {
       const d = user[0];
-      const createdAt = new Date(d.createdAt);
-      const daysFromStart = (createdAt - startDate) / (1000 * 60 * 60 * 24);
-      const scale = (daysFromStart / totalDays) - 0.5;
-      d.x += (width * scale - d.x) * TIMELINE_SPEED;
-    });
+      if (d.createdAt !== null) {
+        const d = user[0];
+        const createdAt = new Date(d.createdAt);
+        const daysFromStart = (createdAt - startDate) / (1000 * 60 * 60 * 24);
+        const scale = (daysFromStart / totalDays) - 0.5;
+        d.x += (width * scale - d.x) * TIMELINE_SPEED;
 
-    users.forEach((user) => {
-      context.beginPath();
-      user.forEach(drawNode);
-      context.fillStyle = color(user[0].category);
-      context.fill();
+        context.beginPath();
+        user.forEach(drawNode);
+        context.fillStyle = color(user[0].category);
+        context.fill();
+      }
     });
 
     context.restore();
@@ -583,12 +665,166 @@ function Lineage() {
   }
 
   function drawLink(d) {
+    // Define the size and angle of the arrowhead
+    const arrowLength = 10; // Length of the arrowhead
+    const arrowWidth = 6; // Width of the arrowhead
+  
+    // Calculate the angle of the link
+    const dx = d.target.x - d.source.x;
+    const dy = d.target.y - d.source.y;
+    const angle = Math.atan2(dy, dx);
+  
+    // Calculate the length of the link line
+    const linkLength = Math.sqrt(dx * dx + dy * dy);
+  
+    // Calculate the end of the line (just before the arrowhead)
+    const endX = d.target.x - (arrowLength * Math.cos(angle));
+    const endY = d.target.y - (arrowLength * Math.sin(angle));
+  
+    // Draw the main link line
+    context.beginPath();
+    context.moveTo(d.source.x, d.source.y);
+    context.lineTo(endX, endY);
+    context.strokeStyle = color(d.color);
+    context.stroke();
+  
+    // Draw the arrowhead
+    context.beginPath();
+    context.moveTo(endX, endY); // Tip of the arrow
+    context.lineTo(
+      endX - arrowWidth * Math.cos(angle - Math.PI / 6),
+      endY - arrowWidth * Math.sin(angle - Math.PI / 6)
+    );
+    context.lineTo(
+      endX - arrowWidth * Math.cos(angle + Math.PI / 6),
+      endY - arrowWidth * Math.sin(angle + Math.PI / 6)
+    );
+    context.closePath();
+    context.fillStyle = color(d.color);
+    context.fill();
+  }
+  
+
+  /*
+  function drawLink(d) {
     context.beginPath();
     context.moveTo(d.source.x, d.source.y);
     context.strokeStyle = color(d.color);
     context.lineTo(d.target.x, d.target.y);
     context.stroke();
   }
+  */
+
+  function drawLegend(options) {
+    const {
+      nodeCategories, // Array of node categories with { color, label }
+      linkRelations,  // Array of link relations with { color, label }
+      x = 300,         // X-coordinate for the legend's top-left corner
+      y = -350,         // Y-coordinate for the legend's top-left corner
+      padding = 7,   // Padding inside the legend
+      fontSize = 12,  // Font size for text
+      boxSize = 15,   // Size of the color boxes
+      columnSpacing = 135, // Space between columns
+    } = options;
+  
+    // Ensure the global context is available
+    if (!context) {
+      throw new Error("No global drawing context found.");
+    }
+  
+    // Calculate column positions
+    const nodeColumnX = x + padding;
+    const linkColumnX = x + columnSpacing;
+  
+    // Determine the maximum width of labels
+    const maxNodeLabelWidth = Math.max(
+      ...nodeCategories.map(c => context.measureText(c.label).width)
+    );
+    const maxLinkLabelWidth = Math.max(
+      ...linkRelations.map(r => context.measureText(r.label).width)
+    );
+  
+    // Calculate legend width and height
+    const legendWidth = Math.max(
+      maxNodeLabelWidth,
+      maxLinkLabelWidth
+    ) + boxSize + padding * 2 + columnSpacing;
+    const legendHeight =
+      Math.max(nodeCategories.length, linkRelations.length) * (boxSize + padding) +
+      padding * 2;
+  
+    // Draw the background for the legend
+    /*
+    context.fillStyle = "white";
+    context.fillRect(x, y, legendWidth, legendHeight);
+    context.strokeStyle = "black";
+    context.strokeRect(x, y, legendWidth, legendHeight);
+    */
+  
+    // Set font for the legend
+    context.font = `${fontSize}px sans-serif`;
+    context.fillStyle = "black";
+    let currentNodeY = y + padding;
+    let currentLinkY = y + padding;
+  
+    // Draw node category legend in the left column
+    nodeCategories.forEach(category => {
+      // Draw the color box
+      context.fillStyle = category.color;
+      context.fillRect(nodeColumnX, currentNodeY, boxSize, boxSize);
+  
+      // Draw the label
+      context.fillStyle = "black";
+      context.fillText(
+        category.label,
+        nodeColumnX + boxSize + padding,
+        currentNodeY + boxSize - 2
+      );
+  
+      currentNodeY += boxSize + padding;
+    });
+  
+    // Draw link relation legend in the right column
+    linkRelations.forEach(relation => {
+      // Draw the arrowed line
+      const startX = linkColumnX;
+      const startY = currentLinkY + boxSize / 2;
+      const endX = startX + boxSize * 2;
+      const endY = startY;
+  
+      // Draw line
+      context.strokeStyle = relation.color;
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(startX, startY);
+      context.lineTo(endX, endY);
+      context.stroke();
+  
+      // Draw arrowhead
+      const arrowLength = 6;
+      const arrowWidth = 4;
+      context.beginPath();
+      context.moveTo(endX, endY);
+      context.lineTo(endX - arrowLength, endY - arrowWidth);
+      context.lineTo(endX - arrowLength, endY + arrowWidth);
+      context.closePath();
+      context.fillStyle = relation.color;
+      context.fill();
+  
+      // Draw the label
+      context.fillStyle = "black";
+      context.fillText(
+        relation.label,
+        linkColumnX + boxSize * 2 + padding,
+        currentLinkY + boxSize - 2
+      );
+  
+      currentLinkY += boxSize + padding;
+    });
+  }
+  
+  
+  
 
   function drawNode(d) {
     context.moveTo(d.x, d.y);
