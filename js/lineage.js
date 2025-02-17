@@ -122,24 +122,24 @@ function Lineage() {
     data = response;
 
     users = d3.group(nodes, (d) => d.id);
-    console.timeLog('init', "users");
+    timeLog('init', config, "users");
     data = prepareData(data, filters);
-    console.timeLog('init', "prep data");
+    timeLog('init', config, "prep data");
     config.firstDate = new Date(findFirstDate(config.nodes));
     config.lastDate = new Date(findLastDate(config.nodes));
-    console.timeLog('init', "data");
+    timeLog('init', config, "data");
 
     config = initConfig(config);
 
     console.log(`${data.nodes.length} nodes`);
     console.log(`${data.links.length} links`);
     simulation = d3.forceSimulation(nodes);
-    console.timeLog('init', "sim");
+    timeLog('init', config, "sim");
     [canvas, simulation] = getCanvasSimulation(mode);
-    console.timeLog('init', "getSim");
+    timeLog('init', config, "getSim");
 
     clusters = resetClusters(data.nodes);
-    console.timeLog('init', "resetClusters");
+    timeLog('init', config, "resetClusters");
     restart();
     timeEnd('init', config);
   }
@@ -603,11 +603,13 @@ function Lineage() {
       ).values()
     );
 
-    drawLegend(
-      {
-        nodeCategories: nodeCategories, 
-        linkRelations: linkRelations
-      });
+    if (config.showLegend) {
+      drawLegend(
+        {
+          nodeCategories: nodeCategories, 
+          linkRelations: linkRelations
+        });
+    }
 
     context.restore();
   }
@@ -865,6 +867,12 @@ function Lineage() {
   function timeEnd(name, conf) {
     if (conf.debug) {
       console.timeEnd(name);
+    }
+  }
+
+  function timeLog(name, conf, message) {
+    if (conf.debug) {
+      console.timeLog(name, message);
     }
   }
 

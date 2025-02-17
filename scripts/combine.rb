@@ -1,8 +1,8 @@
 require 'json'
 
 # Load the JSON data from files
-nodes_file = 'data/nodes.json'
-links_file = 'data/links.json'
+nodes_file = 'data/cp_nodes.json'
+links_file = 'data/cp_links.json'
 
 nodes_data = JSON.parse(File.read(nodes_file))
 links_data = JSON.parse(File.read(links_file))

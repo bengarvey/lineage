@@ -2,13 +2,14 @@
   "data": "data/tp_data.json",
   "filter": "",
   "startDate": "2024-10-17 00:00:00",
-  "speed": 525,
+  "speed": 100,
   "debug": false,
   "menuDefaultOpen": true,
   "showDead": true,
-  "timeStep": "year",
+  "timeStep": "month",
   "hideOrphans": false,
   "showCategory": false,
+  "showLegend": false,
   "nodeColumnMappings": {
     "description": "name",
     "createdAt": "birthDate",
@@ -33,7 +34,7 @@
   },
   "treeSim": {
     "charge": -105,
-    "link": 0.2,
+    "link": 0.1,
     "alphaTarget": 1
   }
 }
