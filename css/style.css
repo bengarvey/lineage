@@ -1,4 +1,3 @@
-
 body {
   font-family: georgia,helvetica, arial;
   font-size: 36pt;
@@ -184,4 +183,14 @@ canvas {
   top: 0;
   left: 0;
   z-index: 0;
+}
+
+.config-selector {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
 }

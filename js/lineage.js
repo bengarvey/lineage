@@ -5,6 +5,7 @@
 */
 
 function Lineage() {
+  let configs = [];
   let config = {
     startDate: '2014-01-01',
     lastDate: '2014-12-31',
@@ -80,13 +81,22 @@ function Lineage() {
   function lin(conf) {
     log('Initializing', conf);
     initNightMode();
-    config = conf;
+    if (Array.isArray(conf)) {
+      configs = conf;
+      config = configs[0];
+    } else {
+      configs = [conf];
+      config = conf;
+    }
+    
+    initConfigSelector();
 
+    switchConfig(0);
+    
     config.startDate = new Date(config.startDate);
-
     currentTime = config.startDate;
     initShowDead(config.showDead);
-    document.getElementById('search').value = conf.filter;
+    document.getElementById('search').value = config.filter || '';
   }
 
   function zoomed(event) {
@@ -145,19 +155,50 @@ function Lineage() {
   }
 
   function initConfig(config) {
+    if (!config) config = {};
+    
     const defaultTreeSim = {
       charge: -105,
       link: 0.2,
       alphaTarget: 1,
     };
-  
-    return {
-      ...config,
-      treeSim: {
-        ...defaultTreeSim,
-        ...config.treeSim,
+    
+    const defaultConfig = {
+      treeSim: defaultTreeSim,
+      colorKeys: {},
+      showCategory: false,
+      showLegend: false,
+      hideOrphans: false,
+      startDate: new Date(),
+      lastDate: new Date(),
+      firstDate: new Date(),
+      nodeColumnMappings: {
+        description: "name",
+        createdAt: "birthDate",
+        deletedAt: "deathDate",
+        category: "category",
+        id: "id"
       },
+      linkColumnMappings: {
+        color: "relation"
+      }
     };
+  
+    const newConfig = {
+      ...defaultConfig,
+      ...config,
+      treeSim: config.treeSim ? {
+        ...defaultTreeSim,
+        ...config.treeSim
+      } : defaultTreeSim,
+    };
+    
+    // Ensure dates are Date objects
+    newConfig.startDate = new Date(newConfig.startDate);
+    newConfig.lastDate = new Date(newConfig.lastDate);
+    newConfig.firstDate = new Date(newConfig.firstDate);
+    
+    return newConfig;
   }
 
   function getCanvasSimulation(simulationMode) {
@@ -883,7 +924,15 @@ function Lineage() {
   }
 
   lin.loadJson = function (path) {
-    d3.json(path).then(go);
+    d3.json(path).then(response => {
+      if (Array.isArray(response)) {
+        configs = response;
+        lin(response);
+      } else {
+        configs = [response];
+        go(response);
+      }
+    });
   };
 
   lin.playMusic = function () {
@@ -934,6 +983,56 @@ function Lineage() {
     console.log(nodes);
     console.log(simulation);
   };
+
+  function initConfigSelector() {
+    const existingSelector = document.getElementById('configSelector');
+    if (existingSelector) {
+      existingSelector.remove();
+    }
+
+    const selector = document.createElement('select');
+    selector.id = 'configSelector';
+    selector.className = 'config-selector';
+    
+    configs.forEach((conf, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.text = conf.name || `Config ${index + 1}`;
+      selector.appendChild(option);
+    });
+
+    selector.addEventListener('change', (e) => {
+      switchConfig(parseInt(e.target.value));
+    });
+
+    const container = document.getElementById('config-selector-container');
+    container.appendChild(selector);
+  }
+
+  function switchConfig(configIndex) {
+    // Stop any existing interval
+    if (interval !== null) {
+      interval.stop();
+    }
+    
+    config = initConfig(configs[configIndex] || {});
+    
+    currentTime = new Date(config.startDate);
+    initShowDead(config.showDead);
+    document.getElementById('search').value = config.filter || '';
+    
+    if (config.data) {
+      d3.json(config.data).then(response => {
+        nodes = [];
+        links = [];
+        originalData = jQuery.extend(true, {}, response);
+        data = response;
+        init(response);
+        forceRefresh = true;
+        interval = d3.interval(loop, config.speed);
+      });
+    }
+  }
 
   return lin;
 }

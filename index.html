@@ -25,24 +25,18 @@ const startYear = parseInt(urlParams.get('startYear'), 10);
 /* eslint-disable no-unused-vars */
 function start() {
   $.getJSON('config/configs.json', (configsList) => {
-    let x = 1;
     if (!configsList.configs || configsList.configs.length === 0) {
       console.error('No configs found in configs.json');
       return;
     }
 
-    // Use first config as default
-    const configPath = configsList.configs[0];
-    
-    $.getJSON(configPath, (configuration) => {
-      config = configuration;
-      config.startYear = Number.isNaN(startYear) ? config.startYear : startYear;
-      lineage = new Lineage();
-      lineage(config);
-      lineage.loadJson(config.data);
+    // Pass all configs to lineage
+    config = configsList.configs[0]; // Set first config as default
+    config.startYear = Number.isNaN(startYear) ? config.startYear : startYear;
+    lineage = new Lineage();
+    lineage(configsList.configs); // Pass the full array of configs
 
-      if (config.menuDefaultOpen) toggleMenu();
-    });
+    if (config.menuDefaultOpen) toggleMenu();
   });
 }
 /* eslint-enable no-unused-vars */
@@ -61,6 +55,10 @@ function toggleMenu() {
     <button class="toggle__button" onClick="toggleMenu()"><</button>
     <div class="options">
       <h1><a href="http://github.com/bengarvey/lineage">Lineage</a></h1>
+      <div class="control">
+        <label class="options__label">Configuration</label>
+        <div id="config-selector-container"></div>
+      </div>
       <div class="checkbox">
         <label class="options__label">
           <input type="checkbox" class="checkbox-lg" id="musicOn">

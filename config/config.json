@@ -1,4 +1,5 @@
 {
+  "name": "Twin Peaks",
   "data": "data/tp_data.json",
   "filter": "",
   "startDate": "2024-10-17 00:00:00",
